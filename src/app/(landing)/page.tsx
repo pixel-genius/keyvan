@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 
-import React, { useRef, useState } from "react";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -11,7 +10,13 @@ import "swiper/css/pagination";
 import "../../app/globals.css";
 
 // import required modules
+import {
+  IconCategory2,
+  IconChartAreaLine,
+  IconNews,
+} from "@tabler/icons-react";
 import { Pagination } from "swiper/modules";
+import Winsetonicon from "../icons/winseton";
 
 const LandingPage = () => {
   return (
@@ -50,11 +55,19 @@ const LandingPage = () => {
           </SwiperSlide>
         </Swiper>
       </div>
-      <div className="flex flex-col items-center justify-center">
-        <div className=""></div>
-        <div></div>
-        <div></div>
-        <div></div>
+      <div className="flex flex-row items-center gap-9 justify-evenly">
+        <div className="bg-maincard rounded-xl w-12 h-12 flex justify-center items-center">
+          <Winsetonicon />
+        </div>
+        <div className="bg-maincard rounded-xl w-12 h-12 flex justify-center items-center">
+          <IconCategory2 size={24} className="text-primary-500" />
+        </div>
+        <div className="bg-maincard rounded-xl w-12 h-12 flex justify-center items-center">
+          <IconNews size={24} className="text-primary-500" />
+        </div>
+        <div className="bg-maincard rounded-xl w-12 h-12 flex justify-center items-center">
+          <IconChartAreaLine size={24} className="text-primary-500" />
+        </div>
       </div>
     </div>
   );
