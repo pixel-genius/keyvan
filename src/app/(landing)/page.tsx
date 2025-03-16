@@ -16,11 +16,11 @@ import {
   IconNews,
 } from "@tabler/icons-react";
 import { Pagination } from "swiper/modules";
-import Winsetonicon from "../icons/winseton";
+import Winsetonicon from "../../icons/winseton";
 
 const LandingPage = () => {
   return (
-    <div className="container  mx-auto w-[768px]">
+    <div className="container  mx-auto w-[768px] min-h-full">
       <div className="flex flex-col items-center justify-center ">
         <Swiper pagination={true} modules={[Pagination]} className="mySwiper">
           <SwiperSlide>

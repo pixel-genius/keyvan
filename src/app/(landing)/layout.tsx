@@ -6,11 +6,11 @@ import {
   IconShoppingCart,
   IconUser,
 } from "@tabler/icons-react";
-import LogoIcon from "../icons/logo";
+import LogoIcon from "../../icons/logo";
 
 const LandingLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="container  mx-auto w-[768px]">
+    <div className="container  mx-auto w-[768px] min-h-full">
       <nav>
         <div className="bg-maincard flex justify-around items-center rounded-t-4xl h-24 w-full flex-row">
           <div>
