@@ -9,23 +9,13 @@
 :root {
   --font-sans: "YekanBakh", sans-serif;
  --maincard: #121212;
- --primary-50: #F9F7ED;
- --primary-100: #F1ECD0;
- --primary-200: #E4D9A4;
- --primary-300: #D5BF6F;
- --primary-400: #C7A848;
- --primary-500: #BA953B;
- --primary-600: #9E7530;
- --primary-700: #7F5829;
- --primary-800: #6B4828;
- --primary-900: #5C3D27;
- --primary-950: #352013;
+
  --radius: 0.625rem;
- --card: oklch(1 0 0);
+ --card: oklch(18.22% 0 0);
  --card-foreground: oklch(0.141 0.005 285.823);
  --popover: oklch(1 0 0);
  --popover-foreground: oklch(0.141 0.005 285.823);
- --primary: oklch(0.21 0.006 285.885);
+ --primary: oklch(68.74% 0.1155 86.26);
  --primary-foreground: oklch(0.985 0 0);
  --secondary: oklch(0.967 0.001 286.375);
  --secondary-foreground: oklch(0.21 0.006 285.885);
@@ -126,6 +116,8 @@
     --primary-900: #5C3D27;
     --primary-950: #352013;
   }
+
+  
 }
 .swiper {
   width: 100%;
@@ -148,6 +140,8 @@
   height: 100%;
   object-fit: cover;
 }
+
+
 
 .dark {
  --background: oklch(27.38% 0.0015 17.25);
@@ -190,6 +184,8 @@
   body {
     @apply bg-background text-foreground;
  }
+
+ 
 }
 
 
@@ -199,4 +195,12 @@
        url("/fonts/woff/YekanBakh-Regular.woff") format("woff");
   font-weight: normal;
   font-style: normal;
+}
+
+@font-face {
+  font-family: "YekanBakh";
+  src: url("/fonts/woff2/YekanBakh-bold.woff2") format("woff2"),
+       url("/fonts/woff/YekanBakh-bold.woff") format("woff");
+  font-weight: 700;
+  font-style: bold;
 }

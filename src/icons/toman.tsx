@@ -1,7 +1,7 @@
 import { IconProps } from "@/types/icon-types";
 
 const Tomanicon = (props: IconProps) => {
-  const { size = 24, color = "currentColor", ...resProps } = props;
+  const { size = 20, color = "currentColor", ...resProps } = props;
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

@@ -10,37 +10,34 @@ import LogoIcon from "../../icons/logo";
 
 const LandingLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="container  mx-auto w-[768px] min-h-full">
-      <nav>
-        <div className="bg-maincard flex justify-around items-center rounded-t-4xl h-24 w-full flex-row">
-          <div>
-            <IconShoppingCart size={34} color="white" />
-          </div>
-          <div>
-            <LogoIcon />
-          </div>
-          <div>
-            <IconMenu2 size={34} color="white" />
-          </div>
-        </div>
+    <div className="w-full min-h-screen flex flex-col">
+      {/* Navbar */}
+      <nav className="bg-maincard flex justify-between z-50 fixed top-0 w-full items-center px-4 py-6">
+        <IconShoppingCart size={28} color="white" />
+        <LogoIcon />
+        <IconMenu2 size={28} color="white" />
       </nav>
-      <div>{children}</div>
-      <footer className="bg-maincard h-24 rounded-b-4xl flex items-center ">
-        <div className="flex gap-3 justify-evenly w-full">
-          <div className="flex flex-col items-center">
-            <IconUser size={34} color="white" />
-            <p>حساب کاربری</p>
+
+      {/* Main Content */}
+      <main className="flex-grow p-4 rounded-4xl mt-20 pb-40  ">{children}</main>
+
+      {/* Footer Navigation */}
+      <footer className="bg-maincard fixed bottom-0 left-0 w-full py-4 z-50  flex items-center shadow-lg">
+        <div className="flex justify-around w-full text-xs text-white">
+          <div className="flex flex-col gap-2 items-center">
+            <IconUser size={24} color="white" />
+            <p>حساب</p>
           </div>
-          <div className="flex flex-col items-center">
-            <IconListDetails size={34} color="white" />
+          <div className="flex flex-col gap-2 items-center">
+            <IconListDetails size={24} color="white" />
             <p>سفارشات</p>
           </div>
-          <div className="flex flex-col items-center">
-            <IconShoppingBag size={34} color="white" />
+          <div className="flex flex-col gap-2 items-center">
+            <IconShoppingBag size={24} color="white" />
             <p>محصولات</p>
           </div>
-          <div className="flex flex-col items-center">
-            <IconHome size={34} color="white" />
+          <div className="flex flex-col gap-2 items-center">
+            <IconHome size={24} color="white" />
             <p>خانه</p>
           </div>
         </div>
