@@ -2,7 +2,7 @@ import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui/lib/utils";
 import OrbitingDotsLoading from "./orbitingDotsLoading";
 
 const buttonVariants = cva(
@@ -79,10 +79,11 @@ const buttonVariants = cva(
       variant: "primary",
       size: "md",
     },
-  }
+  },
 );
 
 export type ButtonState = "success" | "warning" | "error";
+
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -108,14 +109,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       state,
       ...props
     },
-    ref
+    ref,
   ) => {
     const Comp = asChild ? Slot : "button";
 
     return (
       <Comp
         className={cn(
-          buttonVariants({ variant, size, isLoading, state, className })
+          buttonVariants({ variant, size, isLoading, state, className }),
         )}
         ref={ref}
         {...props}
@@ -136,7 +137,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         )}
       </Comp>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";
