@@ -5,7 +5,9 @@
 
 @custom-variant dark (&:is(.dark *));
 
+
 :root {
+  --font-sans: "YekanBakh", sans-serif;
  --maincard: #121212;
  --primary-50: #F9F7ED;
  --primary-100: #F1ECD0;
@@ -55,6 +57,7 @@
 }
 
 @theme inline {
+  --font-sans: "YekanBakh", sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -187,4 +190,13 @@
   body {
     @apply bg-background text-foreground;
  }
+}
+
+
+@font-face {
+  font-family: "YekanBakh";
+  src: url("/fonts/woff2/YekanBakh-Regular.woff2") format("woff2"),
+       url("/fonts/woff/YekanBakh-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
 }
