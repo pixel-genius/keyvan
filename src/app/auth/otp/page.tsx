@@ -5,6 +5,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import Typography from "@/components/ui/typography";
 import { ArrowRightIcon } from "lucide-react";
 import React from "react";
 
@@ -15,11 +16,12 @@ const OtpPage = () => {
       <div className=" flex flex-col gap-1">
         <div className=" p-5 flex flex-row gap-1 items-center">
           <ArrowRightIcon size={24} color="white" />
-          <p className="text-xl font-bold">ثبت نام</p>
+            <Typography variant={"heading/xl"}>ثبت نام</Typography>
+
         </div>
         <div className="px-5 flex flex-col gap-2 justify-center items-center">
           <div className="w-full flex flex-col gap-2">
-            <div dir="ltr" className="flex flex-row gap-3">
+            <div className=" flex justify-center items-center">
               <InputOTP
                 maxLength={6}
                 value={value}
@@ -31,7 +33,6 @@ const OtpPage = () => {
                   <InputOTPSlot index={2} />
                   <InputOTPSlot index={3} />
                   <InputOTPSlot index={4} />
-                  <InputOTPSlot index={5} />
                 </InputOTPGroup>
               </InputOTP>
             </div>

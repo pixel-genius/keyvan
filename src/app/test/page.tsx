@@ -2,7 +2,7 @@ import ProductCard from "../_components/card";
 
 const TestPage = () => {
   const product = {
-    image: "/img/winston.png",
+    image: "/img/.png",
     name: "سیگار وینستون کلاسیک الترا لایت نقره ای کینگ",
     category: "سیگار",
     price: "۲۰۰۰۰۰",
