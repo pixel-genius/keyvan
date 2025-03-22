@@ -9,6 +9,7 @@ import ProductCard from '../_components/ProductCard';
 import BottomSheet from '../_components/BottomSheet';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import Counter from '../_components/Counter';
 
 const ProductsPage = () => {
   const router = useRouter();
@@ -77,7 +78,7 @@ const ProductsPage = () => {
             <Typography variant="label/sm" weight="bold" className="mb-4 text-center" >{selectedProduct.title}</Typography>
           
             {/* اضافه کردن فیلدهای تعداد و توضیحات */}
-            <Input type="number" placeholder="تعداد" className="mb-4" />
+            <Counter />
             <Textarea placeholder="توضیحات (اختیاری)" className="mb-4" />
             <Button className="w-full" variant="primary" onClick={handleCloseBottomSheet}>
               
