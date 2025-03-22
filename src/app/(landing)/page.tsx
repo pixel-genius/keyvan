@@ -52,31 +52,31 @@ const LandingPage = () => {
       image: "/img/image-cig.jpg",
       name: "سیگار وینستون کلاسیک الترا لایت نقره ای کینگ",
       category: "سیگار",
-      price: "۲۰۰۰۰۰",
+      price: "200000",
     },
     {
       image: "/img/image-cig.jpg",
       name: "سیگار وینستون کلاسیک الترا لایت نقره ای کینگ",
       category: "سیگار",
-      price: "۲۰۰۰۰۰",
+      price: "200000",
     },
     {
       image: "/img/image-cig.jpg",
       name: "سیگار وینستون کلاسیک الترا لایت نقره ای کینگ",
       category: "سیگار",
-      price: "۲۰۰۰۰۰",
+      price: "200000",
     },
     {
       image: "/img/image-cig.jpg",
       name: "سیگار وینستون کلاسیک الترا لایت نقره ای کینگ",
       category: "سیگار",
-      price: "۲۰۰۰۰۰",
+      price: "200000",
     },
     {
       image: "/img/image-cig.jpg",
       name: "سیگار وینستون کلاسیک الترا لایت نقره ای کینگ",
       category: "سیگار",
-      price: "۲۰۰۰۰۰",
+      price: "200000",
     },
   ];
 
@@ -115,15 +115,15 @@ const LandingPage = () => {
       <div className="flex justify-center gap-8 pt-4 items-center">
         <CardItem icon="/img/logo-cig.png" label="برند ها" />
         <CardItem
-          icon={<IconCategory2 size={24} className="text-primary-500" />}
+          icon={<IconCategory2 size={24} className="text-primary" />}
           label="دسته‌بندی‌ها"
         />
         <CardItem
-          icon={<IconNews size={24} className="text-primary-500" />}
+          icon={<IconNews size={24} className="text-primary" />}
           label="اخبار داخلیات"
         />
         <CardItem
-          icon={<IconChartAreaLine size={24} className="text-primary-500" />}
+          icon={<IconChartAreaLine size={24} className="text-primary" />}
           label="قیمت روز"
         />
       </div>
