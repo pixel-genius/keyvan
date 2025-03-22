@@ -1,11 +1,13 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/components/atoms/button";
+import { Countdown } from "@/components/components/atoms/countdown";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/components/ui/input-otp";
-import Typography from "@/components/ui/typography";
+} from "@/components/components/atoms/input-otp";
+
+import Typography from "@/components/components/atoms/typography";
 import { ArrowRightIcon } from "lucide-react";
 import React from "react";
 
@@ -16,12 +18,11 @@ const OtpPage = () => {
       <div className=" flex flex-col gap-1">
         <div className=" p-5 flex flex-row gap-1 items-center">
           <ArrowRightIcon size={24} color="white" />
-            <Typography variant={"heading/xl"}>ثبت نام</Typography>
-
+          <Typography variant={"heading/xs"}>ثبت نام</Typography>
         </div>
         <div className="px-5 flex flex-col gap-2 justify-center items-center">
           <div className="w-full flex flex-col gap-2">
-            <div className=" flex justify-center items-center">
+            <div className=" flex flex-col gap-2 justify-center items-center">
               <InputOTP
                 maxLength={6}
                 value={value}
@@ -35,15 +36,13 @@ const OtpPage = () => {
                   <InputOTPSlot index={4} />
                 </InputOTPGroup>
               </InputOTP>
+              <Countdown date={Date.now() + 120000} />
             </div>
 
-            <Button>تایید</Button>
+            <Button variant={"primary"} state="warning">
+              تایید
+            </Button>
           </div>
-          <p className="text-xs font-light">
-            ورود شما به معنای پذیرش{" "}
-            <span className="underline"> شرایط و قوانین </span>
-            پلتفرم تمباکو است
-          </p>
         </div>
       </div>
     </div>

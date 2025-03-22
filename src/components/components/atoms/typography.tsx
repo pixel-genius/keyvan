@@ -114,7 +114,7 @@ const Typography = forwardRef<HTMLParagraphElement, TypographyProps>(
       truncate,
       onClick,
     },
-    ref,
+    ref
   ) => {
     const styles = typographyVariants({
       variant,
@@ -148,7 +148,7 @@ const Typography = forwardRef<HTMLParagraphElement, TypographyProps>(
         {children}
       </Component>
     );
-  },
+  }
 );
 
 Typography.displayName = "Typography";

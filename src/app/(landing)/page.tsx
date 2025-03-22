@@ -18,11 +18,10 @@ import {
 } from "@tabler/icons-react";
 
 import Winsetonicon from "../../icons/winseton";
-import Typography from "@/components/ui/typography";
 import CardItem from "../_components/CardItem";
-import { Button } from "@/components/ui/button";
 import ProductCard from "../_components/card";
 import BlogCard from "../_components/BlogCard";
+import Typography from "@/components/components/atoms/typography";
 
 const LandingPage = () => {
   const blogs = [
@@ -142,7 +141,7 @@ const LandingPage = () => {
         </div>
       </div>
       <Swiper
-       modules={[Autoplay]}
+        modules={[Autoplay]}
         className="mySwiper"
         dir="rtl"
         spaceBetween={30}
