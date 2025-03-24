@@ -7,7 +7,6 @@ import LogoIcon from "../icons/logo";
 import Footer from "./_components/Footer";
 import Navbar from "./_components/Navbar";
 
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -30,17 +29,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased  bg-white`}
+      >
+        <div className="max-w-2xl mx-auto relative bg-background">
+          {/* Navbar */}
+          <Navbar />
 
-        {/* Navbar */}
-        <Navbar/> 
+          <main className="flex-grow p-4 rounded-4xl pb-40">{children}</main>
 
-        <main className="flex-grow p-4 rounded-4xl mt-20 pb-40">
-          {children}
-        </main>
-
-        {/* اضافه کردن فوتر */}
-        <Footer />
+          {/* اضافه کردن فوتر */}
+          <Footer />
+        </div>
       </body>
     </html>
   );

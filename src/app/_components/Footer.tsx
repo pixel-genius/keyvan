@@ -1,21 +1,42 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { IconUser, IconListDetails, IconShoppingBag, IconHome } from "@tabler/icons-react";
+import {
+  IconUser,
+  IconListDetails,
+  IconShoppingBag,
+  IconHome,
+} from "@tabler/icons-react";
 
 const Footer = () => {
   const pathname = usePathname();
   const router = useRouter();
 
   const links = [
-    { id: "account", href: "/account", icon: <IconUser size={24} />, label: "حساب" },
-    { id: "orders", href: "/orders", icon: <IconListDetails size={24} />, label: "سفارشات" },
-    { id: "products", href: "/products", icon: <IconShoppingBag size={24} />, label: "محصولات" },
+    {
+      id: "account",
+      href: "/account",
+      icon: <IconUser size={24} />,
+      label: "حساب",
+    },
+    {
+      id: "orders",
+      href: "/orders",
+      icon: <IconListDetails size={24} />,
+      label: "سفارشات",
+    },
+    {
+      id: "products",
+      href: "/products",
+      icon: <IconShoppingBag size={24} />,
+      label: "محصولات",
+    },
     { id: "home", href: "/", icon: <IconHome size={24} />, label: "خانه" },
   ];
 
   return (
-    <footer className="bg-maincard fixed bottom-0 left-0 w-full py-4 z-30 flex items-center shadow-lg">
+    <footer className="bg-maincard sticky bottom-0 left-0 w-full py-4 pt-10 z-30 flex items-center shadow-lg">
+      <div className="bg-background  absolute left-0 -top-1 h-6 w-full rounded-b-full" />
       <div className="flex justify-around w-full text-xs text-gray-600">
         {links.map((link) => (
           <div

@@ -142,7 +142,8 @@ const LandingPage = () => {
         </div>
       </div>
       <Swiper
-       modules={[Autoplay]}
+        slidesPerView={1.5}
+        modules={[Autoplay]}
         className="mySwiper"
         dir="rtl"
         spaceBetween={30}
@@ -155,14 +156,14 @@ const LandingPage = () => {
             slidesPerView: 2,
             spaceBetween: 15,
           },
-          768: {
-            slidesPerView: 4,
-            spaceBetween: 40,
-          },
-          1024: {
-            slidesPerView: 5,
-            spaceBetween: 50,
-          },
+          // 768: {
+          //   slidesPerView: 4,
+          //   spaceBetween: 40,
+          // },
+          // 1024: {
+          //   slidesPerView: 5,
+          //   spaceBetween: 50,
+          // },
         }}
       >
         {products.map((product, index) => (
