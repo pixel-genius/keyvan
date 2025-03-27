@@ -1,15 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import Typography from '@/components/ui/typography';
 import { IconChevronLeft, IconFilter } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import ProductCard from '../_components/ProductCard';
 import BottomSheet from '../_components/BottomSheet';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import Counter from '../_components/Counter';
+import Typography from '@/components/components/atoms/typography';
+import { Input } from '@/components/components/molecules/input';
+import { Textarea } from '@/components/components/atoms/textarea';
+import { Button } from '@/components/components/atoms/button';
 
 const ProductsPage = () => {
   const router = useRouter();

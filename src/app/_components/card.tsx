@@ -40,11 +40,7 @@ const ProductCard = ({ product }: { product: any }) => {
             variant={"label/md"}
             weight="normal"
           >
-<<<<<<< HEAD
-            {product.price}
-=======
             {formattedPrice}
->>>>>>> baa80eaa9850fca27553070fce6d7940d48e3c3b
           </Typography>
           <Tomanicon color2="white" />
         </div>

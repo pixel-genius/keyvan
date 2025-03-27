@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { IconCirclePlusFilled, IconMinus, IconPlus } from '@tabler/icons-react';
+import { Button } from '@/components/components/atoms/button';
 
 export default function Counter() {
   const [count, setCount] = useState(25);
