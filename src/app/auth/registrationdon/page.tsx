@@ -1,5 +1,5 @@
 import Typography from "@/components/components/atoms/typography";
-import { IconProgressCheck } from "@tabler/icons-react";
+import { IconHeadset, IconProgressCheck } from "@tabler/icons-react";
 
 const Registrationdonpage = () => {
   return (
@@ -12,6 +12,12 @@ const Registrationdonpage = () => {
             اطلاعات شما در سریع‌ترین زمان ممکن بررسی می‌شود و نتیجه را به شما
             اطلاع می‌دهیم. از شکیبایی شما سپاسگزاریم.
           </Typography>
+          <div className="flex gap-0.5">
+            <IconHeadset size={16} />
+            <Typography variant={"label/md"} className="underline">
+              تماس با پشتیبانی
+            </Typography>
+          </div>
         </div>
       </div>
     </div>
