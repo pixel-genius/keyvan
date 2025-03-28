@@ -18,7 +18,7 @@ export interface AttachmentThumbnailProps extends AttachmentProps {
 }
 const AttachmentThumbnail = (
   props: Omit<AttachmentProps, "multiple" | "allowedTypes"> &
-    AttachmentThumbnailProps,
+    AttachmentThumbnailProps
 ) => {
   const [showRefresh, setShowRefresh] = useState<boolean>(false);
   const {
