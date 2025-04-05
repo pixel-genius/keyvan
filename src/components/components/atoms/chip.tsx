@@ -7,12 +7,12 @@ const chipVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-primary hover:bg-purple-600 ",
+        primary: "bg-primary hover:bg-yellow-700   ",
         warning: "bg-warning hover:bg-amber-700    ",
         danger: "bg-rose-500 hover:bg-rose-700   ",
         success: "bg-success hover:bg-emerald-700   ",
         info: "bg-sky-500 hover:bg-sky-700   ",
-        secendery: "bg-secondary hover:bg-zinc-900    ",
+        secendery: "bg-zinc-900 hover:bg-zinc-700    ",
       },
       size: {
         sm: "h-9 text-sm",
@@ -24,7 +24,7 @@ const chipVariants = cva(
       variant: "primary",
       size: "sm",
     },
-  },
+  }
 );
 export interface ChipProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -46,7 +46,7 @@ const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
       children,
       ...props
     },
-    ref,
+    ref
   ) => {
     const Comp = asChild ? Slot : "button";
     return (
@@ -61,7 +61,7 @@ const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
         {IconRight && <span> {IconRight}</span>}
       </Comp>
     );
-  },
+  }
 );
 Chip.displayName = "Chip";
 
