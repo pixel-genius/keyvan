@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { IconUser, IconListDetails, IconShoppingBag, IconHome } from "@tabler/icons-react";
+import { IconUser, IconListDetails, IconShoppingBag, IconHome, IconCategory } from "@tabler/icons-react";
 
 const Footer = () => {
   const pathname = usePathname();
@@ -10,6 +10,7 @@ const Footer = () => {
   const links = [
     { id: "account", href: "/account", icon: <IconUser size={24} />, label: "حساب" },
     { id: "orders", href: "/orders", icon: <IconListDetails size={24} />, label: "سفارشات" },
+    { id: "category", href: "/category", icon: <IconCategory size={24} />, label: "دسته‌بندی" },
     { id: "products", href: "/products", icon: <IconShoppingBag size={24} />, label: "محصولات" },
     { id: "home", href: "/", icon: <IconHome size={24} />, label: "خانه" },
   ];

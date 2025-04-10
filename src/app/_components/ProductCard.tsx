@@ -4,22 +4,33 @@ import Image from "next/image";
 import { IconEye, IconShoppingCartPlus } from "@tabler/icons-react";
 import { Card, CardContent } from "@/components/components/atoms/card";
 import Typography from "@/components/components/atoms/typography";
+import { useRouter } from "next/navigation";
 
 interface ProductCardProps {
+  id?: string;
   imageUrl: string;
   title: string;
   subtitle: string;
   price: string;
-  onAddToCart: () => void; // اضافه کردن این خط
+  category?: string;
+  onAddToCart: () => void;
 }
 
 export default function ProductCard({
+  id = "1",
   imageUrl,
   title,
   subtitle,
   price,
+  category = "سیگار",
   onAddToCart,
 }: ProductCardProps) {
+  const router = useRouter();
+
+  const handleViewProduct = () => {
+    router.push(`/productlist/${id}`);
+  };
+
   return (
     <Card dir="rtl" className="bg-black text-white rounded-2xl">
       <CardContent className="p-4 flex items-center space-x-4">
@@ -33,8 +44,10 @@ export default function ProductCard({
           </Typography>
 
           <div className="flex items-center mt-2">
+
+            {/* Category  */}
             <span className="bg-primary text-white text-xs px-2 py-1 rounded-lg">
-              سیگار
+              {category}
             </span>
           </div>
         </div>
@@ -44,7 +57,10 @@ export default function ProductCard({
           </Typography>
 
           <div className="flex space-x-2 mt-2">
-            <button className="p-2 bg-gray-700 rounded-full hover:bg-gray-600">
+            <button 
+              className="p-2 bg-gray-700 rounded-full hover:bg-gray-600"
+              onClick={handleViewProduct}
+            >
               <IconEye stroke={2} className="w-5 h-5" />
             </button>
             <button

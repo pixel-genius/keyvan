@@ -4,6 +4,8 @@ import { ChartConfig } from "@/components/components/atoms/chart";
 import Typography from "@/components/components/atoms/typography";
 import { IconChevronLeft } from "@tabler/icons-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { products } from "@/data/products";
 import BoxPacketInfo from "./_components/BoxPacketInfo";
 import CustomAreaChartCard from "./_components/CustomAreaChartCard";
 
@@ -23,30 +25,44 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const ProductList = () => {
+export default function ProductDetail({ params }: { params: { id: string } }) {
+  const router = useRouter();
+  const product = products.find((p) => p.id === params.id);
+
+  if (!product) {
+    return <div>محصول یافت نشد</div>;
+  }
+
   return (
     <div>
       <div className="flex gap-0.5 items-center pb-3.5">
-        <IconChevronLeft size={24} className="cursor-pointer" />
+        <IconChevronLeft 
+          size={24} 
+          className="cursor-pointer" 
+          onClick={() => router.back()}
+        />
         <Typography variant={"paragraph/md"}>
-          <a href="/products">بازگشت</a>
+          بازگشت
         </Typography>
       </div>
       <div>
         <div className="flex justify-center items-center bg-white rounded-lg mb-4">
           <Image
-            src={"/img/image-cig.jpg"}
-            alt="sigar"
+            src={product.imageUrl}
+            alt={product.title}
             width={400}
             height={400}
           />
         </div>
         <div dir="rtl" className="pb-9 ">
           <Badge variant="default" className="mb-2">
-            سیگار
+            {product.category}
           </Badge>
           <Typography variant="label/lg" weight="normal">
-            سیگار وینستون کلاسیک الترا
+            {product.title}
+          </Typography>
+          <Typography variant="paragraph/sm" weight="normal" className="mt-2">
+            {product.description}
           </Typography>
         </div>
         <div className="flex flex-col gap-2 text-right">
@@ -54,12 +70,13 @@ const ProductList = () => {
             مشخصات
           </Typography>
           <div className="flex flex-col gap-4 pb-5">
-            <BoxPacketInfo count={12} label="تعداد جعبه در پالت" />
-            <BoxPacketInfo count={12} label="تعداد جعبه در پالت" />
-            <BoxPacketInfo count={12} label="تعداد جعبه در پالت" />
-            <BoxPacketInfo count={12} label="تعداد جعبه در پالت" />
-            <BoxPacketInfo count={12} label="تعداد جعبه در پالت" />
-            <BoxPacketInfo count={12} label="تعداد جعبه در پالت" />
+            {product.specifications.map((spec, index) => (
+              <BoxPacketInfo
+                key={index}
+                count={spec.value}
+                label={spec.label}
+              />
+            ))}
           </div>
         </div>
         <div>
@@ -71,6 +88,4 @@ const ProductList = () => {
       </div>
     </div>
   );
-};
-
-export default ProductList;
+}
