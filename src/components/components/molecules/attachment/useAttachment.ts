@@ -1,6 +1,5 @@
 "use client";
 
-import { UsePostUploadfile } from "@repo/apis/core/base/upload/post/use-post-uploadfile";
 import { ChangeEvent, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -41,25 +40,6 @@ const useAttachment = ({
 }: AttachmentProps) => {
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<FileState[]>([]);
-  const fileUploadMutation = UsePostUploadfile({
-    onSuccess: (res) => {
-      const ids: number[] = [];
-      const data = res.data;
-      if (data.data.length) {
-        data.data.forEach((item) => {
-          ids.push(item.id);
-        });
-        setFiles((prev) =>
-          prev.map((file, index: number) => {
-            delete file.loading;
-            ids[index] ? (file.id = ids[index]) : null;
-            return file;
-          }),
-        );
-      }
-      onChange(ids);
-    },
-  });
 
   const allowedTypesText = useMemo(() => {
     let tempTxt: string = "";
@@ -83,7 +63,10 @@ const useAttachment = ({
         (file) => file[typeof arg === "string" ? "name" : "id"] !== arg,
       ),
     );
+    // For demo, just pass empty array to onChange
+    onChange([]);
   };
+  
   const getUploadFiles = (
     Files: Array<File>,
     e: ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLDivElement>,
@@ -94,7 +77,7 @@ const useAttachment = ({
         file.type.slice(file.type.lastIndexOf("/") + 1, file.type.length),
       ),
     );
-    console.log(allowedTypes);
+    
     if (includesType) {
       const maxSizeBytes = maxSize * 1024 * 1024;
       const validSize = filesInput.every((file) => file.size <= maxSizeBytes);
@@ -120,7 +103,6 @@ const useAttachment = ({
                 loading: true,
               };
 
-              console.log();
               if (file.type.includes("image"))
                 tempObj.fileUrl = URL.createObjectURL(file);
               prev.push(tempObj);
@@ -128,7 +110,12 @@ const useAttachment = ({
           });
           return [...prev];
         });
-        if (filesInput.length) fileUploadMutation.mutate({ file: filesInput });
+        
+        // For demo, just pass a dummy ID array to onChange
+        if (filesInput.length) {
+          const dummyIds = filesInput.map((_, index) => index + 1);
+          onChange(dummyIds);
+        }
       } else {
         e.preventDefault();
         toast.warning(`File size exceeds ${maxSize}MB!`);
@@ -168,4 +155,5 @@ const useAttachment = ({
     allowedTypesText,
   };
 };
+
 export { useAttachment };

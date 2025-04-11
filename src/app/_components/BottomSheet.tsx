@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -6,16 +8,22 @@ type BottomSheetProps = {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
+  hasBackdrop?: boolean;
+  hasBlur?: boolean;
+  isClosable?: boolean;
 };
 
 export default function BottomSheet({
   isOpen,
   onClose,
   children,
+  hasBackdrop = true,
+  hasBlur = true,
+  isClosable = true,
 }: BottomSheetProps) {
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
-      if ((event.target as HTMLElement).id === "backdrop") {
+      if (isClosable && (event.target as HTMLElement).id === "backdrop") {
         onClose();
       }
     };
@@ -32,14 +40,18 @@ export default function BottomSheet({
       document.body.style.overflow = "";
       document.removeEventListener("mousedown", handleOutsideClick);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, isClosable]);
 
   return (
     <AnimatePresence>
       {isOpen && (
         <div
           id="backdrop"
-          className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm"
+          className={cn(
+            "fixed inset-0 z-50 flex items-end justify-center",
+            hasBackdrop && "bg-black/50",
+            hasBlur && "backdrop-blur-sm"
+          )}
         >
           <motion.div
             initial={{ y: "100%" }}
