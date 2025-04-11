@@ -7,7 +7,7 @@ import Typography from '@/components/components/atoms/typography';
 import { products } from '@/data/products';
 import { categories } from '@/data/categories';
 import Image from 'next/image';
-import Header from '../_components/Header';
+import Header from '@/app/_components/Header';
 
 
 interface CategoryWithCount {

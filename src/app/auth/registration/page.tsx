@@ -6,18 +6,48 @@ import { Input } from "@/components/components/molecules/input";
 import BottomSheet from "@/app/_components/BottomSheet";
 import { useState } from "react";
 import FileUpload from "@/app/_components/FileUpload";
+import { useRouter } from "next/navigation";
 
 const Registrationpage = () => {
+  const router = useRouter();
   const [isOpen] = useState(true);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    nationalCode: "",
+  });
   const [provincialLicense, setProvincialLicense] = useState<File | null>(null);
   const [businessLicense, setBusinessLicense] = useState<File | null>(null);
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   const handleSubmit = () => {
-    // Demo function - would send data to API in production
-    console.log({ 
-      provincialLicense, 
-      businessLicense 
-    });
+    // Generate a pending token with timestamp
+    const pendingToken = {
+      token: Math.random().toString(36).substring(2),
+      timestamp: Date.now(),
+      status: 'pending'
+    };
+    
+    // Store the registration data and pending token
+    localStorage.setItem("registrationData", JSON.stringify({
+      ...formData,
+      provincialLicense: provincialLicense ? provincialLicense.name : null,
+      businessLicense: businessLicense ? businessLicense.name : null
+    }));
+    
+    // Store the pending token
+    localStorage.setItem("pendingToken", JSON.stringify(pendingToken));
+    
+    // Navigate to pending approval page
+    router.push("/auth/pend-approved");
   };
 
   return (
@@ -39,26 +69,51 @@ const Registrationpage = () => {
           
           <div className="flex flex-col gap-2">
             <div className="w-full flex gap-2">
-              <Input placeholder="نام " />
-              <Input placeholder="نام خانوادگی" />
+              <Input 
+                placeholder="نام" 
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleInputChange}
+              />
+              <Input 
+                placeholder="نام خانوادگی" 
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleInputChange}
+              />
             </div>
             
             <div className="flex flex-col gap-2">
-              <Input placeholder="آدرس ایمیل" />
-              <Input placeholder="کد ملی" />
+              <Input 
+                placeholder="آدرس ایمیل" 
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+              />
+              <Input 
+                placeholder="کد ملی" 
+                name="nationalCode"
+                value={formData.nationalCode}
+                onChange={handleInputChange}
+              />
               
               <FileUpload 
-                label="مجوز توزیع استانی یا کشوری" 
+                label="مجوز توزیع استانی یا کشوری (اختیاری)" 
                 onChange={setProvincialLicense}
               />
               
               <FileUpload 
-                label="جواز کسب" 
+                label="جواز کسب (اختیاری)" 
                 onChange={setBusinessLicense}
               />
             </div>
             
-            <Button variant={"primary"} state="warning" onClick={handleSubmit}>
+            <Button 
+              variant={"primary"} 
+              state="warning" 
+              onClick={handleSubmit}
+              disabled={!formData.firstName || !formData.lastName || !formData.email || !formData.nationalCode}
+            >
               ارسال
             </Button>
           </div>

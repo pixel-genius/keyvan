@@ -15,7 +15,7 @@ import { Button } from "@/components/components/atoms/button";
 import { Card } from "@/components/components/atoms/card";
 import { Chip } from "@/components/components/atoms/chip";
 import { Separator } from "@/components/components/atoms/separator";
-import Header from '../_components/Header';
+import Header from '@/app/_components/Header';
 
 const OrdersPage = () => {
   const [orderDetailsOpen, setOrderDetailsOpen] = useState(false);

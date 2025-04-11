@@ -1,10 +1,43 @@
+"use client";
+
 import Typography from "@/components/components/atoms/typography";
 import { IconHeadset, IconProgressCheck } from "@tabler/icons-react";
 import BottomSheet from "@/app/_components/BottomSheet";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Cookies from 'js-cookie';
 
 const Registrationdonpage = () => {
+  const router = useRouter();
   const [isOpen] = useState(true);
+  const [timeLeft, setTimeLeft] = useState(20);
+
+  useEffect(() => {
+    // Set the pending token in a cookie for the middleware to access
+    const pendingTokenStr = localStorage.getItem("pendingToken");
+    if (pendingTokenStr) {
+      // Set the cookie with the same structure as in localStorage
+      Cookies.set('pendingToken', pendingTokenStr, { 
+        expires: 1, // 1 day
+        path: '/',
+        sameSite: 'strict'
+      });
+    }
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          // Force a page reload to trigger the middleware check
+          window.location.href = '/auth/pend-approved';
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <div className="h-full">
@@ -20,8 +53,7 @@ const Registrationdonpage = () => {
           <div className="flex flex-col items-center gap-3">
             <Typography variant={"heading/xs"}>ثبت نام موفق شد</Typography>
             <Typography variant={"label/sm"} className="text-center">
-              اطلاعات شما در سریع‌ترین زمان ممکن بررسی می‌شود و نتیجه را به شما
-              اطلاع می‌دهیم. از شکیبایی شما سپاسگزاریم.
+              اطلاعات شما در حال بررسی است. لطفا {timeLeft} ثانیه صبر کنید.
             </Typography>
             <div className="flex gap-0.5">
               <IconHeadset size={16} />

@@ -3,16 +3,16 @@
 import { useState, useEffect } from 'react';
 import { IconChevronLeft, IconFilter, IconX } from '@tabler/icons-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import ProductCard from '../_components/ProductCard';
-import BottomSheet from '../_components/BottomSheet';
-import Counter from '../_components/Counter';
+import ProductCard from '@/app/_components/ProductCard';
+import BottomSheet from '@/app/_components/BottomSheet';
+import Counter from '@/app/_components/Counter';
 import Typography from '@/components/components/atoms/typography';
 import { Input } from '@/components/components/molecules/input';
 import { Textarea } from '@/components/components/atoms/textarea';
 import { Button } from '@/components/components/atoms/button';
 import { Chip } from '@/components/components/atoms/chip';
 import { products } from '@/data/products';
-import Header from '../_components/Header';
+import Header from '@/app/_components/Header';
 
 // Define cigarette brands in Persian
 const cigaretteBrands = [

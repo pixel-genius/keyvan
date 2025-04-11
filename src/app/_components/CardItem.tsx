@@ -1,14 +1,19 @@
 import Typography from "@/components/components/atoms/typography";
 import Image from "next/image";
+import Link from "next/link";
 
 const CardItem = ({
   icon,
   label,
+  link,
 }: {
   icon: React.ReactNode | string;
   label: string;
+  link?: string;
 }) => {
   return (
+    
+      <Link href={link || ""}>
     <div className="flex flex-col items-center">
       <div className="bg-card p-4 rounded-xl shadow-lg  flex items-center justify-center">
         {typeof icon === "string" ? (
@@ -24,7 +29,8 @@ const CardItem = ({
       >
         {label}
       </Typography>
-    </div>
+      </div>
+      </Link>
   );
 };
 

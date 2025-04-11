@@ -14,7 +14,7 @@ import { useState, useEffect } from "react";
 import { DayBadge } from "./_components/dayBadge";
 import { FilterChips } from "./_components/filterChips";
 import { PriceItemCard } from "./_components/priceItemCard";
-import BottomSheet from "../_components/BottomSheet";
+import BottomSheet from "@/app/_components/BottomSheet";
 import CustomAreaChartCard from "../productlist/[id]/_components/CustomAreaChartCard";
 
 // Define types
