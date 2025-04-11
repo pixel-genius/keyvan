@@ -15,7 +15,7 @@ import { DayBadge } from "./_components/dayBadge";
 import { FilterChips } from "./_components/filterChips";
 import { PriceItemCard } from "./_components/priceItemCard";
 import BottomSheet from "@/app/_components/BottomSheet";
-import CustomAreaChartCard from "../productlist/[id]/_components/CustomAreaChartCard";
+import CustomAreaChartCard from "@/app/(landing)/products/[id]/_components/CustomAreaChartCard";
 
 // Define types
 type TrendType = "up" | "down";
