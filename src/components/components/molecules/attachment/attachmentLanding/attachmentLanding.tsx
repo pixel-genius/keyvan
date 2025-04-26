@@ -1,4 +1,8 @@
 import { motion } from "framer-motion";
+<<<<<<< HEAD
+=======
+import AttachmentIcon from "@/icons/attachment";
+>>>>>>> 434bbd9c3fb6d3998005f0e1ad88de750ed3e422
 import { Button } from "../../../atoms/button";
 import { AnimatePresence } from "framer-motion";
 import { Card } from "../../../atoms/card";
@@ -6,7 +10,10 @@ import { ScrollArea } from "../../../atoms/scroll-area";
 import { AttachmentProps, useAttachment } from "../useAttachment";
 import { AttachmentItem } from "./attachmentItem/attachmentItem";
 import Typography from "@/components/components/atoms/typography";
+<<<<<<< HEAD
 import { Paperclip } from "lucide-react";
+=======
+>>>>>>> 434bbd9c3fb6d3998005f0e1ad88de750ed3e422
 
 const AttachmentLanding = (props: AttachmentProps) => {
   const {

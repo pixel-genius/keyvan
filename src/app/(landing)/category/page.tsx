@@ -1,4 +1,17 @@
+<<<<<<< HEAD:src/app/category/page.tsx
 "use client";
+=======
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { IconChevronLeft } from '@tabler/icons-react';
+import Typography from '@/components/components/atoms/typography';
+import { products } from '@/data/products';
+import { categories } from '@/data/categories';
+import Image from 'next/image';
+import Header from '@/app/_components/Header';
+>>>>>>> 434bbd9c3fb6d3998005f0e1ad88de750ed3e422:src/app/(landing)/category/page.tsx
 
 import Typography from "@/components/components/atoms/typography";
 import { categories } from "@/data/categories";

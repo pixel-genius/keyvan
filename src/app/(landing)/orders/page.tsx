@@ -4,6 +4,7 @@ import { Button } from "@/components/components/atoms/button";
 import { Card } from "@/components/components/atoms/card";
 import { Chip } from "@/components/components/atoms/chip";
 import { Separator } from "@/components/components/atoms/separator";
+<<<<<<< HEAD:src/app/orders/page.tsx
 import Typography from "@/components/components/atoms/typography";
 import {
   IconChevronDown,
@@ -14,6 +15,9 @@ import {
 } from "@tabler/icons-react";
 import { useState } from "react";
 import Header from "../_components/Header";
+=======
+import Header from '@/app/_components/Header';
+>>>>>>> 434bbd9c3fb6d3998005f0e1ad88de750ed3e422:src/app/(landing)/orders/page.tsx
 
 const OrdersPage = () => {
   const [orderDetailsOpen, setOrderDetailsOpen] = useState(false);

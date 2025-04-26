@@ -1,5 +1,6 @@
 "use client"; // این خط را به بالای فایل اضافه کنید
 
+<<<<<<< HEAD:src/app/products/page.tsx
 import { Button } from "@/components/components/atoms/button";
 import { Textarea } from "@/components/components/atoms/textarea";
 import Typography from "@/components/components/atoms/typography";
@@ -32,6 +33,21 @@ interface SelectedProduct {
   title: string;
   price: string;
 }
+=======
+import { useState, useEffect } from 'react';
+import { IconChevronLeft, IconFilter, IconX } from '@tabler/icons-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import ProductCard from '@/app/_components/ProductCard';
+import BottomSheet from '@/app/_components/BottomSheet';
+import Counter from '@/app/_components/Counter';
+import Typography from '@/components/components/atoms/typography';
+import { Input } from '@/components/components/molecules/input';
+import { Textarea } from '@/components/components/atoms/textarea';
+import { Button } from '@/components/components/atoms/button';
+import { Chip } from '@/components/components/atoms/chip';
+import { products } from '@/data/products';
+import Header from '@/app/_components/Header';
+>>>>>>> 434bbd9c3fb6d3998005f0e1ad88de750ed3e422:src/app/(landing)/products/page.tsx
 
 const cigaretteBrands = [
   "مارلبورو",

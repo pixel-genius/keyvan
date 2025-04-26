@@ -111,10 +111,11 @@ const LandingPage = () => {
       </div>
 
       <div className="flex justify-center gap-8 pt-4 items-center">
-        <CardItem icon="/img/logo-cig.png" label="برند ها" />
+        <CardItem icon="/img/logo-cig.png" label="برند ها" link="/products" />
         <CardItem
           icon={<IconCategory2 size={24} className="text-primary" />}
           label="دسته‌بندی‌ها"
+          link="/category"
         />
         <CardItem
           icon={<IconNews size={24} className="text-primary" />}
@@ -123,6 +124,7 @@ const LandingPage = () => {
         <CardItem
           icon={<IconChartAreaLine size={24} className="text-primary" />}
           label="قیمت روز"
+          link="/price"
         />
       </div>
 

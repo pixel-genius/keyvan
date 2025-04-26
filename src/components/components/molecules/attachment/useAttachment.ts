@@ -1,6 +1,9 @@
 "use client";
 
+<<<<<<< HEAD
 // import { UsePostUploadfile } from "@repo/apis/core/base/upload/post/use-post-uploadfile";
+=======
+>>>>>>> 434bbd9c3fb6d3998005f0e1ad88de750ed3e422
 import { ChangeEvent, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -35,6 +38,7 @@ export interface AttachmentItemProps {
 const useAttachment = ({ allowedTypes, maxSize = 10 }: AttachmentProps) => {
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<FileState[]>([]);
+<<<<<<< HEAD
   // const fileUploadMutation = UsePostUploadfile({
   //   onSuccess: (res) => {
   //     const ids: number[] = [];
@@ -54,6 +58,8 @@ const useAttachment = ({ allowedTypes, maxSize = 10 }: AttachmentProps) => {
   //     onChange(ids);
   //   },
   // });
+=======
+>>>>>>> 434bbd9c3fb6d3998005f0e1ad88de750ed3e422
 
   const allowedTypesText = useMemo(() => {
     let tempTxt: string = "";
@@ -77,7 +83,10 @@ const useAttachment = ({ allowedTypes, maxSize = 10 }: AttachmentProps) => {
         (file) => file[typeof arg === "string" ? "name" : "id"] !== arg
       )
     );
+    // For demo, just pass empty array to onChange
+    onChange([]);
   };
+  
   const getUploadFiles = (
     Files: Array<File>,
     e: ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLDivElement>
@@ -88,7 +97,7 @@ const useAttachment = ({ allowedTypes, maxSize = 10 }: AttachmentProps) => {
         file.type.slice(file.type.lastIndexOf("/") + 1, file.type.length)
       )
     );
-    console.log(allowedTypes);
+    
     if (includesType) {
       const maxSizeBytes = maxSize * 1024 * 1024;
       const validSize = filesInput.every((file) => file.size <= maxSizeBytes);
@@ -114,7 +123,6 @@ const useAttachment = ({ allowedTypes, maxSize = 10 }: AttachmentProps) => {
                 loading: true,
               };
 
-              console.log();
               if (file.type.includes("image"))
                 tempObj.fileUrl = URL.createObjectURL(file);
               prev.push(tempObj);
@@ -122,7 +130,16 @@ const useAttachment = ({ allowedTypes, maxSize = 10 }: AttachmentProps) => {
           });
           return [...prev];
         });
+<<<<<<< HEAD
         // if (filesInput.length) fileUploadMutation.mutate({ file: filesInput });
+=======
+        
+        // For demo, just pass a dummy ID array to onChange
+        if (filesInput.length) {
+          const dummyIds = filesInput.map((_, index) => index + 1);
+          onChange(dummyIds);
+        }
+>>>>>>> 434bbd9c3fb6d3998005f0e1ad88de750ed3e422
       } else {
         e.preventDefault();
         toast.warning(`File size exceeds ${maxSize}MB!`);
@@ -162,4 +179,5 @@ const useAttachment = ({ allowedTypes, maxSize = 10 }: AttachmentProps) => {
     allowedTypesText,
   };
 };
+
 export { useAttachment };

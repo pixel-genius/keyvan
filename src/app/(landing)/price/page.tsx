@@ -12,6 +12,11 @@ import CustomAreaChartCard from "../productlist/[id]/_components/CustomAreaChart
 import { DayBadge } from "./_components/dayBadge";
 import { FilterChips } from "./_components/filterChips";
 import { PriceItemCard } from "./_components/priceItemCard";
+<<<<<<< HEAD:src/app/price/page.tsx
+=======
+import BottomSheet from "@/app/_components/BottomSheet";
+import CustomAreaChartCard from "@/app/(landing)/products/[id]/_components/CustomAreaChartCard";
+>>>>>>> 434bbd9c3fb6d3998005f0e1ad88de750ed3e422:src/app/(landing)/price/page.tsx
 
 // Define types
 type TrendType = "up" | "down";
