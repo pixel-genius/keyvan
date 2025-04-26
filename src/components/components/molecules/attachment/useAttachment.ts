@@ -1,6 +1,6 @@
 "use client";
 
-import { UsePostUploadfile } from "@repo/apis/core/base/upload/post/use-post-uploadfile";
+// import { UsePostUploadfile } from "@repo/apis/core/base/upload/post/use-post-uploadfile";
 import { ChangeEvent, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -32,34 +32,28 @@ export interface AttachmentItemProps {
   handleRemove: (arg: string | number) => void;
 }
 
-const useAttachment = ({
-  allowedTypes,
-  maxSize = 10,
-  fileCategory,
-  canDeleteFile,
-  onChange,
-}: AttachmentProps) => {
+const useAttachment = ({ allowedTypes, maxSize = 10 }: AttachmentProps) => {
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<FileState[]>([]);
-  const fileUploadMutation = UsePostUploadfile({
-    onSuccess: (res) => {
-      const ids: number[] = [];
-      const data = res.data;
-      if (data.data.length) {
-        data.data.forEach((item) => {
-          ids.push(item.id);
-        });
-        setFiles((prev) =>
-          prev.map((file, index: number) => {
-            delete file.loading;
-            ids[index] ? (file.id = ids[index]) : null;
-            return file;
-          }),
-        );
-      }
-      onChange(ids);
-    },
-  });
+  // const fileUploadMutation = UsePostUploadfile({
+  //   onSuccess: (res) => {
+  //     const ids: number[] = [];
+  //     const data = res.data;
+  //     if (data.data.length) {
+  //       data.data.forEach((item) => {
+  //         ids.push(item.id);
+  //       });
+  //       setFiles((prev) =>
+  //         prev.map((file, index: number) => {
+  //           delete file.loading;
+  //           ids[index] ? (file.id = ids[index]) : null;
+  //           return file;
+  //         })
+  //       );
+  //     }
+  //     onChange(ids);
+  //   },
+  // });
 
   const allowedTypesText = useMemo(() => {
     let tempTxt: string = "";
@@ -70,8 +64,8 @@ const useAttachment = ({
           (index === allowedTypes.length - 2
             ? " or "
             : index === allowedTypes.length - 1
-              ? ""
-              : ", ");
+            ? ""
+            : ", ");
       });
     }
     return tempTxt;
@@ -80,19 +74,19 @@ const useAttachment = ({
   const handleRemove = (arg: string | number) => {
     setFiles((prev) =>
       prev.filter(
-        (file) => file[typeof arg === "string" ? "name" : "id"] !== arg,
-      ),
+        (file) => file[typeof arg === "string" ? "name" : "id"] !== arg
+      )
     );
   };
   const getUploadFiles = (
     Files: Array<File>,
-    e: ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLDivElement>,
+    e: ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLDivElement>
   ) => {
     let filesInput = Files;
     const includesType = filesInput.every((file) =>
       allowedTypes?.includes(
-        file.type.slice(file.type.lastIndexOf("/") + 1, file.type.length),
-      ),
+        file.type.slice(file.type.lastIndexOf("/") + 1, file.type.length)
+      )
     );
     console.log(allowedTypes);
     if (includesType) {
@@ -103,7 +97,7 @@ const useAttachment = ({
           if (filesInput.some((filesInput) => filesInput.name === file.name)) {
             toast.warning(`Some Files already exists!`);
             filesInput = filesInput.filter(
-              (fileInput) => fileInput.name !== file.name,
+              (fileInput) => fileInput.name !== file.name
             );
           }
         });
@@ -115,7 +109,7 @@ const useAttachment = ({
                 size: file.size,
                 type: file.type.slice(
                   file.type.lastIndexOf("/") + 1,
-                  file.type.length,
+                  file.type.length
                 ),
                 loading: true,
               };
@@ -128,7 +122,7 @@ const useAttachment = ({
           });
           return [...prev];
         });
-        if (filesInput.length) fileUploadMutation.mutate({ file: filesInput });
+        // if (filesInput.length) fileUploadMutation.mutate({ file: filesInput });
       } else {
         e.preventDefault();
         toast.warning(`File size exceeds ${maxSize}MB!`);

@@ -2,11 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import { IconShoppingCart, IconMenu2 } from "@tabler/icons-react";
-import LogoIcon from "../icons/logo";
 import Footer from "./_components/Footer";
 import Navbar from "./_components/Navbar";
-
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,13 +28,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiasedv`}>
-
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiasedv`}
+      >
         {/* Navbar */}
-        <Navbar/> 
+        <Navbar />
 
         <main className="flex-grow p-4 rounded-4xl mt-20 pb-40">
           {children}
+          <Toaster />
         </main>
 
         {/* اضافه کردن فوتر */}

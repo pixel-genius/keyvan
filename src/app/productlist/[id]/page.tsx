@@ -4,7 +4,7 @@ import { ChartConfig } from "@/components/components/atoms/chart";
 import Typography from "@/components/components/atoms/typography";
 import { IconChevronLeft } from "@tabler/icons-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { products } from "@/data/products";
 import BoxPacketInfo from "./_components/BoxPacketInfo";
 import CustomAreaChartCard from "./_components/CustomAreaChartCard";
@@ -25,9 +25,10 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function ProductDetail({ params }: { params: { id: string } }) {
+export default function ProductDetail() {
   const router = useRouter();
-  const product = products.find((p) => p.id === params.id);
+  const { id } = useParams<{ id: string }>();
+  const product = products.find((p) => p.id === id);
 
   if (!product) {
     return <div>محصول یافت نشد</div>;
@@ -36,14 +37,12 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
   return (
     <div>
       <div className="flex gap-0.5 items-center pb-3.5">
-        <IconChevronLeft 
-          size={24} 
-          className="cursor-pointer" 
+        <IconChevronLeft
+          size={24}
+          className="cursor-pointer"
           onClick={() => router.back()}
         />
-        <Typography variant={"paragraph/md"}>
-          بازگشت
-        </Typography>
+        <Typography variant={"paragraph/md"}>بازگشت</Typography>
       </div>
       <div>
         <div className="flex justify-center items-center bg-white rounded-lg mb-4">

@@ -1,20 +1,38 @@
-'use client';
+"use client"; // این خط را به بالای فایل اضافه کنید
 
-import { useState, useEffect } from 'react';
-import { IconChevronLeft, IconFilter, IconX } from '@tabler/icons-react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import ProductCard from '../_components/ProductCard';
-import BottomSheet from '../_components/BottomSheet';
-import Counter from '../_components/Counter';
-import Typography from '@/components/components/atoms/typography';
-import { Input } from '@/components/components/molecules/input';
-import { Textarea } from '@/components/components/atoms/textarea';
-import { Button } from '@/components/components/atoms/button';
-import { Chip } from '@/components/components/atoms/chip';
-import { products } from '@/data/products';
-import Header from '../_components/Header';
+import { Button } from "@/components/components/atoms/button";
+import { Textarea } from "@/components/components/atoms/textarea";
+import Typography from "@/components/components/atoms/typography";
+import { Input } from "@/components/components/molecules/input";
+import { IconFilter } from "@tabler/icons-react";
+import dynamic from "next/dynamic";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-// Define cigarette brands in Persian
+// کامپوننت‌ها به صورت دینامیک وارد می‌شوند تا مشکلات احتمالی SSR رفع شوند
+const BottomSheet = dynamic(() => import("../_components/BottomSheet"), {
+  ssr: false,
+});
+const Counter = dynamic(() => import("../_components/Counter"), { ssr: false });
+const Header = dynamic(() => import("../_components/Header"), { ssr: false });
+const ProductCard = dynamic(() => import("../_components/ProductCard"), {
+  ssr: false,
+});
+
+interface Product {
+  id: number;
+  title: string;
+  subtitle: string;
+  price: string;
+  category: string;
+  imageUrl: string;
+}
+
+interface SelectedProduct {
+  title: string;
+  price: string;
+}
+
 const cigaretteBrands = [
   "مارلبورو",
   "وینستون",
@@ -23,63 +41,93 @@ const cigaretteBrands = [
   "پارلیامنت",
   "دانهیل",
   "لاکی استرایک",
-  "پال مال"
+  "پال مال",
 ];
 
-const ProductsPage = () => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const categoryFilter = searchParams.get('category');
-  
+// تابع برای دریافت محصولات
+const fetchProducts = async (): Promise<Product[]> => {
+  return [
+    {
+      id: 1,
+      title: "مارلبورو",
+      subtitle: "Subtitle 1",
+      price: "100",
+      category: "Category 1",
+      imageUrl: "/path/to/image1.jpg",
+    },
+    {
+      id: 2,
+      title: "وینستون",
+      subtitle: "Subtitle 2",
+      price: "200",
+      category: "Category 2",
+      imageUrl: "/path/to/image2.jpg",
+    },
+  ];
+};
+
+export default function ProductsPage() {
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<{ title: string; price: string } | null>(null);
-  const [filteredProducts, setFilteredProducts] = useState(products);
-  const [searchQuery, setSearchQuery] = useState('');
-  
-  // Filter states
+  const [selectedProduct, setSelectedProduct] =
+    useState<SelectedProduct | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  
-  // Get unique categories from products
-  const categories = Array.from(new Set(products.map(product => product.category)));
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categoryFilter, setCategoryFilter] = useState<string | undefined>(
+    undefined
+  );
+
+  // استفاده از usePathname و useSearchParams برای مدیریت مسیر
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Filter products based on category, search query, and selected filters
-    let result = products;
-    
+    setCategoryFilter(searchParams.get("category") || undefined);
+  }, [searchParams]);
+
+  // دریافت داده‌ها در useEffect (فقط در سمت کاربر)
+  useEffect(() => {
+    const fetchData = async () => {
+      const productsData = await fetchProducts();
+      setProducts(productsData);
+    };
+    fetchData();
+  }, []);
+
+  const filteredProducts = products.filter((product) => {
+    let isValid = true;
+
     if (categoryFilter) {
-      result = result.filter(product => product.category === categoryFilter);
+      isValid = isValid && product.category === categoryFilter;
     }
-    
+
     if (searchQuery) {
-      result = result.filter(product => 
-        product.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        product.subtitle.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      isValid =
+        isValid &&
+        (product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.subtitle.toLowerCase().includes(searchQuery.toLowerCase()));
     }
-    
-    // Apply category filters
+
     if (selectedCategories.length > 0) {
-      result = result.filter(product => selectedCategories.includes(product.category));
+      isValid = isValid && selectedCategories.includes(product.category);
     }
-    
-    // Apply brand filters
+
     if (selectedBrands.length > 0) {
-      result = result.filter(product => {
-        // Check if any of the selected brands is in the product title
-        return selectedBrands.some(brand => product.title.includes(brand));
-      });
+      isValid =
+        isValid &&
+        selectedBrands.some((_brand) => product.title.includes(_brand));
     }
-    
-    setFilteredProducts(result);
-  }, [categoryFilter, searchQuery, selectedCategories, selectedBrands]);
+
+    return isValid;
+  });
 
   const handleBackClick = () => {
-    router.back();
+    // Simulate a back navigation
+    window.history.back();
   };
 
-  const handleAddToCart = (product: { title: string; price: string }) => {
+  const handleAddToCart = (product: SelectedProduct) => {
     setSelectedProduct(product);
     setIsBottomSheetOpen(true);
   };
@@ -97,23 +145,17 @@ const ProductsPage = () => {
     setIsFilterSheetOpen(true);
   };
 
-  const handleCloseFilterSheet = () => {
-    setIsFilterSheetOpen(false);
-  };
-
   const toggleCategory = (category: string) => {
-    setSelectedCategories(prev => 
-      prev.includes(category) 
-        ? prev.filter(c => c !== category) 
+    setSelectedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
         : [...prev, category]
     );
   };
 
   const toggleBrand = (brand: string) => {
-    setSelectedBrands(prev => 
-      prev.includes(brand) 
-        ? prev.filter(b => b !== brand) 
-        : [...prev, brand]
+    setSelectedBrands((prev) =>
+      prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand]
     );
   };
 
@@ -126,40 +168,86 @@ const ProductsPage = () => {
     setSelectedBrands([]);
   };
 
+  const categories = Array.from(
+    new Set(products.map((product) => product.category))
+  );
+
   return (
-    <div className=" mx-auto min-h-full">
-      <Header title={categoryFilter ? categoryFilter : 'محصولات'} onBackClick={handleBackClick} />
-      
-      <div className="flex justify-between items-center gap-2 ">
-        <Input 
-          placeholder="جستجو" 
-          className="pb-1  text-sm" 
-          dir='rtl'
+    <div className="mx-auto min-h-full">
+      <Header
+        title={categoryFilter ? categoryFilter : "محصولات"}
+        onBackClick={handleBackClick}
+      />
+
+      <div className="flex justify-between items-center gap-2">
+        <Input
+          placeholder="جستجو"
+          className="pb-1 text-sm"
+          dir="rtl"
           value={searchQuery}
           onChange={handleSearchChange}
         />
-        <div className="flex justify-center items-center">
-          <div 
-            className='border-2 border-zinc-700 rounded p-2 cursor-pointer h-[50px] w-[50px] flex items-center justify-center'
-            onClick={handleFilterClick}
-          >
-            <IconFilter size="24" stroke={1.5} />
-          </div>
+        <div
+          className="border-2 border-zinc-700 rounded p-2 cursor-pointer h-[50px] w-[50px] flex items-center justify-center"
+          onClick={handleFilterClick}
+        >
+          <IconFilter size="24" stroke={1.5} />
         </div>
       </div>
 
-      <div className='flex flex-col gap-2 mt-4'>
+      {isFilterSheetOpen && (
+        <div className="filter-sheet p-4 bg-white rounded-lg shadow-md">
+          <div className="categories">
+            <Typography variant="label/md" weight="bold">
+              دسته‌بندی‌ها
+            </Typography>
+            {categories.map((category) => (
+              <Button
+                key={category}
+                onClick={() => toggleCategory(category)}
+                className={
+                  selectedCategories.includes(category) ? "active" : ""
+                }
+              >
+                {category}
+              </Button>
+            ))}
+          </div>
+          <div className="brands mt-4">
+            <Typography variant="label/md" weight="bold">
+              برندها
+            </Typography>
+            {cigaretteBrands.map((brand) => (
+              <Button
+                key={brand}
+                onClick={() => toggleBrand(brand)}
+                className={selectedBrands.includes(brand) ? "active" : ""}
+              >
+                {brand}
+              </Button>
+            ))}
+          </div>
+          <div className="actions mt-4">
+            <Button onClick={resetFilters}>بازنشانی</Button>
+            <Button onClick={applyFilters}>اعمال فیلترها</Button>
+          </div>
+        </div>
+      )}
+
+      <div className="flex flex-col gap-2 mt-4">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <ProductCard
-              category={product.category}
               key={product.id}
-              id={product.id}
+              id={product.id.toString()}
               imageUrl={product.imageUrl}
               title={product.title}
               subtitle={product.subtitle}
               price={product.price}
-              onAddToCart={() => handleAddToCart({ title: product.title, price: product.price })}
+              category={product.category}
+              onAddToCart={() =>
+                handleAddToCart({ title: product.title, price: product.price })
+              }
             />
           ))
         ) : (
@@ -171,88 +259,36 @@ const ProductsPage = () => {
         )}
       </div>
 
-      {/* Add to Cart Bottom Sheet */}
       <BottomSheet isOpen={isBottomSheetOpen} onClose={handleCloseBottomSheet}>
         {selectedProduct && (
-          <div className='pb-15'>
-            <hr className='w-1/2 mx-auto border-2 rounded-full mb-4' />
-            <Typography variant="label/lg" weight="semi-bold" className="mb-4 text-center" >افزودن محصول به سبد </Typography>
-
-            <Typography variant="label/sm" weight="bold" className="mb-4 text-center" >{selectedProduct.title}</Typography>
-          
+          <div className="pb-15">
+            <hr className="w-1/2 mx-auto border-2 rounded-full mb-4" />
+            <Typography
+              variant="label/lg"
+              weight="semi-bold"
+              className="mb-4 text-center"
+            >
+              افزودن محصول به سبد
+            </Typography>
+            <Typography
+              variant="label/sm"
+              weight="bold"
+              className="mb-4 text-center"
+            >
+              {selectedProduct.title}
+            </Typography>
             <Counter />
             <Textarea placeholder="توضیحات (اختیاری)" className="mb-4" />
-            <Button className="w-full" variant="primary" onClick={handleCloseBottomSheet}>
+            <Button
+              className="w-full"
+              variant="primary"
+              onClick={handleCloseBottomSheet}
+            >
               افزودن به سبد خرید
             </Button>
           </div>
         )}
       </BottomSheet>
-
-      {/* Filter Bottom Sheet */}
-      <BottomSheet isOpen={isFilterSheetOpen} onClose={handleCloseFilterSheet}>
-        <div className='pb-15'>
-          <div className="flex justify-between items-center py-8">
-            <IconX 
-              size={24} 
-              className="cursor-pointer" 
-              onClick={handleCloseFilterSheet} 
-            />
-            <Typography variant="heading/sm" weight="semi-bold">فیلترها</Typography>
-          </div>
-          
-          <div className="mb-2">
-            <Typography variant="label/lg" weight="medium" className="pt-4 text-right">دسته‌بندی</Typography>
-            <div className="flex justify-end py-4 flex-wrap gap-2">
-              {categories.map((category) => (
-                <Chip 
-                  key={category}
-                  variant={selectedCategories.includes(category) ? "primary" : "secendery"}
-                  size="sm"
-                  onClick={() => toggleCategory(category)}
-                >
-                  {category}
-                </Chip>
-              ))}
-            </div>
-          </div>
-          
-          <div className="mb-6">
-            <Typography variant="label/lg" weight="medium" className="py-4 text-right">برند</Typography>
-            <div className="flex justify-end flex-wrap gap-2">
-              {cigaretteBrands.map((brand) => (
-                <Chip 
-                  key={brand}
-                  variant={selectedBrands.includes(brand) ? "primary" : "secendery"}
-                  size="sm"
-                  onClick={() => toggleBrand(brand)}
-                >
-                  {brand}
-                </Chip>
-              ))}
-            </div>
-          </div>
-          
-          <div className="flex gap-2">
-            <Button 
-              className="flex-1" 
-              variant="secondary" 
-              onClick={resetFilters}
-            >
-              پاک کردن فیلترها
-            </Button>
-            <Button 
-              className="flex-1" 
-              variant="primary" 
-              onClick={applyFilters}
-            >
-              اعمال فیلترها
-            </Button>
-          </div>
-        </div>
-      </BottomSheet>
     </div>
   );
-};
-
-export default ProductsPage;
+}

@@ -1,6 +1,6 @@
-import { IconTrash, IconMinus, IconPlus } from "@tabler/icons-react";
-import Image from "next/image";
 import Typography from "@/components/components/atoms/typography";
+import { IconTrash } from "@tabler/icons-react";
+import Image from "next/image";
 
 type CartItemCardProps = {
   id: string;
@@ -12,39 +12,45 @@ type CartItemCardProps = {
   onDecreaseQuantity: (id: string) => void;
 };
 
-const CartItemCard = ({ 
-  id, 
-  name, 
+const CartItemCard = ({
+  id,
+  name,
   quantity,
   image,
-  onRemove, 
-  onIncreaseQuantity,
-  onDecreaseQuantity
+  onRemove,
 }: CartItemCardProps) => {
   return (
     <div className="flex items-center justify-between gap-2 bg-card w-full rounded-lg p-2 mb-4">
-      <button 
+      <button
         onClick={() => onRemove(id)}
         className="p-1 rounded-full hover:bg-gray-100 transition-colors"
       >
         <IconTrash size={18} color="#ef4444" />
       </button>
-      
+
       <div className="flex items-center gap-4 ml-auto">
         <div className="flex flex-col items-end">
-          <Typography variant="label/sm" weight="normal" className="text-right mb-1">
+          <Typography
+            variant="label/sm"
+            weight="normal"
+            className="text-right mb-1"
+          >
             {name} x {quantity}
           </Typography>
-          <Typography variant="label/xs" weight="normal" className="text-right text-gray-500">
+          <Typography
+            variant="label/xs"
+            weight="normal"
+            className="text-right text-gray-500"
+          >
             مبلغ : ۳۲۵,۰۰۰ تومان
           </Typography>
         </div>
         <div className="h-[54px] w-[54px] rounded-lg overflow-hidden">
-          <Image 
-            src={image} 
-            alt={name} 
-            width={54} 
-            height={54} 
+          <Image
+            src={image}
+            alt={name}
+            width={54}
+            height={54}
             className="h-full w-full object-cover rounded-lg"
           />
         </div>
@@ -53,4 +59,4 @@ const CartItemCard = ({
   );
 };
 
-export default CartItemCard; 
+export default CartItemCard;

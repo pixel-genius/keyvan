@@ -2,8 +2,7 @@
 
 import React, { useCallback, useEffect, useRef } from "react";
 import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
-
-import { cn } from "@repo/ui/lib/utils";
+import { cn } from "@/lib/utils";
 
 export interface MagicCardProps extends React.HTMLAttributes<HTMLDivElement> {
   gradientSize?: number;
@@ -32,7 +31,7 @@ export function MagicCard({
         mouseY.set(clientY - top);
       }
     },
-    [mouseX, mouseY],
+    [mouseX, mouseY]
   );
 
   const handleMouseOut = useCallback(
@@ -43,7 +42,7 @@ export function MagicCard({
         mouseY.set(-gradientSize);
       }
     },
-    [mouseX, mouseY, gradientSize],
+    [mouseX, mouseY, gradientSize]
   );
 
   const handleMouseEnter = useCallback(() => {
@@ -74,7 +73,7 @@ export function MagicCard({
       ref={cardRef}
       className={cn(
         "group relative flex size-full overflow-hidden rounded-xl bg-neutral-100 dark:bg-neutral-900 border text-black dark:text-white",
-        className,
+        className
       )}
     >
       <div className="relative z-10">{children}</div>

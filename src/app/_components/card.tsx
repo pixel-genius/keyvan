@@ -3,12 +3,24 @@ import Tomanicon from "../../icons/toman";
 import { Badge } from "@/components/components/atoms/badge";
 import Typography from "@/components/components/atoms/typography";
 
-const ProductCard = ({ product }: { product: any }) => {
+interface Product {
+  name: string;
+  image: string;
+  price: string | number;
+  category: string;
+}
+
+const ProductCard = ({ product }: { product: Product }) => {
   // اطمینان از این که قیمت عددی است
-  const price = parseFloat(product.price);
+  const price =
+    typeof product.price === "string"
+      ? parseFloat(product.price)
+      : product.price;
 
   // فرمت کردن قیمت به تومان
-  const formattedPrice = price ? new Intl.NumberFormat('fa-IR').format(price) : "0";
+  const formattedPrice = price
+    ? new Intl.NumberFormat("fa-IR").format(price)
+    : "0";
 
   return (
     <div className="bg-maincard p-4 rounded-xl pb-1.5">

@@ -1,15 +1,16 @@
-import AttachmentIcon2 from "@repo/icons/attachment2";
 import { AnimatePresence, motion } from "framer-motion";
 import { Card } from "../../../atoms/card";
 import { ScrollArea } from "../../../atoms/scroll-area";
 import { AttachmentProps, useAttachment } from "../useAttachment";
 import { AttachmentItem } from "./attachmentItem/attachmentItem";
-import Typography from "@repo/ui/components/typography";
+import Typography from "@/components/components/atoms/typography";
+import { Paperclip } from "lucide-react";
 
 const AttachmentAdmin = (props: AttachmentProps) => {
-  const { title, multiple = false, maxSize = 10, allowedTypes } = props;
+  const { multiple = false, allowedTypes } = props; // Removed 'title' and 'maxSize' since they are unused.
   const { inputFileRef, handleChange, handleRemove, files, allowedTypesText } =
     useAttachment(props);
+
   return (
     <>
       <Card className="bg-card p-4 border-0 mb-3">
@@ -26,7 +27,7 @@ const AttachmentAdmin = (props: AttachmentProps) => {
                 : ""
             }
           />
-          <AttachmentIcon2 />
+          <Paperclip />
           <div className="flex flex-wrap justify-center w-full gap-2 flex-column">
             <Typography className="text-foreground">
               Drag & drop image to upload, or
@@ -59,15 +60,12 @@ const AttachmentAdmin = (props: AttachmentProps) => {
               <ScrollArea>
                 {files.map((file) => (
                   <motion.div
+                    key={`${file.name}-${file.size}`} // Added unique key.
                     exit={{ opacity: 0, scale: 1 }}
                     initial={{ opacity: 0, scale: 0.7 }}
                     animate={{ opacity: 1, scale: 1 }}
                   >
-                    <AttachmentItem
-                      key={file.name + file.size}
-                      file={file}
-                      handleRemove={handleRemove}
-                    />
+                    <AttachmentItem file={file} handleRemove={handleRemove} />
                   </motion.div>
                 ))}
               </ScrollArea>
@@ -78,4 +76,5 @@ const AttachmentAdmin = (props: AttachmentProps) => {
     </>
   );
 };
+
 export { AttachmentAdmin };

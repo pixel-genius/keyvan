@@ -1,7 +1,7 @@
 import { IconProps } from "@/types/icon-types";
 
 const LogoIcon = (props: IconProps) => {
-  const { size = 24, color = "currentColor", ...resProps } = props;
+  const { size = 24, ...resProps } = props;
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -9,6 +9,7 @@ const LogoIcon = (props: IconProps) => {
       height={size}
       viewBox="0 0 34 34"
       fill="none"
+      {...resProps}
     >
       <path
         fillRule="evenodd"

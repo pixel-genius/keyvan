@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
-import { IconEye, IconShoppingCartPlus } from "@tabler/icons-react";
 import { Card, CardContent } from "@/components/components/atoms/card";
 import Typography from "@/components/components/atoms/typography";
+import { IconEye, IconShoppingCartPlus } from "@tabler/icons-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface ProductCardProps {
@@ -20,7 +20,6 @@ export default function ProductCard({
   id = "1",
   imageUrl,
   title,
-  subtitle,
   price,
   category = "سیگار",
   onAddToCart,
@@ -44,7 +43,6 @@ export default function ProductCard({
           </Typography>
 
           <div className="flex items-center mt-2">
-
             {/* Category  */}
             <span className="bg-primary text-white text-xs px-2 py-1 rounded-lg">
               {category}
@@ -57,7 +55,7 @@ export default function ProductCard({
           </Typography>
 
           <div className="flex space-x-2 mt-2">
-            <button 
+            <button
               className="p-2 bg-gray-700 rounded-full hover:bg-gray-600"
               onClick={handleViewProduct}
             >

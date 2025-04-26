@@ -1,21 +1,17 @@
 "use client";
 import Typography from "@/components/components/atoms/typography";
 import { Input } from "@/components/components/molecules/input";
-import Tomanicon from "@/icons/toman";
 import {
   IconChevronLeft,
   IconChevronRight,
   IconSearch,
-  IconTrendingDown,
-  IconTrendingUp,
-  IconX,
 } from "@tabler/icons-react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import BottomSheet from "../_components/BottomSheet";
+import CustomAreaChartCard from "../productlist/[id]/_components/CustomAreaChartCard";
 import { DayBadge } from "./_components/dayBadge";
 import { FilterChips } from "./_components/filterChips";
 import { PriceItemCard } from "./_components/priceItemCard";
-import BottomSheet from "../_components/BottomSheet";
-import CustomAreaChartCard from "../productlist/[id]/_components/CustomAreaChartCard";
 
 // Define types
 type TrendType = "up" | "down";
@@ -54,30 +50,88 @@ const daysData: DayData[] = [
 
 // Sample price items data with categories
 const priceItems: PriceItem[] = [
-  { title: "کمل کامپکت نقره ای کویین", price: "۳٬۵۰۰٬۰۰۰", trend: "up", category: "سیگار" },
-  { title: "کمل کامپکت آبی کویین", price: "۳٬۵۰۰٬۰۰۰", trend: "down", category: "سیگار" },
-  { title: "کمل نقره ای کینگ", price: "۳٬۵۰۰٬۰۰۰", trend: "up", category: "سیگار" },
-  { title: "کمل مشکی کینگ جدید", price: "۳٬۵۰۰٬۰۰۰", trend: "up", category: "سیگار" },
-  { title: "تنباکو دو سیب معمولی", price: "۳٬۱۰۰٬۰۰۰", trend: "down", category: "تنباکو" },
-  { title: "تنباکو نعنا فرانسوی", price: "۳٬۳۰۰٬۰۰۰", trend: "up", category: "تنباکو" },
-  { title: "سی‌تی‌آی بلو", price: "۴٬۵۰۰٬۰۰۰", trend: "down", category: "سی‌تی‌آی" },
-  { title: "سی‌تی‌آی قرمز", price: "۴٬۶۰۰٬۰۰۰", trend: "up", category: "سی‌تی‌آی" },
-  { title: "بی‌تی‌آی کلاسیک", price: "۴٬۲۰۰٬۰۰۰", trend: "down", category: "بی‌تی‌آی" },
-  { title: "بی‌تی‌آی مینت", price: "۴٬۳۰۰٬۰۰۰", trend: "up", category: "بی‌تی‌آی" },
+  {
+    title: "کمل کامپکت نقره ای کویین",
+    price: "۳٬۵۰۰٬۰۰۰",
+    trend: "up",
+    category: "سیگار",
+  },
+  {
+    title: "کمل کامپکت آبی کویین",
+    price: "۳٬۵۰۰٬۰۰۰",
+    trend: "down",
+    category: "سیگار",
+  },
+  {
+    title: "کمل نقره ای کینگ",
+    price: "۳٬۵۰۰٬۰۰۰",
+    trend: "up",
+    category: "سیگار",
+  },
+  {
+    title: "کمل مشکی کینگ جدید",
+    price: "۳٬۵۰۰٬۰۰۰",
+    trend: "up",
+    category: "سیگار",
+  },
+  {
+    title: "تنباکو دو سیب معمولی",
+    price: "۳٬۱۰۰٬۰۰۰",
+    trend: "down",
+    category: "تنباکو",
+  },
+  {
+    title: "تنباکو نعنا فرانسوی",
+    price: "۳٬۳۰۰٬۰۰۰",
+    trend: "up",
+    category: "تنباکو",
+  },
+  {
+    title: "سی‌تی‌آی بلو",
+    price: "۴٬۵۰۰٬۰۰۰",
+    trend: "down",
+    category: "سی‌تی‌آی",
+  },
+  {
+    title: "سی‌تی‌آی قرمز",
+    price: "۴٬۶۰۰٬۰۰۰",
+    trend: "up",
+    category: "سی‌تی‌آی",
+  },
+  {
+    title: "بی‌تی‌آی کلاسیک",
+    price: "۴٬۲۰۰٬۰۰۰",
+    trend: "down",
+    category: "بی‌تی‌آی",
+  },
+  {
+    title: "بی‌تی‌آی مینت",
+    price: "۴٬۳۰۰٬۰۰۰",
+    trend: "up",
+    category: "بی‌تی‌آی",
+  },
 ];
 
 // Generate sample chart data based on Persian months
 const generateChartData = () => {
-  const persianMonths = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور"];
-  
+  const persianMonths = [
+    "فروردین",
+    "اردیبهشت",
+    "خرداد",
+    "تیر",
+    "مرداد",
+    "شهریور",
+  ];
+
   return persianMonths.map((month, index) => {
     // Generate random price values between 3,000,000 and 4,500,000
     const baseValue = 3000000;
     const randomValue = Math.floor(Math.random() * 1500000);
-    
+
     return {
       month,
       desktop: baseValue + randomValue,
+      index, // Include the index in the resulting object
     };
   });
 };
@@ -98,26 +152,26 @@ const Pricepage = () => {
   const [chartData, setChartData] = useState(generateChartData());
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredItems, setFilteredItems] = useState<PriceItem[]>(priceItems);
-  
+
   const filters = ["همه", "سیگار", "تنباکو", "سی‌تی‌آی", "بی‌تی‌آی"];
 
   // Filter items whenever search query or active filter changes
   useEffect(() => {
     let result = priceItems;
-    
+
     // Apply category filter
     if (activeFilter !== "همه") {
-      result = result.filter(item => item.category === activeFilter);
+      result = result.filter((item) => item.category === activeFilter);
     }
-    
+
     // Apply search filter
     if (searchQuery.trim()) {
       const query = searchQuery.trim().toLowerCase();
-      result = result.filter(item => 
+      result = result.filter((item) =>
         item.title.toLowerCase().includes(query)
       );
     }
-    
+
     setFilteredItems(result);
   }, [searchQuery, activeFilter]);
 
@@ -161,17 +215,25 @@ const Pricepage = () => {
           </Typography>
         </div>
         <div className="flex flex-row gap-0.5">
-          <button 
-            onClick={goToPreviousDay} 
+          <button
+            onClick={goToPreviousDay}
             disabled={currentDayIndex === 0}
-            className={currentDayIndex === 0 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+            className={
+              currentDayIndex === 0
+                ? "opacity-50 cursor-not-allowed"
+                : "cursor-pointer"
+            }
           >
             <IconChevronRight size={24} />
           </button>
-          <button 
-            onClick={goToNextDay} 
+          <button
+            onClick={goToNextDay}
             disabled={currentDayIndex >= daysData.length - 7}
-            className={currentDayIndex >= daysData.length - 7 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+            className={
+              currentDayIndex >= daysData.length - 7
+                ? "opacity-50 cursor-not-allowed"
+                : "cursor-pointer"
+            }
           >
             <IconChevronLeft size={24} />
           </button>
@@ -179,10 +241,10 @@ const Pricepage = () => {
       </div>
       <div className="flex flex-row gap-1 pb-3.5 overflow-x-auto">
         {visibleDays.map((day, index) => (
-          <DayBadge 
-            key={index} 
-            dayName={day.name} 
-            dayNumber={day.number} 
+          <DayBadge
+            key={index}
+            dayName={day.name}
+            dayNumber={day.number}
             active={index === 0}
           />
         ))}
@@ -190,8 +252,8 @@ const Pricepage = () => {
 
       {/* Search Input */}
       <div className="pb-3.5 relative">
-        <Input 
-          placeholder="جستجو کنید ...." 
+        <Input
+          placeholder="جستجو کنید ...."
           value={searchQuery}
           onChange={handleSearch}
         />
@@ -212,14 +274,22 @@ const Pricepage = () => {
       {/* Results count */}
       {filteredItems.length === 0 ? (
         <div className="text-center py-8">
-          <Typography variant="label/md" weight="medium" className="text-gray-400">
+          <Typography
+            variant="label/md"
+            weight="medium"
+            className="text-gray-400"
+          >
             هیچ محصولی یافت نشد
           </Typography>
         </div>
       ) : (
         <div className="flex flex-col gap-4">
           {filteredItems.map((item, index) => (
-            <div key={index} onClick={() => handleItemClick(item)} className="cursor-pointer">
+            <div
+              key={index}
+              onClick={() => handleItemClick(item)}
+              className="cursor-pointer"
+            >
               <PriceItemCard
                 title={item.title}
                 price={item.price}
@@ -233,14 +303,21 @@ const Pricepage = () => {
       {/* Chart Bottom Sheet */}
       <BottomSheet isOpen={showChart} onClose={closeChart}>
         <div className="pt-6 px-2">
-          <Typography variant="label/lg" weight="bold" className="mb-4 text-center">
+          <Typography
+            variant="label/lg"
+            weight="bold"
+            className="mb-4 text-center"
+          >
             نمودار {selectedItem?.title}
           </Typography>
-          
+
           {/* Chart using CustomAreaChartCard */}
           <div className="mt-4 mb-8">
-            <CustomAreaChartCard chartConfig={chartConfig} chartData={chartData} />
-            
+            <CustomAreaChartCard
+              chartConfig={chartConfig}
+              chartData={chartData}
+            />
+
             {/* Date indicator */}
             <div className="mt-2 text-center">
               <div className="text-xs text-gray-400">

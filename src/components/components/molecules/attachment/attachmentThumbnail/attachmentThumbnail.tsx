@@ -1,13 +1,11 @@
-import AttachmentIcon2 from "@repo/icons/attachment2";
-import Avatar from "@repo/icons/avatar";
-import Refresh from "@repo/icons/refresh";
 import { AnimatePresence, motion } from "framer-motion";
-import { Eye, Heart, Loader } from "lucide-react";
+import { Eye, Heart, Loader, Paperclip, RotateCcwIcon } from "lucide-react";
 import Image from "next/image";
 import { AttachmentProps, useAttachment } from "../useAttachment";
 import { useState } from "react";
 import { Card } from "../../../atoms/card";
-import Typography from "@repo/ui/components/typography";
+import Typography from "@/components/components/atoms/typography";
+import { Avatar } from "@/components/components/atoms/avatar";
 
 export interface AttachmentThumbnailProps extends AttachmentProps {
   avatar?: string;
@@ -102,7 +100,7 @@ const AttachmentThumbnail = (
                       ease: "circIn",
                     }}
                   >
-                    <Refresh />
+                    <RotateCcwIcon />
                   </motion.span>
                 </motion.div>
               ) : null}
@@ -114,7 +112,7 @@ const AttachmentThumbnail = (
             </>
           ) : (
             <>
-              <AttachmentIcon2 />
+              <Paperclip />
               <div className="flex flex-wrap justify-center w-full gap-2">
                 <Typography
                   component="p"
@@ -151,7 +149,7 @@ const AttachmentThumbnail = (
       <div className="flex flex-wrap justify-between text-base">
         <div className="flex flex-wrap items-center gap-1">
           {avatar ? (
-            <img className="size-4 flex-none rounded-full" src="" alt="" />
+            <Image className="size-4 flex-none rounded-full" src="" alt="" />
           ) : (
             <Avatar />
           )}

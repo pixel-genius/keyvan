@@ -2,8 +2,8 @@
 import Image from "next/image";
 
 // Import Swiper React components
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, Navigation } from "swiper/modules";
 
 // Import Swiper styles
 import "swiper/css";
@@ -17,11 +17,10 @@ import {
   IconNews,
 } from "@tabler/icons-react";
 
-import Winsetonicon from "../../icons/winseton";
+import Typography from "@/components/components/atoms/typography";
+import BlogCard from "../_components/BlogCard";
 import CardItem from "../_components/CardItem";
 import ProductCard from "../_components/card";
-import BlogCard from "../_components/BlogCard";
-import Typography from "@/components/components/atoms/typography";
 
 const LandingPage = () => {
   const blogs = [

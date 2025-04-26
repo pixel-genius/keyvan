@@ -1,4 +1,5 @@
-import { IconEye, IconHeart, IconShoppingBag ,} from "@tabler/icons-react";
+import { IconEye, IconHeart, IconShoppingBag } from "@tabler/icons-react";
+import Image from "next/image";
 import * as React from "react";
 
 export interface ProductCardProps {
@@ -18,7 +19,7 @@ const ProductCard = React.forwardRef<HTMLDivElement, ProductCardProps>(
       <div ref={ref} className="bg-gray-800 w-full  rounded-xl p-2 pb-4z">
         {/* header - image */}
         <div className="relative flex justify-center items-center rounded-xl h-full overflow-hidden mb-1">
-          <img className="w-full h-full" src={image} alt="image" />
+          <Image className="w-full h-full" src={image} alt="image" />
           {/* background overlay and shopping bag */}
           <div className="absolute inset-0 bg-slate-600/40 opacity-0 hover:opacity-100 transition-opacity rounded-xl">
             <div className="w-full h-full gap-2 flex justify-center items-center">
@@ -47,7 +48,7 @@ const ProductCard = React.forwardRef<HTMLDivElement, ProductCardProps>(
           {/* footer - username, like and see ana avatar icon  */}
           <div className="flex justify-between">
             <div className="flex gap-2 items-center">
-              <img
+              <Image
                 src="https://avatar.iran.liara.run/public/34"
                 alt=""
                 className="w-4 h-4 rounded-full"
@@ -64,7 +65,7 @@ const ProductCard = React.forwardRef<HTMLDivElement, ProductCardProps>(
         </div>
       </div>
     );
-  },
+  }
 );
 
 ProductCard.displayName = "ProductCard";

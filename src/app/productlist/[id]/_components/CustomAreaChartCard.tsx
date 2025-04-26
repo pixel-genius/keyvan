@@ -8,24 +8,14 @@ import {
 } from "@/components/components/atoms/chart";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-];
+interface ChartDataItem {
+  month: string; // Key for the X-axis
+  desktop: number; // Key for the data to be plotted
+}
 
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "hsl(var(--chart-1))",
-  },
-} satisfies ChartConfig;
 interface CustomAreaChartCardProps {
-  chartConfig: any;
-  chartData: any[];
+  chartConfig: ChartConfig; // Use the imported type
+  chartData: ChartDataItem[];
 }
 
 const CustomAreaChartCard = ({
