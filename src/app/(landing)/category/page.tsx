@@ -1,25 +1,12 @@
-<<<<<<< HEAD:src/app/category/page.tsx
 "use client";
-=======
-'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { IconChevronLeft } from '@tabler/icons-react';
-import Typography from '@/components/components/atoms/typography';
-import { products } from '@/data/products';
-import { categories } from '@/data/categories';
-import Image from 'next/image';
-import Header from '@/app/_components/Header';
->>>>>>> 434bbd9c3fb6d3998005f0e1ad88de750ed3e422:src/app/(landing)/category/page.tsx
-
+import Header from "@/app/_components/Header";
 import Typography from "@/components/components/atoms/typography";
 import { categories } from "@/data/categories";
 import { products } from "@/data/products";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Header from "../_components/Header";
 
 interface CategoryWithCount {
   id: string;
@@ -48,8 +35,6 @@ const CategoryPage = () => {
 
     setCategoriesWithCount(categoriesWithProductCount);
   }, []);
-
-
 
   const handleCategoryClick = (categoryName: string) => {
     // Navigate to products page with category filter

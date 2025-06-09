@@ -1,6 +1,6 @@
 "use client";
+import BlogCard from "@/app/_components/BlogCard";
 import { Swiper, SwiperSlide } from "swiper/react";
-import BlogCard from "../_components/BlogCard";
 
 const TestPage = () => {
   const blogs = [

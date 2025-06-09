@@ -1,39 +1,5 @@
 "use client"; // این خط را به بالای فایل اضافه کنید
 
-<<<<<<< HEAD:src/app/products/page.tsx
-import { Button } from "@/components/components/atoms/button";
-import { Textarea } from "@/components/components/atoms/textarea";
-import Typography from "@/components/components/atoms/typography";
-import { Input } from "@/components/components/molecules/input";
-import { IconFilter } from "@tabler/icons-react";
-import dynamic from "next/dynamic";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-
-// کامپوننت‌ها به صورت دینامیک وارد می‌شوند تا مشکلات احتمالی SSR رفع شوند
-const BottomSheet = dynamic(() => import("../_components/BottomSheet"), {
-  ssr: false,
-});
-const Counter = dynamic(() => import("../_components/Counter"), { ssr: false });
-const Header = dynamic(() => import("../_components/Header"), { ssr: false });
-const ProductCard = dynamic(() => import("../_components/ProductCard"), {
-  ssr: false,
-});
-
-interface Product {
-  id: number;
-  title: string;
-  subtitle: string;
-  price: string;
-  category: string;
-  imageUrl: string;
-}
-
-interface SelectedProduct {
-  title: string;
-  price: string;
-}
-=======
 import { useState, useEffect } from 'react';
 import { IconChevronLeft, IconFilter, IconX } from '@tabler/icons-react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -47,7 +13,6 @@ import { Button } from '@/components/components/atoms/button';
 import { Chip } from '@/components/components/atoms/chip';
 import { products } from '@/data/products';
 import Header from '@/app/_components/Header';
->>>>>>> 434bbd9c3fb6d3998005f0e1ad88de750ed3e422:src/app/(landing)/products/page.tsx
 
 const cigaretteBrands = [
   "مارلبورو",
