@@ -3,6 +3,7 @@ import React from "react";
 import Typography from "@/components/components/atoms/typography";
 import Tomanicon from "@/icons/toman";
 import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
+import { formatPrice } from "@/lib/utils";
 
 type PriceItemCardProps = {
   title: string;
@@ -30,7 +31,7 @@ export const PriceItemCard: React.FC<PriceItemCardProps> = ({
         </Typography>
         <div className="flex gap-1.5 items-center">
           <Typography variant={"label/sm"} weight={"medium"}>
-            {price}
+            {formatPrice(price)}
           </Typography>
           <Tomanicon size={18} />
         </div>

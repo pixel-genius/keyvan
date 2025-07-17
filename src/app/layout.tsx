@@ -5,6 +5,7 @@ import "./globals.css";
 import Footer from "./_components/Footer";
 import Navbar from "./_components/Navbar";
 import { Toaster } from "sonner";
+import { yekanBakh } from "@/lib/fonts";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiasedv`}
+        className={`${geistSans.variable} ${geistMono.variable} ${yekanBakh.variable} antialiased`}
       >
         {/* Navbar */}
         <Navbar />
