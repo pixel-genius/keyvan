@@ -28,7 +28,7 @@ export function middleware(request: NextRequest) {
         response.cookies.delete("pendingToken");
         return response;
       }
-    } catch (error) {
+    } catch {
       // If parsing fails, just let them stay on the page
     }
     // Let them stay on the pending approval page
