@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import "../globals.css";
 import LogoIcon from "@/icons/logo";
-import { geistSans, geistMono, yekanBakh } from "@/lib/fonts";
 import { Toaster } from "sonner";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {

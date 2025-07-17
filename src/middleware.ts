@@ -1,13 +1,7 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
 // This function can be marked `async` if using `await` inside
-export function middleware(request: NextRequest) {
-  const isAuthenticated = request.cookies.get("auth-token");
-  const isAuthPage = request.nextUrl.pathname.startsWith("/auth");
-  const isPendingApprovalPage =
-    request.nextUrl.pathname === "/auth/pend-approved";
-
+export function middleware() {
   // Check for pending token approval
   // if (isPendingApprovalPage) {
   //   const pendingTokenStr = request.cookies.get("pendingToken")?.value;
