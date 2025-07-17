@@ -7,7 +7,6 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { fetchProductById, ApiProduct } from "@/lib/api";
-import BoxPacketInfo from "./_components/BoxPacketInfo";
 import CustomAreaChartCard from "./_components/CustomAreaChartCard";
 
 const chartData = [

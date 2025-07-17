@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { IconUser, IconListDetails, IconShoppingBag, IconHome, IconCategory } from "@tabler/icons-react";
+import { IconUser, IconListDetails, IconShoppingBag, IconHome } from "@tabler/icons-react";
 
 const Footer = () => {
   const pathname = usePathname();

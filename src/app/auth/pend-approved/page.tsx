@@ -4,11 +4,9 @@ import Typography from "@/components/components/atoms/typography";
 import { IconHeadset, IconProgressCheck } from "@tabler/icons-react";
 import BottomSheet from "@/app/_components/BottomSheet";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Cookies from 'js-cookie';
 
 const Registrationdonpage = () => {
-  const router = useRouter();
   const [isOpen] = useState(true);
   const [timeLeft, setTimeLeft] = useState(20);
 

@@ -1,8 +1,10 @@
-"use client"; // این خط را به بالای فایل اضافه کنید
+"use client";
+
 
 import { useState, useEffect } from 'react';
-import { IconChevronLeft, IconFilter, IconX } from '@tabler/icons-react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
+import { IconFilter } from '@tabler/icons-react';
+import { useSearchParams } from 'next/navigation';
 import ProductCard from '@/app/_components/ProductCard';
 import BottomSheet from '@/app/_components/BottomSheet';
 import Counter from '@/app/_components/Counter';
@@ -11,7 +13,6 @@ import { Input } from '@/components/components/molecules/input';
 import { Textarea } from '@/components/components/atoms/textarea';
 import { Button } from '@/components/components/atoms/button';
 import { Chip } from '@/components/components/atoms/chip';
-import { products as productsData, Product } from '@/data/products';
 import Header from '@/app/_components/Header';
 // Import the API fetch function and type
 import { fetchProductsFromApi, ApiProduct } from '@/lib/api';
@@ -41,7 +42,7 @@ const fetchProducts = async (): Promise<ApiProduct[]> => {
   return fetchProductsFromApi();
 };
 
-export default function ProductsPage() {
+function ProductsContent() {
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] =
@@ -289,5 +290,13 @@ export default function ProductsPage() {
         )}
       </BottomSheet>
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<div className="text-center py-8">در حال بارگذاری...</div>}>
+      <ProductsContent />
+    </Suspense>
   );
 }
