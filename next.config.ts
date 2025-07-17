@@ -6,9 +6,9 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'http',
-        hostname: '185.204.169.5',
-        port: '8000',
+        protocol: 'https',
+        hostname: 'tobacco.darkube.app/',
+        port: '3000',
         pathname: '/**',
       },
     ],
