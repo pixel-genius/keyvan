@@ -19,7 +19,7 @@ const OrdersPage = () => {
   return (
     <>
       <Header title="سفارشات" />
-      <div dir="rtl" className="flex flex-col gap-4 pt-8">
+      <div dir="rtl" className="flex px-4 pt-28  flex-col gap-4 pt-8">
         {/* Use the new Header component */}
 
         {/* Order Card */}

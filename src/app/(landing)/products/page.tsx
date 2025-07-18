@@ -163,7 +163,7 @@ function ProductsContent() {
   const categories: string[] = [];
 
   return (
-    <div className="mx-auto min-h-full">
+    <div className="mx-auto px-4 pt-28  min-h-full">
       <Header
         title={categoryFilter ? categoryFilter : "محصولات"}
         onBackClick={handleBackClick}

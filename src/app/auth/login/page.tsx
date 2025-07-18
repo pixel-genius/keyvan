@@ -49,7 +49,7 @@ const LoginPage = () => {
                 ادامه
               </Button>
             </div>
-            <p className="text-xs font-light">
+            <p className="text-sm font-light">
               ورود شما به معنای پذیرش{" "}
               <span className="underline"> شرایط و قوانین </span>
               پلتفرم تمباکو است

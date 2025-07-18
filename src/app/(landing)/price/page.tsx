@@ -207,8 +207,8 @@ const Pricepage = () => {
   const currentDay = daysData[currentDayIndex];
 
   return (
-    <div dir="rtl">
-      <div className="flex justify-between pb-3.5">
+    <div dir="rtl" className="px-4 pt-28 ">
+      <div className="flex  justify-between pb-3.5">
         <div>
           <Typography variant={"label/md"} weight={"medium"}>
             قیمت محصولات اسفند ۱۴۰۳

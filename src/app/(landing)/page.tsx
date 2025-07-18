@@ -79,7 +79,7 @@ const LandingPage = () => {
   ];
 
   return (
-    <div className="container  mx-auto  min-h-full">
+    <div className="px-4 pt-28">
       <div className="flex flex-col items-center justify-center ">
         <Swiper
           spaceBetween={30}

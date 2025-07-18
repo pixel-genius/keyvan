@@ -35,7 +35,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         </Head>
         <LayoutClientWrapper>
-          <main className="pt-28 px-4 pb-44 max-w-lg w-full mx-auto">
+          <main className="pb-44 max-w-lg w-full mx-auto">
             {children}
             <Toaster />
           </main>

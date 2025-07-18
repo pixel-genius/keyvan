@@ -62,7 +62,7 @@ export default function ProductDetail() {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen gap-4">
+      <div className="px-4 pt-28  flex flex-col items-center justify-center min-h-screen gap-4">
         <Typography variant="paragraph/md" className="text-red-500">{error}</Typography>
         <button 
           onClick={() => router.back()}
@@ -89,8 +89,8 @@ export default function ProductDetail() {
   }
 
   return (
-    <div>
-      <div className="flex gap-0.5 items-center pb-3.5">
+    <div className="px-4 pt-28 ">
+      <div className="flex  gap-0.5 items-center pb-3.5">
         <IconChevronLeft
           size={24}
           className="cursor-pointer"

@@ -42,7 +42,7 @@ const CategoryPage = () => {
   };
 
   return (
-    <div className=" mx-auto min-h-full pb-24">
+    <div className="px-4 pt-28  mx-auto min-h-full pb-24">
       <Header title="دسته بندی‌ها" />
 
       <div className="flex justify-between items-center gap-8 pt-4 pb-4">

@@ -1,20 +1,20 @@
 "use client";
 
 import Typography from "@/components/components/atoms/typography";
-import { IconChevronLeft } from "@tabler/icons-react";
+import { IconChevronLeft, IconLogout } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 
 const Accountpage = () => {
   const router = useRouter();
   return (
-    <div className="flex flex-col gap-4">
+    <div className=" px-4 pt-28 flex flex-col gap-4">
       <div className="flex justify-between items-center">
         <IconChevronLeft size={24} className="cursor-pointer" />
         <Typography variant={"paragraph/md"}>حساب کاربری</Typography>
       </div>
-      <div className="p-4 bg-primary rounded-lg">
+      <div className="p-4 bg-primary rounded-lg mb-8">
         <div className="flex justify-between items-center">
-          <Typography variant={"paragraph/sm"}>امتیاز شما۳۵امتیاز</Typography>
+          <Typography weight="bold" variant={"paragraph/sm"}>امتیاز شما۳۵امتیاز</Typography>
           <div className="flex gap-1 flex-col text-right">
             <Typography variant={"paragraph/md"}>حساب کاربری</Typography>
             <Typography variant={"paragraph/sm"}>سطح ۱</Typography>
@@ -33,8 +33,8 @@ const Accountpage = () => {
         <IconChevronLeft size={24} className="cursor-pointer" />
         <Typography variant={"paragraph/md"}>آدرس ها</Typography>
       </div>
-      <div className="flex justify-between items-center cursor-pointer" onClick={() => router.push('/auth/logout')}>
-        <IconChevronLeft size={24} className="cursor-pointer" />
+      <div className="flex text-red-500  justify-between items-center py-8 border-t-1 border-zink-200 cursor-pointer" onClick={() => router.push('/auth/logout')}>
+        <IconLogout  size={24} className="cursor-pointer" />
         <Typography variant={"paragraph/md"}>خروج از حساب</Typography>
       </div>
     </div>

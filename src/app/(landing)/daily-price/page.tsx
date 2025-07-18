@@ -1,7 +1,7 @@
 import "swiper/css";
 
 const DailyPrice = () => {
-  return <div className="container mx-auto  min-h-full"></div>;
+  return <div className="px-4 pt-28   min-h-full"></div>;
 };
 
 export default DailyPrice;
