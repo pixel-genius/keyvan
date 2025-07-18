@@ -14,9 +14,9 @@ export const baseInputVariants = cva(
   {
     variants: {
       size: {
-        sm: "px-4 py-2.5 h-9",
-        md: "px-4 py-2.5 h-[52px]",
-        lg: "px-4 py-4 h-14",
+        sm: "px-4 py-2.5 h-9 text-xs",
+        md: "px-4 py-2.5 h-[52px] text-sm",
+        lg: "px-4 py-4 h-14 text-md",
       },
       error: {
         true: "ring-2 ring-error focus-visible:ring-error focus-visible:ring-offset-2",
