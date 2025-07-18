@@ -1,7 +1,11 @@
+"use client";
+
 import Typography from "@/components/components/atoms/typography";
 import { IconChevronLeft } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 
 const Accountpage = () => {
+  const router = useRouter();
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center">
@@ -29,7 +33,7 @@ const Accountpage = () => {
         <IconChevronLeft size={24} className="cursor-pointer" />
         <Typography variant={"paragraph/md"}>آدرس ها</Typography>
       </div>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center cursor-pointer" onClick={() => router.push('/auth/logout')}>
         <IconChevronLeft size={24} className="cursor-pointer" />
         <Typography variant={"paragraph/md"}>خروج از حساب</Typography>
       </div>

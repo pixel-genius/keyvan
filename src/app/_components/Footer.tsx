@@ -16,7 +16,7 @@ const Footer = () => {
 
   return (
     <footer className="bg-maincard fixed bottom-0 left-0 w-full py-4 z-30 flex items-center shadow-lg">
-      <div className="flex justify-around w-full text-xs text-gray-600">
+      <div className="flex justify-around w-full max-w-xl mx-auto text-xs text-gray-600">
         {links.map((link) => (
           <div
             key={link.id}

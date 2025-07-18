@@ -5,6 +5,7 @@ import { Input } from "@/components/components/molecules/input";
 import BottomSheet from "@/app/_components/BottomSheet";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Typography from "@/components/components/atoms/typography";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -16,25 +17,35 @@ const LoginPage = () => {
     router.push("/auth/otp");
   };
 
+  // Only allow numbers and max 11 digits
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "").slice(0, 11);
+    setPhoneNumber(value);
+  };
+
   return (
     <div dir="rtl" className="">
       <BottomSheet isOpen={true} onClose={() => {}} hasBackdrop={false} hasBlur={false} isClosable={false}>
-        <div className="flex flex-col gap-1">
-          <div className="p-5 flex flex-col gap-1 justify-center">
-            <p className="text-xl font-bold">حساب کاربری</p>
-            <p>برای ورود یا ثبت نام لطفا شماره همراه خود را وارد کنید</p>
+        <div className="flex py-8 flex-col gap-1">
+          <div className="p-2 flex flex-col gap-1 justify-center">
+            <h2 className="text-xl font-bold pb-2">حساب کاربری</h2>
+            <p className="text-xs">برای ورود یا ثبت نام لطفا شماره همراه خود را وارد کنید</p>
           </div>
-          <div className="px-5 flex flex-col gap-2 justify-center items-center">
+          <div className="flex flex-col gap-2 justify-center items-center">
             <div className="w-full flex flex-col gap-2">
               <Input 
-                placeholder="شماره همراه" 
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+              dir="rtl"
+              className="text-right pb-2"
+              placeholder="شماره همراه" 
+              value={phoneNumber}
+              onChange={handlePhoneChange}
+              type="tel"
+              maxLength={11}
               />
               <Button 
                 variant={"primary"} 
-                state="warning"
                 onClick={handleContinue}
+                disabled={phoneNumber.length !== 11}
               >
                 ادامه
               </Button>

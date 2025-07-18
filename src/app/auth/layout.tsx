@@ -5,15 +5,15 @@ import { Toaster } from "sonner";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen flex items-center justify-center ">
+    <div className=" flex items-center justify-center ">
       <Toaster position="top-center" />
-      <div className="max-w-md w-full space-y-8 p-8 bg-card rounded-lg shadow-lg">
+      <div className=" w-full  bg-card  shadow-lg">
         <div className="h-screen flex flex-col">
-          <div className="h-[60%] flex justify-center items-center ">
+          <div className=" absolute  ">
             <div dir="rtl">
-              <div className="flex flex-col items-center justify-center gap-2.5">
-                <LogoIcon size={48} />
-                <p className="text-white">قیمت روز تنباکو، سریع و بدون واسطه!</p>
+              <div className="flex text-center px-2 pt-10 flex-col items-center justify-center gap-2.5">
+                <LogoIcon size={48}  />
+                <p className="text-white font-bold">قیمت روز تنباکو، سریع و بدون واسطه!</p>
                 <p className="text-xs font-light text-sub">
                   هر روز جدیدترین قیمت‌ها را دریافت کنید و خرید عمده خود را با
                   بهترین نرخ انجام دهید.

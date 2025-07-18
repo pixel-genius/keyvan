@@ -42,8 +42,8 @@ const InputOTPSlot = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "relative flex h-10 w-10 items-center justify-center border-y border-r border-input text-sm transition-all border-2  border-gray-500 mx-2 rounded-lg",
-        isActive && "z-10 ring-2 ring-ring ring-offset-background",
+        "relative flex h-15 w-15 items-center justify-center border-y border-r  text-xl transition-all border-2  border-gray-500 mx-2 rounded-lg",
+        isActive && "z-10 border-primary ring-offset-background",
         className
       )}
       {...props}
@@ -51,7 +51,7 @@ const InputOTPSlot = React.forwardRef<
       {char}
       {hasFakeCaret && (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="h-4 w-px animate-caret-blink bg-foreground duration-1000" />
+          <div className="h-10 w-px animate-caret-blink bg-foreground duration-1000" />
         </div>
       )}
     </div>

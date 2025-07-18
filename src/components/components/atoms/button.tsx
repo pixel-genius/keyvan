@@ -52,7 +52,7 @@ const buttonVariants = cva(
       {
         variant: "primary",
         state: "warning",
-        className: "!bg-warning hover:!bg-amber-700 focus:ring-warning",
+        className: "!bg-warning hover:!bg-zinc-700 focus:ring-warning",
       },
       {
         variant: "primary",

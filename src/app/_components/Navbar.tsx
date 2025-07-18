@@ -75,31 +75,31 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="bg-maincard flex justify-between z-50 fixed top-0 w-full items-center px-4 py-6">
-        {/* Left Icon */}
-        <IconMenu2 
-          size={28} 
-          color="white" 
-          className="cursor-pointer" 
-          onClick={() => router.push("/menu")} 
-        />
-        
-        {/* Center Logo */}
-        <LogoIcon />
-        
-        {/* Right Icon with Badge */}
-        <div className="relative">
-          <IconShoppingCart 
+      <nav className="bg-maincard flex justify-center z-50 fixed top-0 w-full items-center px-4 py-6">
+        <div className="flex justify-between items-center w-full max-w-xl mx-auto">
+          {/* Left Icon */}
+          <IconMenu2 
             size={28} 
             color="white" 
             className="cursor-pointer" 
-            onClick={() => setIsCartOpen(true)} 
+            onClick={() => router.push("/menu")} 
           />
-          {totalItems > 0 && (
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-              {totalItems}
-            </span>
-          )}
+          {/* Center Logo */}
+          <LogoIcon />
+          {/* Right Icon with Badge */}
+          <div className="relative">
+            <IconShoppingCart 
+              size={28} 
+              color="white" 
+              className="cursor-pointer" 
+              onClick={() => setIsCartOpen(true)} 
+            />
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {totalItems}
+              </span>
+            )}
+          </div>
         </div>
       </nav>
 
