@@ -5,7 +5,6 @@ import { Input } from "@/components/components/molecules/input";
 import BottomSheet from "@/app/_components/BottomSheet";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Typography from "@/components/components/atoms/typography";
 
 const LoginPage = () => {
   const router = useRouter();
