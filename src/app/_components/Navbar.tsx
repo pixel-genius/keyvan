@@ -78,6 +78,14 @@ const Navbar = () => {
       <nav className="bg-maincard flex justify-center z-50 fixed top-0 w-full items-center px-4 py-6">
         <div className="flex justify-between items-center w-full max-w-xl mx-auto">
           {/* Left Icon */}
+
+
+
+
+
+
+
+          
           <IconMenu2 
             size={28} 
             color="white" 
