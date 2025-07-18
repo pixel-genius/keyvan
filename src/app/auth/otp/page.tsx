@@ -8,7 +8,6 @@ import {
 } from "@/components/components/atoms/input-otp";
 
 import Typography from "@/components/components/atoms/typography";
-import { ArrowRightIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import BottomSheet from "@/app/_components/BottomSheet";
 import { useRouter } from "next/navigation";
