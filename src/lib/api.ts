@@ -1,6 +1,6 @@
 // API utility for product-related requests
 // Base URL for the backend API
-export const BASE_URL = 'http://185.204.169.5:8000/';
+export const BASE_URL = 'http://185.204.169.5:8000';
 
 // Endpoint for fetching products
 const PRODUCTS_ENDPOINT = '/shop/products/';
