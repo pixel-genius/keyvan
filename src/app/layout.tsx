@@ -2,8 +2,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { yekanBakh } from "@/lib/fonts";
-import Head from "next/head";  // Import next/head to add meta tag
+import Head from "next/head"; // Import next/head to add meta tag
 import LayoutClientWrapper from "./_components/LayoutClientWrapper";
+import { ApiProvider } from "./_provider/api";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,14 +33,19 @@ export default function RootLayout({
       >
         {/* Add the meta tag for viewport inside the <Head> */}
         <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+          />
         </Head>
-        <LayoutClientWrapper>
-          <main className="pb-44 max-w-lg w-full mx-auto">
-            {children}
-            <Toaster />
-          </main>
-        </LayoutClientWrapper>
+        <ApiProvider>
+          <LayoutClientWrapper>
+            <main className="pb-44 max-w-lg w-full mx-auto">
+              {children}
+              <Toaster />
+            </main>
+          </LayoutClientWrapper>
+        </ApiProvider>
       </body>
     </html>
   );

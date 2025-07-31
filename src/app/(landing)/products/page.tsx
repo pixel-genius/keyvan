@@ -1,23 +1,23 @@
 "use client";
 
-
-import { useState, useEffect } from 'react';
-import { Suspense } from 'react';
-import { IconFilter } from '@tabler/icons-react';
-import { useSearchParams } from 'next/navigation';
-import ProductCard from '@/app/_components/ProductCard';
-import BottomSheet from '@/app/_components/BottomSheet';
-import Counter from '@/app/_components/Counter';
-import Typography from '@/components/components/atoms/typography';
-import { Input } from '@/components/components/molecules/input';
-import { Textarea } from '@/components/components/atoms/textarea';
-import { Button } from '@/components/components/atoms/button';
-import { Chip } from '@/components/components/atoms/chip';
-import Header from '@/app/_components/Header';
+import { useState, useEffect } from "react";
+import { Suspense } from "react";
+import { IconFilter } from "@tabler/icons-react";
+import { useSearchParams } from "next/navigation";
+import ProductCard from "@/app/_components/ProductCard";
+import BottomSheet from "@/app/_components/BottomSheet";
+import Counter from "@/app/_components/Counter";
+import Typography from "@/components/components/atoms/typography";
+import { Input } from "@/components/components/molecules/input";
+import { Textarea } from "@/components/components/atoms/textarea";
+import { Button } from "@/components/components/atoms/button";
+import { Chip } from "@/components/components/atoms/chip";
+import Header from "@/app/_components/Header";
 // Import the API fetch function and type
-import { fetchProductsFromApi, ApiProduct } from '@/lib/api';
-import Tomanicon from '@/icons/toman';
-import { formatPrice } from '@/lib/utils';
+import { fetchProductsFromApi, ApiProduct } from "@/lib/api";
+import Tomanicon from "@/icons/toman";
+import { formatPrice } from "@/lib/utils";
+import { UseGetShopProductList } from "@/utils/apis/shop/products/get/productsListApi";
 
 const cigaretteBrands = [
   "مارلبورو",
@@ -54,7 +54,13 @@ function ProductsContent() {
   const [categoryFilter, setCategoryFilter] = useState<string | undefined>(
     undefined
   );
-
+  const query = UseGetShopProductList({
+    params: {
+      category: 1,
+      brand: 1,
+      search: "",
+    },
+  });
   // استفاده از usePathname و useSearchParams برای مدیریت مسیر
   const searchParams = useSearchParams();
 
@@ -67,16 +73,16 @@ function ProductsContent() {
     const fetchData = async () => {
       try {
         const productsData = await fetchProducts();
-        console.log('Products data received:', productsData);
+        console.log("Products data received:", productsData);
         // Filter out products with invalid image URLs or add fallback images
-        const validProducts = productsData.map(product => ({
+        const validProducts = productsData.map((product) => ({
           ...product,
-          image: product.image || '/img/sigar.png' // Use existing placeholder image
+          image: product.image || "/img/sigar.png", // Use existing placeholder image
         }));
-        console.log('Valid products with images:', validProducts);
+        console.log("Valid products with images:", validProducts);
         setProducts(validProducts);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error("Error fetching products:", error);
         // Set empty array to prevent further errors
         setProducts([]);
       }
@@ -96,7 +102,9 @@ function ProductsContent() {
       isValid =
         isValid &&
         (product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.description.toLowerCase().includes(searchQuery.toLowerCase()));
+          product.description
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()));
     }
 
     // The API does not provide a category field. If needed, add logic here.
@@ -185,10 +193,17 @@ function ProductsContent() {
         </div>
       </div>
 
-      <BottomSheet isOpen={isFilterSheetOpen} onClose={() => setIsFilterSheetOpen(false)}>
+      <BottomSheet
+        isOpen={isFilterSheetOpen}
+        onClose={() => setIsFilterSheetOpen(false)}
+      >
         <div className="filter-sheet p-4 flex flex-col gap-4 justify-start rounded-lg shadow-md">
           <div className="categories">
-            <Typography className='text-right pb-2' variant="label/md" weight="bold">
+            <Typography
+              className="text-right pb-2"
+              variant="label/md"
+              weight="bold"
+            >
               دسته‌بندی‌ها
             </Typography>
             <div className="flex text-right justify-end flex-wrap gap-2 mt-2">
@@ -196,7 +211,11 @@ function ProductsContent() {
                 <Chip
                   key={category}
                   onClick={() => toggleCategory(category)}
-                  variant={selectedCategories.includes(category) ? "primary" : "secendery"}
+                  variant={
+                    selectedCategories.includes(category)
+                      ? "primary"
+                      : "secendery"
+                  }
                   size="sm"
                 >
                   {category}
@@ -205,7 +224,11 @@ function ProductsContent() {
             </div>
           </div>
           <div className="brands  mt-4">
-            <Typography className='text-right pb-2' variant="label/md" weight="bold">
+            <Typography
+              className="text-right pb-2"
+              variant="label/md"
+              weight="bold"
+            >
               برندها
             </Typography>
             <div className="flex text-right justify-end flex-wrap gap-2 mt-2">
@@ -213,7 +236,9 @@ function ProductsContent() {
                 <Chip
                   key={brand}
                   onClick={() => toggleBrand(brand)}
-                  variant={selectedBrands.includes(brand) ? "primary" : "secendery"}
+                  variant={
+                    selectedBrands.includes(brand) ? "primary" : "secendery"
+                  }
                   size="sm"
                 >
                   {brand}
@@ -222,8 +247,16 @@ function ProductsContent() {
             </div>
           </div>
           <div className="actions mt-4 flex gap-2">
-            <Button variant="secondary" className='w-full'  onClick={resetFilters}>بازنشانی</Button>
-            <Button variant="primary" className='w-full' onClick={applyFilters}>اعمال فیلترها</Button>
+            <Button
+              variant="secondary"
+              className="w-full"
+              onClick={resetFilters}
+            >
+              بازنشانی
+            </Button>
+            <Button variant="primary" className="w-full" onClick={applyFilters}>
+              اعمال فیلترها
+            </Button>
           </div>
         </div>
       </BottomSheet>
@@ -240,7 +273,10 @@ function ProductsContent() {
               price={product.latest_price.toString()}
               // category={product.category} // Not available from API
               onAddToCart={() =>
-                handleAddToCart({ title: product.name, price: product.latest_price.toString() })
+                handleAddToCart({
+                  title: product.name,
+                  price: product.latest_price.toString(),
+                })
               }
             />
           ))
@@ -295,7 +331,9 @@ function ProductsContent() {
 
 export default function ProductsPage() {
   return (
-    <Suspense fallback={<div className="text-center py-8">در حال بارگذاری...</div>}>
+    <Suspense
+      fallback={<div className="text-center py-8">در حال بارگذاری...</div>}
+    >
       <ProductsContent />
     </Suspense>
   );
