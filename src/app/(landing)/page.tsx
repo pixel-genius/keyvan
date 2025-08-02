@@ -18,9 +18,9 @@ import {
 } from "@tabler/icons-react";
 
 import Typography from "@/components/components/atoms/typography";
-import ProductCard from "../_components/ProductCard";
 import CardItem from "../_components/CardItem";
 import BlogCard from "../_components/BlogCard";
+import ProductCard from "../_components/card";
 
 const LandingPage = () => {
   const blogs = [
