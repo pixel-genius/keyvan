@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-query";
 import path from "path";
 
-interface Params {
+interface ShopProductsListApiParams {
   category?: number;
   brand?: number;
   search?: string;
@@ -28,7 +28,7 @@ interface ProductsListApiResponse {
 }
 
 const getShopProductsListApi = async (
-  params: Params
+  params: ShopProductsListApiParams
 ): Promise<ProductsListApiResponse> => {
   const response = await coreApi.get(path.join("/shop/products/"), {
     params,
@@ -37,7 +37,7 @@ const getShopProductsListApi = async (
 };
 
 export const UseGetShopProductsList = (
-  props?: { params: Params } & Partial<
+  props?: { params: ShopProductsListApiParams } & Partial<
     DefinedInitialDataOptions<
       ProductsListApiResponse,
       unknown,
