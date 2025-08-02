@@ -37,19 +37,6 @@ const withPWA = nextPwa({
   dest: "public", // where service-worker.js will be generated
   disable: process.env.NODE_ENV === "development", // disable in dev
   register: true,
-  skipWaiting: true,
-  runtimeCaching: [
-    {
-      urlPattern: /^https?.*/,
-      handler: "NetworkFirst",
-      options: {
-        cacheName: "offlineCache",
-        expiration: {
-          maxEntries: 200,
-        },
-      },
-    },
-  ],
 });
 
 export default withPWA(nextConfig);
