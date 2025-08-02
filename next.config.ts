@@ -1,5 +1,4 @@
 import type { NextConfig } from "next";
-import nextPwa from "next-pwa";
 
 const nextConfig: NextConfig = {
   output: "standalone",
@@ -33,10 +32,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-const withPWA = nextPwa({
-  dest: "public", // where service-worker.js will be generated
-  disable: process.env.NODE_ENV === "development", // disable in dev
-  register: true,
-});
-
-export default withPWA(nextConfig);
+export default nextConfig;
