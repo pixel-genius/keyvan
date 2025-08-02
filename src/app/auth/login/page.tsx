@@ -9,10 +9,12 @@ import { useState } from "react";
 const LoginPage = () => {
   const router = useRouter();
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [nationalId, setNationalId] = useState("");
 
   const handleContinue = () => {
-    // Store phone number in localStorage for demo
+    // Store phone number and national ID in localStorage for demo
     localStorage.setItem("demo_phone", phoneNumber);
+    localStorage.setItem("demo_national_id", nationalId);
     router.push("/auth/otp");
   };
 
@@ -20,6 +22,12 @@ const LoginPage = () => {
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "").slice(0, 11);
     setPhoneNumber(value);
+  };
+
+  // Only allow numbers and max 10 digits for national ID
+  const handleNationalIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "").slice(0, 10);
+    setNationalId(value);
   };
 
   return (
@@ -41,10 +49,19 @@ const LoginPage = () => {
               type="tel"
               maxLength={11}
               />
+              <Input 
+              dir="rtl"
+              className="text-right pb-2"
+              placeholder="کد ملی" 
+              value={nationalId}
+              onChange={handleNationalIdChange}
+              type="text"
+              maxLength={10}
+              />
               <Button 
                 variant={"primary"} 
                 onClick={handleContinue}
-                disabled={phoneNumber.length !== 11}
+                disabled={phoneNumber.length !== 11 || nationalId.length !== 10}
               >
                 ادامه
               </Button>

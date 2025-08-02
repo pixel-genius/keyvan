@@ -41,7 +41,7 @@ export const UseGetShopProductList = (props?: {
   options?: Partial<
     DefinedInitialDataOptions<
       ProductsListApiResponse,
-      any,
+      Error,
       ProductsListApiResponse,
       QueryKey
     >
