@@ -14,6 +14,32 @@ const nextConfig: NextConfig = {
     ],
     unoptimized: true, // This can help with some image loading issues
   },
+  async headers() {
+    return [
+      {
+        source: "/manifest.json",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/manifest+json",
+          },
+        ],
+      },
+      {
+        source: "/sw.js",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/javascript",
+          },
+          {
+            key: "Cache-Control",
+            value: "no-cache",
+          },
+        ],
+      },
+    ];
+  },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
