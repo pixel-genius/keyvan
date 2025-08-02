@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-query";
 import path from "path";
 
-interface Params {
+interface BlogPostsListApiParams {
   search?: string;
 }
 
@@ -24,7 +24,7 @@ interface BlogPostsListApiResponse {
 }
 
 const getBlogPostsListApi = async (
-  params: Params
+  params: BlogPostsListApiParams
 ): Promise<BlogPostsListApiResponse> => {
   const response = await coreApi.get(path.join(`/blog/posts/`), {
     params,
@@ -33,7 +33,7 @@ const getBlogPostsListApi = async (
 };
 
 export const UseGetBlogPostsList = (
-  props?: { params: Params } & Partial<
+  props?: { params: BlogPostsListApiParams } & Partial<
     DefinedInitialDataOptions<
       BlogPostsListApiResponse,
       unknown,
