@@ -17,7 +17,6 @@ import Header from "@/app/_components/Header";
 import { fetchProductsFromApi, ApiProduct } from "@/lib/api";
 import Tomanicon from "@/icons/toman";
 import { formatPrice } from "@/lib/utils";
-import { UseGetShopProductsList } from "@/utils/apis/shop/products/GET/shopProductsListApi";
 
 const cigaretteBrands = [
   "مارلبورو",
@@ -54,13 +53,6 @@ function ProductsContent() {
   const [categoryFilter, setCategoryFilter] = useState<string | undefined>(
     undefined
   );
-  const query = UseGetShopProductsList({
-    params: {
-      category: 1,
-      brand: 1,
-      search: "",
-    },
-  });
   // استفاده از usePathname و useSearchParams برای مدیریت مسیر
   const searchParams = useSearchParams();
 
