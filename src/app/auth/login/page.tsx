@@ -32,7 +32,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div dir="rtl" className="">
+    <div dir="rtl" className="max-w-lg w-full mx-auto">
       <BottomSheet isOpen={true} onClose={() => {}} hasBackdrop={false} hasBlur={false} isClosable={false}>
         <div className="flex py-8 flex-col gap-1">
           <div className="p-2 flex flex-col gap-1 justify-center">

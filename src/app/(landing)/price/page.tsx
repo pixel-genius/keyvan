@@ -5,6 +5,7 @@ import {
   IconChevronLeft,
   IconChevronRight,
   IconSearch,
+  IconFilter,
 } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { DayBadge } from "./_components/dayBadge";
@@ -12,6 +13,12 @@ import { FilterChips } from "./_components/filterChips";
 import { PriceItemCard } from "./_components/priceItemCard";
 import BottomSheet from "@/app/_components/BottomSheet";
 import CustomAreaChartCard from "../products/[id]/_components/CustomAreaChartCard";
+import Counter from "@/app/_components/Counter";
+import { Textarea } from "@/components/components/atoms/textarea";
+import { Button } from "@/components/components/atoms/button";
+import Tomanicon from "@/icons/toman";
+import { formatPrice } from "@/lib/utils";
+import { Chip } from "@/components/components/atoms/chip";
 
 // Define types
 type TrendType = "up" | "down";
@@ -27,6 +34,11 @@ interface PriceItem {
   price: string;
   trend: TrendType;
   category?: string;
+}
+
+interface SelectedProduct {
+  title: string;
+  price: string;
 }
 
 // Sample days data
@@ -152,8 +164,15 @@ const Pricepage = () => {
   const [chartData, setChartData] = useState(generateChartData());
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredItems, setFilteredItems] = useState<PriceItem[]>(priceItems);
+  const [showPurchaseBottomSheet, setShowPurchaseBottomSheet] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<SelectedProduct | null>(null);
+  const [showFilterBottomSheet, setShowFilterBottomSheet] = useState(false);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
 
   const filters = ["همه", "سیگار", "تنباکو", "سی‌تی‌آی", "بی‌تی‌آی"];
+  
+  // Brand filters for the bottom sheet
+  const brands = ["کمل", "تنباکو", "سی‌تی‌آی", "بی‌تی‌آی", "مارلبورو", "وینستون"];
 
   // Filter items whenever search query or active filter changes
   useEffect(() => {
@@ -182,7 +201,7 @@ const Pricepage = () => {
   };
 
   const goToNextDay = () => {
-    if (currentDayIndex < daysData.length - 1) {
+    if (currentDayIndex < daysData.length - 7) {
       setCurrentDayIndex(currentDayIndex + 1);
     }
   };
@@ -201,6 +220,31 @@ const Pricepage = () => {
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
+  };
+
+  const handlePurchase = (item: PriceItem) => {
+    setSelectedProduct({
+      title: item.title,
+      price: item.price,
+    });
+    setShowPurchaseBottomSheet(true);
+  };
+
+  const handleClosePurchaseBottomSheet = () => {
+    setShowPurchaseBottomSheet(false);
+    setSelectedProduct(null);
+  };
+
+  const handleCloseFilterBottomSheet = () => {
+    setShowFilterBottomSheet(false);
+  };
+
+  const toggleBrand = (brand: string) => {
+    setSelectedBrands(prev => 
+      prev.includes(brand) 
+        ? prev.filter(b => b !== brand)
+        : [...prev, brand]
+    );
   };
 
   const visibleDays = daysData.slice(currentDayIndex, currentDayIndex + 7);
@@ -251,14 +295,18 @@ const Pricepage = () => {
       </div>
 
       {/* Search Input */}
-      <div className="pb-3.5 relative">
+      <div className="pb-3.5 flex justify-between items-center gap-2">
         <Input
           placeholder="جستجو کنید ...."
           value={searchQuery}
           onChange={handleSearch}
+          className="flex-1"
         />
-        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-          <IconSearch size={20} />
+        <div
+          className="border-2 border-zinc-700 rounded p-2 cursor-pointer h-[50px] w-[50px] flex items-center justify-center"
+          onClick={() => setShowFilterBottomSheet(true)}
+        >
+          <IconFilter size="24" stroke={1.5} />
         </div>
       </div>
 
@@ -287,13 +335,13 @@ const Pricepage = () => {
           {filteredItems.map((item, index) => (
             <div
               key={index}
-              onClick={() => handleItemClick(item)}
-              className="cursor-pointer"
             >
               <PriceItemCard
                 title={item.title}
                 price={item.price}
                 trend={item.trend}
+                onChart={() => handleItemClick(item)}
+                onBuy={() => handlePurchase(item)}
               />
             </div>
           ))}
@@ -328,6 +376,89 @@ const Pricepage = () => {
             </div>
           </div>
         </div>
+      </BottomSheet>
+
+      {/* Filter Bottom Sheet */}
+      <BottomSheet isOpen={showFilterBottomSheet} onClose={handleCloseFilterBottomSheet}>
+        <div className="filter-sheet p-4 flex flex-col gap-4 justify-start">
+          <div className="brands">
+            <Typography
+              className="text-right pb-2"
+              variant="label/md"
+              weight="bold"
+            >
+              برندها
+            </Typography>
+            <div className="flex text-right justify-end flex-wrap gap-2 mt-2">
+              {brands.map((brand) => (
+                <Chip
+                  key={brand}
+                  onClick={() => toggleBrand(brand)}
+                  variant={
+                    selectedBrands.includes(brand) ? "primary" : "secendery"
+                  }
+                  size="sm"
+                >
+                  {brand}
+                </Chip>
+              ))}
+            </div>
+          </div>
+          <div className="actions mt-4 flex gap-2">
+            <Button
+              variant="secondary"
+              className="flex-1"
+              onClick={handleCloseFilterBottomSheet}
+            >
+              انصراف
+            </Button>
+            <Button
+              variant="primary"
+              className="flex-1"
+              onClick={handleCloseFilterBottomSheet}
+            >
+              اعمال فیلتر
+            </Button>
+          </div>
+        </div>
+      </BottomSheet>
+
+      {/* Purchase Bottom Sheet */}
+      <BottomSheet isOpen={showPurchaseBottomSheet} onClose={handleClosePurchaseBottomSheet}>
+        {selectedProduct && (
+          <div className="pb-15">
+            <hr className="w-1/2 mx-auto border-2 rounded-full mb-4" />
+            <Typography
+              variant="label/lg"
+              weight="semi-bold"
+              className="mb-4 text-center"
+            >
+              افزودن محصول به سبد
+            </Typography>
+            <Typography
+              variant="label/sm"
+              weight="bold"
+              className="mb-4 text-center"
+            >
+              {selectedProduct.title}
+            </Typography>
+            <div className="flex items-center justify-center gap-1 mb-4">
+              <Typography variant="label/sm" weight="bold">
+                {formatPrice(selectedProduct.price)}
+              </Typography>
+              <Tomanicon size={18} />
+            </div>
+            <Counter />
+            <Textarea placeholder="توضیحات (اختیاری)" className="mb-4" />
+            <Button
+              className="w-full"
+              variant="primary"
+              onClick={handleClosePurchaseBottomSheet}
+            >
+              افزودن به سبد خرید
+            </Button>
+          </div>
+        )}
       </BottomSheet>
     </div>
   );

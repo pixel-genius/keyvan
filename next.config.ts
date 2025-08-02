@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'tobacco.darkube.app/',
+        hostname: 'https://tanbaku.com',
         port: '3000',
         pathname: '/**',
       },

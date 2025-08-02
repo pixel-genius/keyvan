@@ -14,8 +14,6 @@ const Registrationpage = () => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    email: "",
-    nationalCode: "",
   });
   const [provincialLicense, setProvincialLicense] = useState<File | null>(null);
   const [businessLicense, setBusinessLicense] = useState<File | null>(null);
@@ -84,19 +82,6 @@ const Registrationpage = () => {
             </div>
             
             <div className="flex flex-col gap-2">
-              <Input 
-                placeholder="آدرس ایمیل" 
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-              />
-              <Input 
-                placeholder="کد ملی" 
-                name="nationalCode"
-                value={formData.nationalCode}
-                onChange={handleInputChange}
-              />
-              
               <FileUpload 
                 label="مجوز توزیع استانی یا کشوری (اختیاری)" 
                 onChange={setProvincialLicense}
@@ -112,7 +97,7 @@ const Registrationpage = () => {
               variant={"primary"} 
               state="warning" 
               onClick={handleSubmit}
-              disabled={!formData.firstName || !formData.lastName || !formData.email || !formData.nationalCode}
+              disabled={!formData.firstName || !formData.lastName}
             >
               ارسال
             </Button>

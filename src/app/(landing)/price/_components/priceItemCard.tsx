@@ -2,19 +2,24 @@
 import React from "react";
 import Typography from "@/components/components/atoms/typography";
 import Tomanicon from "@/icons/toman";
-import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
+import { IconTrendingDown, IconTrendingUp, IconChartLine } from "@tabler/icons-react";
 import { formatPrice } from "@/lib/utils";
+import { Button } from "@/components/components/atoms/button";
 
 type PriceItemCardProps = {
   title: string;
   price: number | string;
   trend: "up" | "down";
+  onBuy?: () => void;
+  onChart?: () => void;
 };
 
 export const PriceItemCard: React.FC<PriceItemCardProps> = ({
   title,
   price,
   trend,
+  onBuy,
+  onChart,
 }) => {
   const TrendIcon =
     trend === "up" ? (
@@ -36,7 +41,24 @@ export const PriceItemCard: React.FC<PriceItemCardProps> = ({
           <Tomanicon size={18} />
         </div>
       </div>
-      {TrendIcon}
+      <div className="flex items-center gap-2">
+        {TrendIcon}
+        <Button
+          onClick={onChart}
+          variant="secondary"
+          size="sm"
+          iconLeft={<IconChartLine size={16} />}
+        >
+          نمودار
+        </Button>
+        <Button
+          onClick={onBuy}
+          variant="primary"
+          size="sm"
+        >
+          خرید
+        </Button>
+      </div>
     </div>
   );
 };

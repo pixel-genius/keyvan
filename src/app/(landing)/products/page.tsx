@@ -189,7 +189,7 @@ function ProductsContent() {
         isOpen={isFilterSheetOpen}
         onClose={() => setIsFilterSheetOpen(false)}
       >
-        <div className="filter-sheet p-4 flex flex-col gap-4 justify-start rounded-lg shadow-md">
+        <div className="filter-sheet p-4 flex flex-col gap-4 justify-start rounded-lg ">
           <div className="categories">
             <Typography
               className="text-right pb-2"
