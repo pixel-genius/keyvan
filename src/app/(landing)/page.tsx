@@ -20,7 +20,7 @@ import {
 import Typography from "@/components/components/atoms/typography";
 import CardItem from "../_components/CardItem";
 import BlogCard from "../_components/BlogCard";
-import ProductCard from "../_components/card";
+import ProductCard from "../_components/Card";
 
 const LandingPage = () => {
   const blogs = [
