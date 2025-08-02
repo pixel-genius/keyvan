@@ -1,11 +1,11 @@
 "use client";
 
-import React from "react";
-import { Button } from "@/components/components/atoms/button";
 import { Input } from "@/components/components/molecules/input";
+import { Button } from "@/components/components/atoms/button";
 import BottomSheet from "@/app/_components/BottomSheet";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import React from "react";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -37,30 +37,32 @@ const LoginPage = () => {
         <div className="flex py-8 flex-col gap-1">
           <div className="p-2 flex flex-col gap-1 justify-center">
             <h2 className="text-xl font-bold pb-2">حساب کاربری</h2>
-            <p className="text-xs">برای ورود یا ثبت نام لطفا شماره همراه خود را وارد کنید</p>
+            <p className="text-xs">
+              برای ورود یا ثبت نام لطفا شماره همراه خود را وارد کنید
+            </p>
           </div>
           <div className="flex flex-col gap-2 justify-center items-center">
             <div className="w-full flex flex-col gap-2">
-              <Input 
-              dir="rtl"
-              className="text-right pb-2"
-              placeholder="شماره همراه" 
-              value={phoneNumber}
-              onChange={handlePhoneChange}
-              type="tel"
-              maxLength={11}
+              <Input
+                dir="rtl"
+                className="text-right pb-2"
+                placeholder="شماره همراه"
+                value={phoneNumber}
+                onChange={handlePhoneChange}
+                type="tel"
+                maxLength={11}
               />
-              <Input 
-              dir="rtl"
-              className="text-right pb-2"
-              placeholder="کد ملی" 
-              value={nationalId}
-              onChange={handleNationalIdChange}
-              type="text"
-              maxLength={10}
+              <Input
+                dir="rtl"
+                className="text-right pb-2"
+                placeholder="کد ملی"
+                value={nationalId}
+                onChange={handleNationalIdChange}
+                type="text"
+                maxLength={10}
               />
-              <Button 
-                variant={"primary"} 
+              <Button
+                variant={"primary"}
                 onClick={handleContinue}
                 disabled={phoneNumber.length !== 11 || nationalId.length !== 10}
               >
