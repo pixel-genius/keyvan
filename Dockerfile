@@ -11,7 +11,7 @@ ENV PATH="/root/.bun/bin:${PATH}"
 WORKDIR /app
 
 # کپی کردن پکیج‌ها و فایل‌های مربوط به پروژه
-COPY package.json bun.lockb ./
+COPY package.json bun.lock ./
 COPY tsconfig.json ./
 
 # نصب dependencies

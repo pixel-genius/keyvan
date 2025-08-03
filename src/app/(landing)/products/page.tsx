@@ -1,23 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Suspense } from "react";
-import { IconFilter } from "@tabler/icons-react";
-import { useSearchParams } from "next/navigation";
-import ProductCard from "@/app/_components/ProductCard";
-import BottomSheet from "@/app/_components/BottomSheet";
-import Counter from "@/app/_components/Counter";
 import Typography from "@/components/components/atoms/typography";
-import { Input } from "@/components/components/molecules/input";
 import { Textarea } from "@/components/components/atoms/textarea";
+import { Input } from "@/components/components/molecules/input";
 import { Button } from "@/components/components/atoms/button";
-import { Chip } from "@/components/components/atoms/chip";
-import Header from "@/app/_components/Header";
 // Import the API fetch function and type
 import { fetchProductsFromApi, ApiProduct } from "@/lib/api";
-import Tomanicon from "@/icons/toman";
+import { Chip } from "@/components/components/atoms/chip";
+import ProductCard from "@/app/_components/ProductCard";
+import BottomSheet from "@/app/_components/BottomSheet";
+import { useSearchParams } from "next/navigation";
+import { IconFilter } from "@tabler/icons-react";
+import Counter from "@/app/_components/Counter";
+import Header from "@/app/_components/Header";
+import { useState, useEffect } from "react";
 import { formatPrice } from "@/lib/utils";
-import { UseGetShopProductList } from "@/utils/apis/shop/products/get/productsListApi";
+import Tomanicon from "@/icons/toman";
+import { Suspense } from "react";
+// import { UseGetShopProductsList } from "@/utils/apis/shop/products/GET/shopProductsListApi";
 
 const cigaretteBrands = [
   "مارلبورو",
@@ -52,15 +52,17 @@ function ProductsContent() {
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [products, setProducts] = useState<ApiProduct[]>([]);
   const [categoryFilter, setCategoryFilter] = useState<string | undefined>(
-    undefined
+    undefined,
   );
-  const query = UseGetShopProductList({
-    params: {
-      category: 1,
-      brand: 1,
-      search: "",
-    },
-  });
+
+  // const query = UseGetShopProductsList({
+  //   params: {
+  //     category: 1,
+  //     brand: 1,
+  //     search: "",
+  //   },
+  // });
+
   // استفاده از usePathname و useSearchParams برای مدیریت مسیر
   const searchParams = useSearchParams();
 
@@ -148,13 +150,13 @@ function ProductsContent() {
     setSelectedCategories((prev) =>
       prev.includes(category)
         ? prev.filter((c) => c !== category)
-        : [...prev, category]
+        : [...prev, category],
     );
   };
 
   const toggleBrand = (brand: string) => {
     setSelectedBrands((prev) =>
-      prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand]
+      prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand],
     );
   };
 
@@ -197,7 +199,7 @@ function ProductsContent() {
         isOpen={isFilterSheetOpen}
         onClose={() => setIsFilterSheetOpen(false)}
       >
-        <div className="filter-sheet p-4 flex flex-col gap-4 justify-start rounded-lg shadow-md">
+        <div className="filter-sheet p-4 flex flex-col gap-4 justify-start rounded-lg ">
           <div className="categories">
             <Typography
               className="text-right pb-2"

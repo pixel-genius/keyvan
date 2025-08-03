@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-query";
 import path from "path";
 
-interface Params {
+interface ShopProductsListApiParams {
   category?: number;
   brand?: number;
   search?: string;
@@ -17,18 +17,18 @@ interface ProductsListApiResponse {
   name: string;
   description: string | null;
   image: URL | null | string;
-  created_at: Date;
+  created_at: Date | string;
   is_active: boolean;
   latest_price: number;
   price_history: {
     id: number;
     price: number;
-    created_at: Date;
+    created_at: Date | string;
   }[];
 }
 
-const getProductsListApi = async (
-  params: Params
+const getShopProductsListApi = async (
+  params: ShopProductsListApiParams
 ): Promise<ProductsListApiResponse> => {
   const response = await coreApi.get(path.join("/shop/products/"), {
     params,
@@ -36,21 +36,21 @@ const getProductsListApi = async (
   return response.data;
 };
 
-export const UseGetShopProductList = (props?: {
-  params?: Params;
-  options?: Partial<
+export const UseGetShopProductsList = (
+  props?: { params: ShopProductsListApiParams } & Partial<
     DefinedInitialDataOptions<
       ProductsListApiResponse,
-      any,
+      unknown,
       ProductsListApiResponse,
       QueryKey
     >
-  >;
-}) => {
+  >
+) => {
+  const { params, ...restProps } = props || {};
   const query = useQuery({
-    queryKey: ["getShopProductList", props?.params],
-    queryFn: () => getProductsListApi(props?.params || {}),
-    ...props?.options,
+    queryKey: ["getShopProductsList", params],
+    queryFn: () => getShopProductsListApi(params ?? {}),
+    ...restProps,
   });
 
   return query;

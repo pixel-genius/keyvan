@@ -49,8 +49,8 @@ export default function BottomSheet({
           id="backdrop"
           className={cn(
             "fixed inset-0 z-50 flex items-end justify-center",
-            hasBackdrop && "bg-black/50",
-            hasBlur && "backdrop-blur-sm"
+            hasBackdrop && "bg-black/50  max-w-lg w-full mx-auto",
+            hasBlur && "backdrop-blur-sm  max-w-lg w-full mx-auto"
           )}
         >
           <motion.div
@@ -58,7 +58,7 @@ export default function BottomSheet({
             animate={{ y: 50 }}
             exit={{ y: "100%" }}
             transition={{ type: "tween", duration: 0.5, ease: "easeInOut" }}
-            className={cn("w-full bg-background rounded-t-2xl px-4 pb-16 shadow-lg")}
+            className={cn(" bg-background rounded-t-2xl  max-w-lg w-full mx-auto px-4 pb-16")}
           >
             {children}
           </motion.div>

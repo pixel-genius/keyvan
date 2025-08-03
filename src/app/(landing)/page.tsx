@@ -6,9 +6,9 @@ import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
-import "swiper/css";
 import "swiper/css/pagination";
 import "../../app/globals.css";
+import "swiper/css";
 
 // import required modules
 import {
@@ -18,8 +18,8 @@ import {
 } from "@tabler/icons-react";
 
 import Typography from "@/components/components/atoms/typography";
-import BlogCard from "../_components/BlogCard";
 import CardItem from "../_components/CardItem";
+import BlogCard from "../_components/BlogCard";
 import ProductCard from "../_components/card";
 
 const LandingPage = () => {

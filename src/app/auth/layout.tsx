@@ -21,7 +21,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
               </p>
             </div>
           </div>
-          <div>{children}</div>
+          <div >{children}</div>
         </div>
       </div>
     </div>
