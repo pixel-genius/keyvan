@@ -3,11 +3,11 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/components/components/molecules/input-otp";
+} from "@/components/components/atoms/input-otp";
+import { Countdown } from "@/components/components/atoms/countdown";
 import Typography from "@/components/components/atoms/typography";
 import { Button } from "@/components/components/atoms/button";
 import BottomSheet from "@/app/_components/BottomSheet";
-import Countdown from "@/app/_components/Countdown";
 import { IconPencil } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
