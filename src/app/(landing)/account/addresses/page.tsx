@@ -9,13 +9,25 @@ import {
   IconStar,
   IconLocation,
 } from "@tabler/icons-react";
-import NeshanMap, {
-  NeshanMapRef,
-} from "@neshan-maps-platform/react-openlayers";
 import Typography from "@/components/components/atoms/typography";
 import { useState, useRef, useEffect, useCallback } from "react";
 import BottomSheet from "@/app/_components/BottomSheet";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+
+// Dynamically import the map component to avoid SSR issues
+const NeshanMap = dynamic(
+  () =>
+    import("@neshan-maps-platform/react-openlayers").then((mod) => mod.default),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-64 rounded-2xl bg-muted flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    ),
+  },
+);
 
 interface SelectedLocation {
   lat: number;
@@ -24,13 +36,20 @@ interface SelectedLocation {
 
 const AddressesPage = () => {
   const router = useRouter();
-  const mapRef = useRef<NeshanMapRef | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mapRef = useRef<any>(null);
   const [isAddAddressOpen, setIsAddAddressOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] =
     useState<SelectedLocation | null>(null);
   const [addressDetails, setAddressDetails] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  // Ensure we're on the client side
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const addresses = [
     {
@@ -385,17 +404,19 @@ const AddressesPage = () => {
               انتخاب موقعیت روی نقشه
             </Typography>
             <div className="h-64 rounded-2xl overflow-hidden border border-border relative">
-              <NeshanMap
-                ref={mapRef}
-                mapKey="web.fd5c5f700ad64865aa83da3a0fabbb63"
-                defaultType="neshan"
-                center={{ latitude: 35.6892, longitude: 51.389 }}
-                zoom={13}
-                style={{ height: "100%", width: "100%" }}
-                onInit={onMapInit}
-                traffic={false}
-                poi={false}
-              />
+              {isClient && (
+                <NeshanMap
+                  ref={mapRef}
+                  mapKey="web.fd5c5f700ad64865aa83da3a0fabbb63"
+                  defaultType="neshan"
+                  center={{ latitude: 35.6892, longitude: 51.389 }}
+                  zoom={13}
+                  style={{ height: "100%", width: "100%" }}
+                  onInit={onMapInit}
+                  traffic={false}
+                  poi={false}
+                />
+              )}
 
               {/* My Location Button */}
               <button
