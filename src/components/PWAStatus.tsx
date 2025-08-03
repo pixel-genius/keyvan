@@ -8,20 +8,30 @@ interface NavigatorWithStandalone extends Navigator {
 
 export default function PWAStatus() {
   const [isPWAInstalled, setIsPWAInstalled] = useState(false);
+  const [showStatus, setShowStatus] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
+    
     // Check if app is running in standalone mode (installed)
-    if (window.matchMedia("(display-mode: standalone)").matches) {
+    const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
+    const isIOSStandalone = (window.navigator as NavigatorWithStandalone).standalone;
+    
+    if (isStandalone || isIOSStandalone) {
       setIsPWAInstalled(true);
-    }
-
-    // Check if app is installed on iOS
-    if ((window.navigator as NavigatorWithStandalone).standalone) {
-      setIsPWAInstalled(true);
+      // Only show status for a few seconds when first detected
+      setShowStatus(true);
+      setTimeout(() => {
+        setShowStatus(false);
+      }, 3000);
     }
   }, []);
 
-  if (!isPWAInstalled) return null;
+  // Don't render anything on server-side
+  if (!isClient) return null;
+
+  if (!isPWAInstalled || !showStatus) return null;
 
   return (
     <div className="fixed top-4 left-4 right-4 z-50">

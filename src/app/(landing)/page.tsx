@@ -111,18 +111,23 @@ const LandingPage = () => {
       </div>
 
       <div className="flex justify-center gap-8 pt-4 items-center">
-        <CardItem icon="/img/logo-cig.png" label="برند ها" link="/products" />
         <CardItem
-          icon={<IconCategory2 size={24} className="text-primary" />}
+          image="/img/logo-cig.png"
+          imageSize={64}
+          label="برند ها"
+          link="/products"
+        />
+        <CardItem
+          icon={<IconCategory2 size={34} className="text-primary" />}
           label="دسته‌بندی‌ها"
           link="/category"
         />
         <CardItem
-          icon={<IconNews size={24} className="text-primary" />}
+          icon={<IconNews size={34} className="text-primary" />}
           label="اخبار داخلیات"
         />
-        <CardItem
-          icon={<IconChartAreaLine size={24} className="text-primary" />}
+        <CardItem 
+          icon={<IconChartAreaLine size={34} className="text-primary" />}
           label="قیمت روز"
           link="/price"
         />

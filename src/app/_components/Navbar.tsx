@@ -1,7 +1,6 @@
 "use client";
 
 import { IconShoppingCart, IconMenu2 } from "@tabler/icons-react";
-import LogoIcon from "../../icons/logo";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import BottomSheet from "./BottomSheet";
@@ -10,6 +9,7 @@ import CartItemCard from "./CartItemCard";
 import EmptyCart from "./EmptyCart";
 import { Button } from "@/components/components/atoms/button";
 import OrderConfirmation from "./OrderConfirmation";
+import Image from "next/image";
 
 // Define a type for cart items
 type CartItem = {
@@ -75,7 +75,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="bg-maincard flex justify-center z-50 fixed top-0 w-full items-center px-4 py-6">
+      <nav className="bg-maincard flex justify-center z-50 fixed top-0 w-full items-center px-4 py-4">
         <div className="flex justify-between items-center w-full max-w-xl mx-auto">
           {/* Left Icon */}
 
@@ -93,7 +93,8 @@ const Navbar = () => {
             onClick={() => router.push("/menu")} 
           />
           {/* Center Logo */}
-          <LogoIcon />
+          <Image src="/img/logo-main.svg" alt="logo" width={50} height={50} />
+          
           {/* Right Icon with Badge */}
           <div className="relative">
             <IconShoppingCart 

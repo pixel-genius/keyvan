@@ -1,5 +1,4 @@
 import LayoutClientWrapper from "./_components/LayoutClientWrapper";
-import PWAInstaller from "@/components/PWAInstaller";
 import { Geist, Geist_Mono } from "next/font/google";
 import PWAStatus from "@/components/PWAStatus";
 import { ApiProvider } from "./_provider/api";
@@ -50,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fa" dir="rtl" className="dark">
+    <html className="dark">
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#000000" />
@@ -68,7 +67,6 @@ export default function RootLayout({
               {children}
               <Toaster />
             </main>
-            <PWAInstaller />
             <PWAStatus />
           </LayoutClientWrapper>
         </ApiProvider>

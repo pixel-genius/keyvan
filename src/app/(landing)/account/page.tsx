@@ -1,41 +1,134 @@
 "use client";
 
 import Typography from "@/components/components/atoms/typography";
-import { IconChevronLeft, IconLogout } from "@tabler/icons-react";
+import { IconLogout, IconUser, IconFile, IconMapPin, IconCrown, IconChevronRight } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 
 const Accountpage = () => {
   const router = useRouter();
+  
   return (
-    <div className=" px-4 pt-28 flex flex-col gap-4">
-      <div className="flex justify-between items-center">
-        <IconChevronLeft size={24} className="cursor-pointer" />
-        <Typography variant={"paragraph/md"}>حساب کاربری</Typography>
+    <div className="px-4 pt-28 flex flex-col gap-6 min-h-screen bg-background" dir="rtl">
+      {/* Header */}
+      <div className="flex justify-between items-start">
+        
+        <Typography variant={"paragraph/md"} weight="bold">حساب کاربری</Typography>
+        <IconChevronRight size={24} className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors rotate-180" />
       </div>
-      <div className="p-4 bg-primary rounded-lg mb-8">
-        <div className="flex justify-between items-center">
-          <Typography weight="bold" variant={"paragraph/sm"}>امتیاز شما۳۵امتیاز</Typography>
-          <div className="flex gap-1 flex-col text-right">
-            <Typography variant={"paragraph/md"}>حساب کاربری</Typography>
-            <Typography variant={"paragraph/sm"}>سطح ۱</Typography>
+      
+      {/* User Stats Card */}
+      <div className="relative overflow-hidden bg-primary rounded-2xl p-6 shadow-lg">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-primary-foreground/10 rounded-full -translate-y-16 translate-x-16"></div>
+        <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary-foreground/10 rounded-full translate-y-12 -translate-x-12"></div>
+        
+        <div className="relative flex justify-between items-center">
+          
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-primary-foreground/20 rounded-full flex items-center justify-center">
+              <IconCrown size={24} className="text-primary-foreground" />
+            </div>
+            <div>
+              <Typography weight="bold" variant={"paragraph/md"} className="text-primary-foreground">
+                حساب کاربری
+              </Typography>
+              <Typography variant={"paragraph/sm"} className="text-primary-foreground/90">
+                سطح ۱
+              </Typography>
+            </div>
+          </div>
+          <div className="text-right">
+            <Typography weight="bold" variant={"paragraph/lg"} className="text-primary-foreground">
+              ۳۵
+            </Typography>
+            <Typography variant={"paragraph/sm"} className="text-primary-foreground/90">
+              امتیاز
+            </Typography>
           </div>
         </div>
       </div>
-      <div className="flex justify-between items-center">
-        <IconChevronLeft size={24} className="cursor-pointer" />
-        <Typography variant={"paragraph/md"}>اطلاعات حساب کاربری</Typography>
+      
+      {/* Menu Items */}
+      <div className="space-y-4">
+        {/* Account Information */}
+        <div 
+          className="group flex justify-between items-center p-5 bg-card rounded-2xl shadow-sm border border-border cursor-pointer hover:shadow-md hover:border-primary/20 transition-all duration-300"
+          onClick={() => router.push('/account/profile')}
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+              <IconUser size={24} className="text-primary" />
+            </div>
+            <div>
+              <Typography variant={"paragraph/md"} weight="bold" className="text-foreground">
+                اطلاعات حساب کاربری
+              </Typography>
+              <Typography variant={"paragraph/sm"} className="text-muted-foreground">
+                مشاهده و ویرایش اطلاعات شخصی
+              </Typography>
+            </div>
+          </div>
+          <IconChevronRight size={20} className="text-muted-foreground group-hover:text-primary transition-colors rotate-180" />
+        </div>
+        
+        {/* Documents */}
+        <div 
+          className="group flex justify-between items-center p-5 bg-card rounded-2xl shadow-sm border border-border cursor-pointer hover:shadow-md hover:border-primary/20 transition-all duration-300"
+          onClick={() => router.push('/account/documents')}
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+              <IconFile size={24} className="text-primary" />
+            </div>
+            <div>
+              <Typography variant={"paragraph/md"} weight="bold" className="text-foreground">
+                مستندات و مدارک
+              </Typography>
+              <Typography variant={"paragraph/sm"} className="text-muted-foreground">
+                مدیریت مدارک و اسناد
+              </Typography>
+            </div>
+          </div>
+          <IconChevronRight size={20} className="text-muted-foreground group-hover:text-primary transition-colors rotate-180" />
+        </div>
+        
+        {/* Addresses */}
+        <div 
+          className="group flex justify-between items-center p-5 bg-card rounded-2xl shadow-sm border border-border cursor-pointer hover:shadow-md hover:border-primary/20 transition-all duration-300"
+          onClick={() => router.push('/account/addresses')}
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+              <IconMapPin size={24} className="text-primary" />
+            </div>
+            <div>
+              <Typography variant={"paragraph/md"} weight="bold" className="text-foreground">
+                آدرس ها
+              </Typography>
+              <Typography variant={"paragraph/sm"} className="text-muted-foreground">
+                مدیریت آدرس‌های تحویل
+              </Typography>
+            </div>
+          </div>
+          <IconChevronRight size={20} className="text-muted-foreground group-hover:text-primary transition-colors rotate-180" />
+        </div>
       </div>
-      <div className="flex justify-between items-center">
-        <IconChevronLeft size={24} className="cursor-pointer" />
-        <Typography variant={"paragraph/md"}>مستندات و مدارک</Typography>
-      </div>
-      <div className="flex justify-between items-center">
-        <IconChevronLeft size={24} className="cursor-pointer" />
-        <Typography variant={"paragraph/md"}>آدرس ها</Typography>
-      </div>
-      <div className="flex text-red-500  justify-between items-center py-8 border-t-1 border-zink-200 cursor-pointer" onClick={() => router.push('/auth/logout')}>
-        <IconLogout  size={24} className="cursor-pointer" />
-        <Typography variant={"paragraph/md"}>خروج از حساب</Typography>
+      
+      {/* Logout Button */}
+      <div className="mt-auto pt-6">
+        <div 
+          className="flex text-destructive justify-between items-center p-5 bg-card rounded-2xl shadow-sm border border-destructive/20 cursor-pointer hover:shadow-md hover:border-destructive/40 transition-all duration-300" 
+          onClick={() => router.push('/auth/logout')}
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-destructive/10 rounded-xl flex items-center justify-center">
+              <IconLogout size={24} className="text-destructive" />
+            </div>
+            <Typography variant={"paragraph/md"} weight="bold">
+              خروج از حساب
+            </Typography>
+          </div>
+          <IconChevronRight size={20} className="text-destructive/60 rotate-180" />
+        </div>
       </div>
     </div>
   );

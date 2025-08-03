@@ -26,6 +26,8 @@ export class PWAManager {
   }
 
   async registerServiceWorker(): Promise<ServiceWorkerRegistration | null> {
+    if (typeof window === "undefined") return null;
+    
     if ("serviceWorker" in navigator) {
       try {
         const registration = await navigator.serviceWorker.register("/sw.js");
@@ -40,6 +42,8 @@ export class PWAManager {
   }
 
   setupInstallPrompt(): void {
+    if (typeof window === "undefined") return;
+    
     window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
       this.deferredPrompt = e as BeforeInstallPromptEvent;
@@ -66,6 +70,8 @@ export class PWAManager {
   }
 
   isStandalone(): boolean {
+    if (typeof window === "undefined") return false;
+    
     return (
       window.matchMedia("(display-mode: standalone)").matches ||
       (window.navigator as NavigatorWithStandalone).standalone === true
@@ -73,6 +79,8 @@ export class PWAManager {
   }
 
   async requestNotificationPermission(): Promise<NotificationPermission> {
+    if (typeof window === "undefined") return "denied";
+    
     if (!("Notification" in window)) {
       return "denied";
     }
@@ -88,6 +96,8 @@ export class PWAManager {
     title: string,
     options?: NotificationOptions,
   ): Promise<void> {
+    if (typeof window === "undefined") return;
+    
     if (Notification.permission === "granted") {
       const registration = await navigator.serviceWorker.ready;
       await registration.showNotification(title, {
@@ -99,10 +109,13 @@ export class PWAManager {
   }
 
   isOnline(): boolean {
+    if (typeof window === "undefined") return true;
     return navigator.onLine;
   }
 
   addOnlineStatusListener(callback: (isOnline: boolean) => void): () => void {
+    if (typeof window === "undefined") return () => {};
+    
     const handleOnline = () => callback(true);
     const handleOffline = () => callback(false);
 
@@ -117,6 +130,8 @@ export class PWAManager {
   }
 
   async checkForUpdate(): Promise<boolean> {
+    if (typeof window === "undefined") return false;
+    
     const registration = await navigator.serviceWorker.ready;
 
     return new Promise((resolve) => {
@@ -137,6 +152,8 @@ export class PWAManager {
   }
 
   async updateApp(): Promise<void> {
+    if (typeof window === "undefined") return;
+    
     const registration = await navigator.serviceWorker.ready;
     await registration.update();
   }
