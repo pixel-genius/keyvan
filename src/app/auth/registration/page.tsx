@@ -1,12 +1,12 @@
 "use client";
 
-import { Button } from "@/components/components/atoms/button";
 import Typography from "@/components/components/atoms/typography";
 import { Input } from "@/components/components/molecules/input";
+import { Button } from "@/components/components/atoms/button";
 import BottomSheet from "@/app/_components/BottomSheet";
-import { useState } from "react";
 import FileUpload from "@/app/_components/FileUpload";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const Registrationpage = () => {
   const router = useRouter();
@@ -20,39 +20,42 @@ const Registrationpage = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = () => {
-    // Generate a pending token with timestamp
+    // Generate a pending token with timestamp - only on client side
     const pendingToken = {
       token: Math.random().toString(36).substring(2),
       timestamp: Date.now(),
-      status: 'pending'
+      status: "pending",
     };
-    
+
     // Store the registration data and pending token
-    localStorage.setItem("registrationData", JSON.stringify({
-      ...formData,
-      provincialLicense: provincialLicense ? provincialLicense.name : null,
-      businessLicense: businessLicense ? businessLicense.name : null
-    }));
-    
+    localStorage.setItem(
+      "registrationData",
+      JSON.stringify({
+        ...formData,
+        provincialLicense: provincialLicense ? provincialLicense.name : null,
+        businessLicense: businessLicense ? businessLicense.name : null,
+      }),
+    );
+
     // Store the pending token
     localStorage.setItem("pendingToken", JSON.stringify(pendingToken));
-    
+
     // Navigate to pending approval page
     router.push("/auth/pend-approved");
   };
 
   return (
     <div className="h-full">
-      <BottomSheet 
-        isOpen={isOpen} 
-        onClose={() => {}} 
+      <BottomSheet
+        isOpen={isOpen}
+        onClose={() => {}}
         hasBackdrop={false}
         hasBlur={false}
         isClosable={false}
@@ -64,38 +67,38 @@ const Registrationpage = () => {
               برای تکمیل فرایند ثبت نام لطفا اطلاعات با دقت پر کنید{" "}
             </Typography>
           </div>
-          
+
           <div className="flex flex-col gap-2">
             <div className="w-full flex gap-2">
-              <Input 
-                placeholder="نام" 
+              <Input
+                placeholder="نام"
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleInputChange}
               />
-              <Input 
-                placeholder="نام خانوادگی" 
+              <Input
+                placeholder="نام خانوادگی"
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleInputChange}
               />
             </div>
-            
+
             <div className="flex flex-col gap-2">
-              <FileUpload 
-                label="مجوز توزیع استانی یا کشوری (اختیاری)" 
+              <FileUpload
+                label="مجوز توزیع استانی یا کشوری (اختیاری)"
                 onChange={setProvincialLicense}
               />
-              
-              <FileUpload 
-                label="جواز کسب (اختیاری)" 
+
+              <FileUpload
+                label="جواز کسب (اختیاری)"
                 onChange={setBusinessLicense}
               />
             </div>
-            
-            <Button 
-              variant={"primary"} 
-              state="warning" 
+
+            <Button
+              variant={"primary"}
+              state="warning"
               onClick={handleSubmit}
               disabled={!formData.firstName || !formData.lastName}
             >

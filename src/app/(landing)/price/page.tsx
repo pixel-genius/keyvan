@@ -160,7 +160,9 @@ const Pricepage = () => {
   const [currentDayIndex, setCurrentDayIndex] = useState(0);
   const [showChart, setShowChart] = useState(false);
   const [selectedItem, setSelectedItem] = useState<PriceItem | null>(null);
-  const [chartData, setChartData] = useState(generateChartData());
+  const [chartData, setChartData] = useState<
+    ReturnType<typeof generateChartData>
+  >([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredItems, setFilteredItems] = useState<PriceItem[]>(priceItems);
   const [showPurchaseBottomSheet, setShowPurchaseBottomSheet] = useState(false);
@@ -180,6 +182,11 @@ const Pricepage = () => {
     "مارلبورو",
     "وینستون",
   ];
+
+  // Initialize chart data on client side only
+  useEffect(() => {
+    setChartData(generateChartData());
+  }, []);
 
   // Filter items whenever search query or active filter changes
   useEffect(() => {

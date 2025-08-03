@@ -1,29 +1,33 @@
 "use client";
-import { Button } from "@/components/components/atoms/button";
-import { Countdown } from "@/components/components/atoms/countdown";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/components/components/atoms/input-otp";
-
+} from "@/components/components/molecules/input-otp";
 import Typography from "@/components/components/atoms/typography";
-import React, { useEffect, useState } from "react";
+import { Button } from "@/components/components/atoms/button";
 import BottomSheet from "@/app/_components/BottomSheet";
-import { useRouter } from "next/navigation";
+import Countdown from "@/app/_components/Countdown";
 import { IconPencil } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 const OtpPage = () => {
   const router = useRouter();
-  const [value, setValue] = React.useState("");
-  const [isOpen] = React.useState(true);
+  const [isOpen] = useState(true);
+  const [value, setValue] = useState("");
   const [phone, setPhone] = useState("");
+  const [countdownDate, setCountdownDate] = useState<number | null>(null);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     const storedPhone = localStorage.getItem("demo_phone");
     if (storedPhone) {
       setPhone(storedPhone);
     }
+    // Set countdown date on client side only
+    setCountdownDate(Date.now() + 120000);
   }, []);
 
   const handleVerify = () => {
@@ -35,7 +39,7 @@ const OtpPage = () => {
       JSON.stringify({
         phone: localStorage.getItem("demo_phone"),
         isAuthenticated: true,
-      })
+      }),
     );
 
     // Redirect to registration page
@@ -101,7 +105,9 @@ const OtpPage = () => {
                     <InputOTPSlot index={4} />
                   </InputOTPGroup>
                 </InputOTP>
-                <Countdown date={Date.now() + 120000} />
+                {isClient && countdownDate && (
+                  <Countdown date={countdownDate} />
+                )}
               </div>
 
               <Button variant={"primary"} onClick={handleVerify}>
