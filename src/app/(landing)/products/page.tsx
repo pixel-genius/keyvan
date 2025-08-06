@@ -1,23 +1,18 @@
 "use client";
 
+import { UseGetShopProductsList } from "@/utils/apis/shop/products/GET/shopProductsListApi";
 import Typography from "@/components/components/atoms/typography";
-import { Textarea } from "@/components/components/atoms/textarea";
+import { Skeleton } from "@/components/components/atoms/skeleton";
 import { Input } from "@/components/components/molecules/input";
 import { Button } from "@/components/components/atoms/button";
-// Import the API fetch function and type
-import { fetchProductsFromApi, ApiProduct } from "@/lib/api";
 import { Chip } from "@/components/components/atoms/chip";
 import ProductCard from "@/app/_components/ProductCard";
+// Import the API fetch function and type
 import BottomSheet from "@/app/_components/BottomSheet";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { IconFilter } from "@tabler/icons-react";
-import Counter from "@/app/_components/Counter";
 import Header from "@/app/_components/Header";
-import { useState, useEffect } from "react";
-import { formatPrice } from "@/lib/utils";
-import Tomanicon from "@/icons/toman";
-import { Suspense } from "react";
-// import { UseGetShopProductsList } from "@/utils/apis/shop/products/GET/shopProductsListApi";
 
 const cigaretteBrands = [
   "مارلبورو",
@@ -30,38 +25,23 @@ const cigaretteBrands = [
   "پال مال",
 ];
 
-// Define a minimal SelectedProduct type for cart usage
-interface SelectedProduct {
-  title: string;
-  price: string;
-}
-
-// تابع برای دریافت محصولات
-// Fetch products from API (see src/lib/api.ts)
-const fetchProducts = async (): Promise<ApiProduct[]> => {
-  return fetchProductsFromApi();
-};
-
 function ProductsContent() {
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  // const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] =
-    useState<SelectedProduct | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [products, setProducts] = useState<ApiProduct[]>([]);
   const [categoryFilter, setCategoryFilter] = useState<string | undefined>(
     undefined,
   );
 
-  // const query = UseGetShopProductsList({
-  //   params: {
-  //     category: 1,
-  //     brand: 1,
-  //     search: "",
-  //   },
-  // });
+  const query = UseGetShopProductsList({
+    params: {
+      // category: 1,
+      // brand: 1,
+      // search: "",
+    },
+  });
 
   // استفاده از usePathname و useSearchParams برای مدیریت مسیر
   const searchParams = useSearchParams();
@@ -70,72 +50,9 @@ function ProductsContent() {
     setCategoryFilter(searchParams.get("category") || undefined);
   }, [searchParams]);
 
-  // دریافت داده‌ها در useEffect (فقط در سمت کاربر)
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const productsData = await fetchProducts();
-        console.log("Products data received:", productsData);
-        // Filter out products with invalid image URLs or add fallback images
-        const validProducts = productsData.map((product) => ({
-          ...product,
-          image: product.image || "/img/sigar.png", // Use existing placeholder image
-        }));
-        console.log("Valid products with images:", validProducts);
-        setProducts(validProducts);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-        // Set empty array to prevent further errors
-        setProducts([]);
-      }
-    };
-    fetchData();
-  }, []);
-
-  const filteredProducts = products.filter((product) => {
-    let isValid = true;
-
-    // The API does not provide a category field. If needed, add logic here.
-    // if (categoryFilter) {
-    //   isValid = isValid && product.category === categoryFilter;
-    // }
-
-    if (searchQuery) {
-      isValid =
-        isValid &&
-        (product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.description
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase()));
-    }
-
-    // The API does not provide a category field. If needed, add logic here.
-    // if (selectedCategories.length > 0) {
-    //   isValid = isValid && selectedCategories.includes(product.category);
-    // }
-
-    if (selectedBrands.length > 0) {
-      isValid =
-        isValid &&
-        selectedBrands.some((_brand) => product.name.includes(_brand));
-    }
-
-    return isValid;
-  });
-
   const handleBackClick = () => {
     // Simulate a back navigation
     window.history.back();
-  };
-
-  const handleAddToCart = (product: SelectedProduct) => {
-    setSelectedProduct(product);
-    setIsBottomSheetOpen(true);
-  };
-
-  const handleCloseBottomSheet = () => {
-    setIsBottomSheetOpen(false);
-    setSelectedProduct(null);
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -168,7 +85,6 @@ function ProductsContent() {
     setSelectedCategories([]);
     setSelectedBrands([]);
   };
-
   // The API does not provide a category field. If needed, extract categories from another source.
   const categories: string[] = [];
 
@@ -264,22 +180,44 @@ function ProductsContent() {
       </BottomSheet>
 
       <div className="flex flex-col gap-2 mt-4">
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map((product) => (
+        {query.isFetching && (
+          <>
+            {[...Array(6)].map((_, index) => (
+              <div key={index} className="bg-black rounded-2xl p-4" dir="rtl">
+                <div className="flex items-center space-x-4">
+                  {/* Image skeleton */}
+                  <Skeleton className="w-16 h-16 rounded-lg" />
+
+                  {/* Content skeleton */}
+                  <div className="flex-1">
+                    <Skeleton className="h-4 w-3/4 mb-2" />
+                    <Skeleton className="h-3 w-1/3" />
+                  </div>
+
+                  {/* Price and buttons skeleton */}
+                  <div className="flex flex-col items-end">
+                    <Skeleton className="h-4 w-16 mb-2" />
+                    <div className="flex space-x-2">
+                      <Skeleton className="w-8 h-8 rounded-full" />
+                      <Skeleton className="w-8 h-8 rounded-full" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </>
+        )}
+        {query?.data && query.data.length > 0 ? (
+          query.data.map((product) => (
             <ProductCard
               key={product.id}
               id={product.id.toString()}
-              imageUrl={product.image}
+              imageUrl={product.image as string}
               title={product.name}
-              subtitle={product.description}
+              subtitle={product.description as string}
               price={product.latest_price.toString()}
               // category={product.category} // Not available from API
-              onAddToCart={() =>
-                handleAddToCart({
-                  title: product.name,
-                  price: product.latest_price.toString(),
-                })
-              }
+              onAddToCart={() => {}}
             />
           ))
         ) : (
@@ -291,7 +229,7 @@ function ProductsContent() {
         )}
       </div>
 
-      <BottomSheet isOpen={isBottomSheetOpen} onClose={handleCloseBottomSheet}>
+      {/* <BottomSheet isOpen={isBottomSheetOpen} onClose={handleCloseBottomSheet}>
         {selectedProduct && (
           <div className="pb-15">
             <hr className="w-1/2 mx-auto border-2 rounded-full mb-4" />
@@ -326,7 +264,7 @@ function ProductsContent() {
             </Button>
           </div>
         )}
-      </BottomSheet>
+      </BottomSheet> */}
     </div>
   );
 }

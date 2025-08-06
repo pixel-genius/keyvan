@@ -1,9 +1,9 @@
-import { coreApi } from "@/utils/service/instance";
 import {
   DefinedInitialDataOptions,
   QueryKey,
   useQuery,
 } from "@tanstack/react-query";
+import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
 interface ShopProductsListApiParams {
@@ -28,23 +28,24 @@ interface ProductsListApiResponse {
 }
 
 const getShopProductsListApi = async (
-  params: ShopProductsListApiParams
-): Promise<ProductsListApiResponse> => {
+  params: ShopProductsListApiParams,
+): Promise<ProductsListApiResponse[]> => {
   const response = await coreApi.get(path.join("/shop/products/"), {
     params,
   });
+
   return response.data;
 };
 
 export const UseGetShopProductsList = (
   props?: { params: ShopProductsListApiParams } & Partial<
     DefinedInitialDataOptions<
-      ProductsListApiResponse,
+      ProductsListApiResponse[],
       unknown,
-      ProductsListApiResponse,
+      ProductsListApiResponse[],
       QueryKey
     >
-  >
+  >,
 ) => {
   const { params, ...restProps } = props || {};
   const query = useQuery({
