@@ -268,7 +268,6 @@ function ProductsContent() {
     </div>
   );
 }
-
 export default function ProductsPage() {
   return (
     <Suspense

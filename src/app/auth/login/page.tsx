@@ -32,9 +32,15 @@ const LoginPage = () => {
   };
 
   return (
-    <div dir="rtl" className="max-w-lg w-full mx-auto">
-      <BottomSheet isOpen={true} onClose={() => {}} hasBackdrop={false} hasBlur={false} isClosable={false}>
-        <div className="flex py-8 flex-col gap-1">
+    <div dir="rtl" className="max-w-lg w-full  mx-auto">
+      <BottomSheet
+        isOpen={true}
+        onClose={() => {}}
+        hasBackdrop={false}
+        hasBlur={false}
+        isClosable={false}
+      >
+        <div className="flex py-8 px-4 flex-col gap-1">
           <div className="p-2 flex flex-col gap-1 justify-center">
             <h2 className="text-xl font-bold pb-2">حساب کاربری</h2>
             <p className="text-xs">

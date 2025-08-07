@@ -11,6 +11,7 @@ import {
 } from "@tabler/icons-react";
 import Typography from "@/components/components/atoms/typography";
 import { useState, useRef, useEffect, useCallback } from "react";
+import { Button } from "@/components/components/atoms/button";
 import BottomSheet from "@/app/_components/BottomSheet";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
@@ -38,11 +39,12 @@ const AddressesPage = () => {
   const router = useRouter();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mapRef = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [isLoading, setIsLoading] = useState(false);
   const [isAddAddressOpen, setIsAddAddressOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] =
     useState<SelectedLocation | null>(null);
   const [addressDetails, setAddressDetails] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
@@ -443,35 +445,6 @@ const AddressesPage = () => {
           </div>
 
           {/* Address Details */}
-          {selectedLocation && (
-            <div className="bg-muted/50 rounded-xl p-4">
-              <Typography
-                variant={"paragraph/sm"}
-                weight="bold"
-                className="mb-2 text-foreground"
-              >
-                آدرس انتخاب شده:
-              </Typography>
-              {isLoading ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                  <Typography
-                    variant={"paragraph/xs"}
-                    className="text-muted-foreground"
-                  >
-                    در حال دریافت آدرس...
-                  </Typography>
-                </div>
-              ) : (
-                <Typography
-                  variant={"paragraph/xs"}
-                  className="text-muted-foreground"
-                >
-                  {addressDetails || "برای دریافت آدرس، روی نقشه کلیک کنید"}
-                </Typography>
-              )}
-            </div>
-          )}
 
           {/* Manual Address Input */}
           <div>
@@ -491,7 +464,7 @@ const AddressesPage = () => {
           </div>
 
           {/* Save Button */}
-          <button
+          <Button
             onClick={handleSaveAddress}
             disabled={!addressDetails}
             className="w-full bg-primary text-primary-foreground py-4 rounded-2xl font-bold disabled:bg-muted disabled:cursor-not-allowed hover:shadow-lg transition-all duration-300"
@@ -499,7 +472,7 @@ const AddressesPage = () => {
             <Typography variant={"paragraph/md"} weight="bold">
               ذخیره آدرس
             </Typography>
-          </button>
+          </Button>
         </div>
       </BottomSheet>
     </div>

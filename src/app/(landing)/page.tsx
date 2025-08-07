@@ -124,9 +124,10 @@ const LandingPage = () => {
         />
         <CardItem
           icon={<IconNews size={34} className="text-primary" />}
-          label="اخبار داخلیات"
+          label=" اخبار دخانیات "
+          link="/blog"
         />
-        <CardItem 
+        <CardItem
           icon={<IconChartAreaLine size={34} className="text-primary" />}
           label="قیمت روز"
           link="/price"

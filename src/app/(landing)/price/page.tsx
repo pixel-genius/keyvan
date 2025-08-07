@@ -18,6 +18,7 @@ import Counter from "@/app/_components/Counter";
 import { useEffect, useState } from "react";
 import { formatPrice } from "@/lib/utils";
 import Tomanicon from "@/icons/toman";
+import { clsx } from "clsx";
 
 // Define types
 type TrendType = "up" | "down";
@@ -30,94 +31,84 @@ interface DayData {
 
 interface PriceItem {
   title: string;
-  price: string;
+  price: number;
   trend: TrendType;
   category?: string;
 }
 
 interface SelectedProduct {
   title: string;
-  price: string;
+  price: number;
 }
 
-// Sample days data
+// Sample days data (5 days: today and 4 previous days)
 const daysData: DayData[] = [
-  { name: "شنبه", number: "۱", date: "۲۰اردیبهشت" },
-  { name: "یکشنبه", number: "۲", date: "۲۱اردیبهشت" },
-  { name: "دوشنبه", number: "۳", date: "۲۲اردیبهشت" },
-  { name: "سه‌شنبه", number: "۴", date: "۲۳اردیبهشت" },
-  { name: "چهارشنبه", number: "۵", date: "۲۴اردیبهشت" },
-  { name: "پنج‌شنبه", number: "۶", date: "۲۵اردیبهشت" },
-  { name: "جمعه", number: "۷", date: "۲۶اردیبهشت" },
-  { name: "شنبه", number: "۸", date: "۲۷اردیبهشت" },
-  { name: "یکشنبه", number: "۹", date: "۲۸اردیبهشت" },
-  { name: "دوشنبه", number: "۱۰", date: "۲۹اردیبهشت" },
-  { name: "سه‌شنبه", number: "۱۱", date: "۳۰اردیبهشت" },
-  { name: "چهارشنبه", number: "۱۲", date: "۱خرداد" },
-  { name: "پنج‌شنبه", number: "۱۳", date: "۲خرداد" },
-  { name: "جمعه", number: "۱۴", date: "۳خرداد" },
-  { name: "شنبه", number: "۱۵", date: "۴خرداد" },
+  { name: "پنج‌شنبه", number: "۷", date: "۳ خرداد" }, // 4 روز قبل
+  { name: "جمعه", number: "۸", date: "۴ خرداد" }, // 3 روز قبل
+  { name: "شنبه", number: "۹", date: "۵ خرداد" }, // 2 روز قبل
+  { name: "یکشنبه", number: "۱۰", date: "۶ خرداد" }, // 1 روز قبل
+  { name: "دوشنبه", number: "۱۱", date: "۷ خرداد" }, // امروز
 ];
 
 // Sample price items data with categories
 const priceItems: PriceItem[] = [
   {
     title: "کمل کامپکت نقره ای کویین",
-    price: "۳٬۵۰۰٬۰۰۰",
+    price: 3500000,
     trend: "up",
     category: "سیگار",
   },
   {
     title: "کمل کامپکت آبی کویین",
-    price: "۳٬۵۰۰٬۰۰۰",
+    price: 3500000,
     trend: "down",
     category: "سیگار",
   },
   {
     title: "کمل نقره ای کینگ",
-    price: "۳٬۵۰۰٬۰۰۰",
+    price: 3500000,
     trend: "up",
     category: "سیگار",
   },
   {
     title: "کمل مشکی کینگ جدید",
-    price: "۳٬۵۰۰٬۰۰۰",
+    price: 3500000,
     trend: "up",
     category: "سیگار",
   },
   {
     title: "تنباکو دو سیب معمولی",
-    price: "۳٬۱۰۰٬۰۰۰",
+    price: 3100000,
     trend: "down",
     category: "تنباکو",
   },
   {
     title: "تنباکو نعنا فرانسوی",
-    price: "۳٬۳۰۰٬۰۰۰",
+    price: 3300000,
     trend: "up",
     category: "تنباکو",
   },
   {
     title: "سی‌تی‌آی بلو",
-    price: "۴٬۵۰۰٬۰۰۰",
+    price: 4500000,
     trend: "down",
     category: "سی‌تی‌آی",
   },
   {
     title: "سی‌تی‌آی قرمز",
-    price: "۴٬۶۰۰٬۰۰۰",
+    price: 4600000,
     trend: "up",
     category: "سی‌تی‌آی",
   },
   {
     title: "بی‌تی‌آی کلاسیک",
-    price: "۴٬۲۰۰٬۰۰۰",
+    price: 4200000,
     trend: "down",
     category: "بی‌تی‌آی",
   },
   {
     title: "بی‌تی‌آی مینت",
-    price: "۴٬۳۰۰٬۰۰۰",
+    price: 4300000,
     trend: "up",
     category: "بی‌تی‌آی",
   },
@@ -157,7 +148,7 @@ const chartConfig = {
 
 const Pricepage = () => {
   const [activeFilter, setActiveFilter] = useState("همه");
-  const [currentDayIndex, setCurrentDayIndex] = useState(0);
+  const [currentDayIndex, setCurrentDayIndex] = useState(daysData.length - 1); // مقدار اولیه روی آخرین روز
   const [showChart, setShowChart] = useState(false);
   const [selectedItem, setSelectedItem] = useState<PriceItem | null>(null);
   const [chartData, setChartData] = useState<
@@ -215,7 +206,7 @@ const Pricepage = () => {
   };
 
   const goToNextDay = () => {
-    if (currentDayIndex < daysData.length - 7) {
+    if (currentDayIndex < daysData.length - 1) {
       setCurrentDayIndex(currentDayIndex + 1);
     }
   };
@@ -259,51 +250,38 @@ const Pricepage = () => {
     );
   };
 
-  const visibleDays = daysData.slice(currentDayIndex, currentDayIndex + 7);
   const currentDay = daysData[currentDayIndex];
 
   return (
     <div dir="rtl" className="px-4 pt-28 ">
-      <div className="flex  justify-between pb-3.5">
-        <div>
-          <Typography variant={"label/md"} weight={"medium"}>
-            قیمت محصولات اسفند ۱۴۰۳
-          </Typography>
-        </div>
-        <div className="flex flex-row gap-0.5">
-          <button
-            onClick={goToPreviousDay}
-            disabled={currentDayIndex === 0}
-            className={
-              currentDayIndex === 0
-                ? "opacity-50 cursor-not-allowed"
-                : "cursor-pointer"
-            }
-          >
-            <IconChevronRight size={24} />
-          </button>
-          <button
-            onClick={goToNextDay}
-            disabled={currentDayIndex >= daysData.length - 7}
-            className={
-              currentDayIndex >= daysData.length - 7
-                ? "opacity-50 cursor-not-allowed"
-                : "cursor-pointer"
-            }
-          >
-            <IconChevronLeft size={24} />
-          </button>
-        </div>
-      </div>
-      <div className="flex flex-row gap-1 pb-3.5 overflow-x-auto">
-        {visibleDays.map((day, index) => (
-          <DayBadge
-            key={index}
-            dayName={day.name}
-            dayNumber={day.number}
-            active={index === 0}
-          />
-        ))}
+      <div className="flex flex-row items-center justify-between ">
+        <button
+          onClick={goToPreviousDay}
+          disabled={currentDayIndex === 0}
+          className={clsx(
+            "flex items-center justify-center  text-white transition",
+            currentDayIndex === 0
+              ? "opacity-50 cursor-not-allowed"
+              : "bg-zinc-800",
+          )}
+        >
+          <IconChevronRight size={24} />
+          روز قبل
+        </button>
+        <DayBadge dayLabel={`${currentDay.name} ${currentDay.date} ۱۴۰۴`} />
+        <button
+          onClick={goToNextDay}
+          disabled={currentDayIndex === daysData.length - 1}
+          className={clsx(
+            "flex items-center justify-center rounded-xl text-white transition",
+            currentDayIndex === daysData.length - 1
+              ? "opacity-50 cursor-not-allowed"
+              : "bg-zinc-800 hover:bg-zinc-700",
+          )}
+        >
+          روز بعد
+          <IconChevronLeft size={24} />
+        </button>
       </div>
 
       {/* Search Input */}

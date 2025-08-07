@@ -1,8 +1,8 @@
-import { ReactNode } from "react";
-import "../globals.css";
-import LogoIcon from "@/icons/logo";
-import { Toaster } from "sonner";
 import PWAInstaller from "@/components/PWAInstaller";
+import { ReactNode } from "react";
+import { Toaster } from "sonner";
+import Image from "next/image";
+import "../globals.css";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
@@ -10,12 +10,13 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       <Toaster position="top-center" />
       <div className="w-full max-w-md bg-card shadow-lg">
         <div className="h-screen flex flex-col">
-          <div className="flex text-center px-2 pt-10 flex-col items-center justify-center gap-2.5">
-            <LogoIcon size={48} />
-            <p className="text-white font-bold text-right">
+          <div className="flex text-center px-2 pt-28 flex-col items-center justify-center gap-2.5">
+            {/* <LogoIcon size={48} /> */}
+            <Image src="/img/logo-main.svg" alt="logo" width={50} height={50} />
+            <p className="text-white font-bold text-center">
               قیمت روز تنباکو، سریع و بدون واسطه!
             </p>
-            <p className="text-xs font-light text-sub text-right">
+            <p className="text-xs font-light text-sub text-center">
               هر روز جدیدترین قیمت‌ها را دریافت کنید و خرید عمده خود را با
               بهترین نرخ انجام دهید.
             </p>
