@@ -1,13 +1,19 @@
 "use client";
 
-import { Button } from "@/components/components/atoms/button";
-import { Card } from "@/components/components/atoms/card";
-import { Chip } from "@/components/components/atoms/chip";
+import {
+  IconChevronDown,
+  IconHome,
+  IconListDetails,
+  IconShoppingBag,
+  IconUser,
+} from "@tabler/icons-react";
 import { Separator } from "@/components/components/atoms/separator";
+import Typography from "@/components/components/atoms/typography";
+import { Button } from "@/components/components/atoms/button";
+import { Chip } from "@/components/components/atoms/chip";
+import { Card } from "@/components/components/atoms/card";
 import Header from "@/app/_components/Header";
 import { useState } from "react";
-import Typography from "@/components/components/atoms/typography";
-import { IconChevronDown, IconHome, IconListDetails, IconShoppingBag, IconUser } from "@tabler/icons-react";
 
 const OrdersPage = () => {
   const [orderDetailsOpen, setOrderDetailsOpen] = useState(false);
@@ -19,7 +25,7 @@ const OrdersPage = () => {
   return (
     <>
       <Header title="سفارشات" />
-      <div dir="rtl" className="flex px-4 pt-28  flex-col gap-4 pt-8">
+      <div dir="rtl" className="flex px-4 pt-28  flex-col gap-4 ">
         {/* Use the new Header component */}
 
         {/* Order Card */}
