@@ -131,16 +131,16 @@ const generateChartData = () => {
     const randomValue = Math.floor(Math.random() * 1500000);
 
     return {
-      month,
-      desktop: baseValue + randomValue,
-      index, // Include the index in the resulting object
+      id: index + 1,
+      price: baseValue + randomValue,
+      created_at: month, // Using month as created_at for display purposes
     };
   });
 };
 
 // Chart configuration
 const chartConfig = {
-  desktop: {
+  price: {
     label: "قیمت",
     color: "#BA953B",
   },

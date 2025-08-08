@@ -1,26 +1,26 @@
-import { coreApi } from "@/utils/service/instance";
 import {
   DefinedInitialDataOptions,
   QueryKey,
   useQuery,
 } from "@tanstack/react-query";
+import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
-interface BlogPostsDetailApiResponse {
+export interface BlogPostsDetailApiResponse {
   id: number;
   author: number;
   author_name: string;
   title: string | null;
   slug: string | null;
   content: string | null;
-  image: URL | string | null;
+  image: string | null;
   is_published: boolean;
-  created_at: Date | string;
-  updated_at: Date | string;
+  created_at: string | null;
+  updated_at: string | null;
 }
 
 const getBlogPostsDetailApi = async (
-  slug: string
+  slug: string,
 ): Promise<BlogPostsDetailApiResponse> => {
   const response = await coreApi.get(path.join(`/blog/posts/${slug}`));
   return response.data;
@@ -34,7 +34,7 @@ export const UseGetBlogPostsDetail = (
       BlogPostsDetailApiResponse,
       QueryKey
     >
-  >
+  >,
 ) => {
   const { slug, ...restProps } = props || {};
   const query = useQuery({

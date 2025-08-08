@@ -1,21 +1,17 @@
 "use client";
-import { Card, CardContent } from "@/components/components/atoms/card";
+import { ShopProductDetailPriceHistoryApiResponse } from "@/utils/apis/shop/products/[id]/priceHistory/GET/shopProductDetailPriceHistoryApi";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/components/atoms/chart";
+import { Card, CardContent } from "@/components/components/atoms/card";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
-
-interface ChartDataItem {
-  month: string; // Key for the X-axis
-  desktop: number; // Key for the data to be plotted
-}
 
 interface CustomAreaChartCardProps {
   chartConfig: ChartConfig; // Use the imported type
-  chartData: ChartDataItem[];
+  chartData: ShopProductDetailPriceHistoryApiResponse[];
 }
 
 const CustomAreaChartCard = ({
@@ -33,18 +29,20 @@ const CustomAreaChartCard = ({
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="created_at"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) =>
+                value ? new Date(value).toLocaleDateString("fa") : ""
+              }
             />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="dot" hideLabel />}
             />
             <Area
-              dataKey="desktop"
+              dataKey="price"
               type="linear"
               fill="#BA953B"
               fillOpacity={0.4}

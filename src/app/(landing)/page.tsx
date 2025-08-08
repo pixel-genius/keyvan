@@ -17,34 +17,13 @@ import {
   IconNews,
 } from "@tabler/icons-react";
 
+import { UseGetBlogPostsList } from "@/utils/apis/blog/posts/GET/blogPostsListApi";
 import Typography from "@/components/components/atoms/typography";
 import CardItem from "../_components/CardItem";
 import BlogCard from "../_components/BlogCard";
 import ProductCard from "../_components/card";
 
 const LandingPage = () => {
-  const blogs = [
-    {
-      image: "/img/blog.webp",
-      title: "عنوان بلاگ ۱",
-      description: "توضیح کوتاه درباره مطلب اول",
-      date: "پنجشنبه ۲ اسفند ۱۴۰۳",
-    },
-    {
-      image: "/img/blog.webp",
-      title: "عنوان بلاگ ۱",
-      description:
-        "به گزارش مدیریت ارتباطات و امور بین‌الملل شرکت دخانیات ایران، فرداد امیراسکندری؛ مدیرعامل شرکت دخانیات در پیامی ضمن تبریک فرارسیدن سال 1404 هجری شمسی، تأکید کرد: با اتحاد، همدلی، گذشت و فداکاری و تدبیر تمامی همکاران گرامی خود بار دیگر شرکت دخانیات ایران، شأن و جایگاه واقعی خود را باز می‌یابد . ",
-      date: "پنجشنبه ۲ اسفند ۱۴۰۳",
-    },
-    {
-      image: "/img/blog.webp",
-      title: "عنوان بلاگ ۱",
-      description: "توضیح کوتاه درباره مطلب اول",
-      date: "پنجشنبه ۲ اسفند ۱۴۰۳",
-    },
-  ];
-
   const products = [
     {
       image: "/img/image-cig.jpg",
@@ -77,6 +56,7 @@ const LandingPage = () => {
       price: "200000",
     },
   ];
+  const blogPostsquery = UseGetBlogPostsList();
 
   return (
     <div className="px-4 pt-28">
@@ -203,11 +183,12 @@ const LandingPage = () => {
         spaceBetween={10}
         className="mySwiper"
       >
-        {blogs.map((blog, index) => (
-          <SwiperSlide key={index}>
-            <BlogCard {...blog} />
-          </SwiperSlide>
-        ))}
+        {blogPostsquery?.data?.length &&
+          blogPostsquery.data.map((blog, index) => (
+            <SwiperSlide key={index}>
+              <BlogCard {...blog} />
+            </SwiperSlide>
+          ))}
       </Swiper>
     </div>
   );

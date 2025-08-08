@@ -1,22 +1,14 @@
 "use client";
-import { Badge } from "@/components/components/atoms/badge";
-import { ChartConfig } from "@/components/components/atoms/chart";
-import Typography from "@/components/components/atoms/typography";
-import { IconChevronLeft } from "@tabler/icons-react";
-import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { fetchProductById, ApiProduct } from "@/lib/api";
+import { UseGetShopProductDetailPriceHistory } from "@/utils/apis/shop/products/[id]/priceHistory/GET/shopProductDetailPriceHistoryApi";
+import { UseGetShopProductDetail } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
 import CustomAreaChartCard from "./_components/CustomAreaChartCard";
-
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-];
+import Typography from "@/components/components/atoms/typography";
+import { ChartConfig } from "@/components/components/atoms/chart";
+import { Badge } from "@/components/components/atoms/badge";
+import { useParams, useRouter } from "next/navigation";
+import { IconChevronLeft } from "@tabler/icons-react";
+import { Suspense } from "react";
+import Image from "next/image";
 
 const chartConfig = {
   desktop: {
@@ -25,34 +17,17 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function ProductDetail() {
+function ProductDetailFn() {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
-  const [product, setProduct] = useState<ApiProduct | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      if (!id) return;
-      
-      try {
-        setLoading(true);
-        setError(null);
-        const productData = await fetchProductById(id as string);
-        setProduct(productData);
-      } catch (err) {
-        console.error('Error fetching product:', err);
-        setError('خطا در دریافت اطلاعات محصول');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const shopProductDetail = UseGetShopProductDetail({ slug: id });
 
-    fetchProduct();
-  }, [id]);
+  const shopProductDetailPriceHistory = UseGetShopProductDetailPriceHistory({
+    slug: id,
+  });
 
-  if (loading) {
+  if (shopProductDetail.isFetching) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <Typography variant="paragraph/md">در حال بارگذاری...</Typography>
@@ -60,11 +35,13 @@ export default function ProductDetail() {
     );
   }
 
-  if (error) {
+  if (shopProductDetail.isError) {
     return (
       <div className="px-4 pt-28  flex flex-col items-center justify-center min-h-screen gap-4">
-        <Typography variant="paragraph/md" className="text-red-500">{error}</Typography>
-        <button 
+        <Typography variant="paragraph/md" className="text-red-500">
+          خطا در دریافت اطلاعات محصول
+        </Typography>
+        <button
           onClick={() => router.back()}
           className="px-4 py-2 bg-primary text-white rounded-lg"
         >
@@ -74,11 +51,11 @@ export default function ProductDetail() {
     );
   }
 
-  if (!product) {
+  if (!shopProductDetail.data) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4">
         <Typography variant="paragraph/md">محصول یافت نشد</Typography>
-        <button 
+        <button
           onClick={() => router.back()}
           className="px-4 py-2 bg-primary text-white rounded-lg"
         >
@@ -101,8 +78,8 @@ export default function ProductDetail() {
       <div>
         <div className="flex justify-center items-center bg-white rounded-lg mb-4">
           <Image
-            src={product.image || '/img/sigar.png'}
-            alt={product.name}
+            src={shopProductDetail?.data?.image || "/img/sigar.png"}
+            alt={shopProductDetail?.data?.name || ""}
             width={400}
             height={400}
             className="object-cover"
@@ -113,10 +90,16 @@ export default function ProductDetail() {
             سیگار
           </Badge>
           <Typography variant="label/lg" weight="normal">
-            {product.name}
+            {shopProductDetail?.data?.name || null}
           </Typography>
-          <Typography variant="label/lg" weight="bold" className="mt-2 text-primary">
-            {product.latest_price.toLocaleString('fa-IR')} تومان
+          <Typography
+            variant="label/lg"
+            weight="bold"
+            className="mt-2 text-primary"
+          >
+            {shopProductDetail.data.latest_price
+              ? `${shopProductDetail.data.latest_price.toLocaleString("fa-IR")} تومان`
+              : null}
           </Typography>
         </div>
         <div className="flex flex-col gap-2 text-right">
@@ -124,18 +107,34 @@ export default function ProductDetail() {
             توضیحات
           </Typography>
           <div className="pb-5">
-            <Typography variant="paragraph/sm" weight="normal" className="text-gray-300">
-              {product.description}
+            <Typography
+              variant="paragraph/sm"
+              weight="normal"
+              className="text-gray-300"
+            >
+              {shopProductDetail.data.description || null}
             </Typography>
           </div>
         </div>
-        <div>
-          <CustomAreaChartCard
-            chartConfig={chartConfig}
-            chartData={chartData}
-          />
-        </div>
+        {shopProductDetailPriceHistory.data ? (
+          <div>
+            <CustomAreaChartCard
+              chartConfig={chartConfig}
+              chartData={shopProductDetailPriceHistory.data || []}
+            />
+          </div>
+        ) : null}
       </div>
     </div>
+  );
+}
+
+export default function ProductDetail() {
+  return (
+    <Suspense
+      fallback={<div className="text-center py-8">در حال بارگذاری...</div>}
+    >
+      <ProductDetailFn />
+    </Suspense>
   );
 }

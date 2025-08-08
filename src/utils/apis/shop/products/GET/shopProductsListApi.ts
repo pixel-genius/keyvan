@@ -6,7 +6,7 @@ import {
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
-interface ShopProductsListApiParams {
+export interface ShopProductsListApiParams {
   category?: number;
   brand?: number;
   search?: string;
@@ -16,14 +16,14 @@ interface ProductsListApiResponse {
   id: number;
   name: string;
   description: string | null;
-  image: URL | null | string;
-  created_at: Date | string;
+  image: string;
+  created_at: string;
   is_active: boolean;
   latest_price: number;
   price_history: {
     id: number;
     price: number;
-    created_at: Date | string;
+    created_at: string;
   }[];
 }
 
