@@ -17,46 +17,16 @@ import {
   IconNews,
 } from "@tabler/icons-react";
 
-import { UseGetBlogPostsList } from "@/utils/apis/blog/posts/GET/blogPostsListApi";
+import { useGetShopProductsList } from "@/utils/apis/shop/products/GET/shopProductsListApi";
+import { useGetBlogPostsList } from "@/utils/apis/blog/posts/GET/blogPostsListApi";
 import Typography from "@/components/components/atoms/typography";
 import CardItem from "../_components/CardItem";
 import BlogCard from "../_components/BlogCard";
 import ProductCard from "../_components/card";
 
 const LandingPage = () => {
-  const products = [
-    {
-      image: "/img/image-cig.jpg",
-      name: "سیگار وینستون کلاسیک الترا لایت نقره ای کینگ",
-      category: "سیگار",
-      price: "200000",
-    },
-    {
-      image: "/img/image-cig.jpg",
-      name: "سیگار وینستون کلاسیک الترا لایت نقره ای کینگ",
-      category: "سیگار",
-      price: "200000",
-    },
-    {
-      image: "/img/image-cig.jpg",
-      name: "سیگار وینستون کلاسیک الترا لایت نقره ای کینگ",
-      category: "سیگار",
-      price: "200000",
-    },
-    {
-      image: "/img/image-cig.jpg",
-      name: "سیگار وینستون کلاسیک الترا لایت نقره ای کینگ",
-      category: "سیگار",
-      price: "200000",
-    },
-    {
-      image: "/img/image-cig.jpg",
-      name: "سیگار وینستون کلاسیک الترا لایت نقره ای کینگ",
-      category: "سیگار",
-      price: "200000",
-    },
-  ];
-  const blogPostsquery = UseGetBlogPostsList();
+  const blogPostsQuery = useGetBlogPostsList();
+  const shopProductsQuery = useGetShopProductsList();
 
   return (
     <div className="px-4 pt-28">
@@ -151,11 +121,14 @@ const LandingPage = () => {
           },
         }}
       >
-        {products.map((product, index) => (
-          <SwiperSlide key={index}>
-            <ProductCard product={product} />
-          </SwiperSlide>
-        ))}
+        {shopProductsQuery?.data?.length &&
+          shopProductsQuery.data.map((product, index) => (
+            <SwiperSlide key={index} style={{ maxHeight: "300px" }}>
+              <ProductCard
+                product={{ ...product, price: product.latest_price }}
+              />
+            </SwiperSlide>
+          ))}
       </Swiper>
 
       <div className="flex justify-between items-center gap-8 pt-8  pb-4">
@@ -183,8 +156,8 @@ const LandingPage = () => {
         spaceBetween={10}
         className="mySwiper"
       >
-        {blogPostsquery?.data?.length &&
-          blogPostsquery.data.map((blog, index) => (
+        {blogPostsQuery?.data?.length &&
+          blogPostsQuery.data.map((blog, index) => (
             <SwiperSlide key={index}>
               <BlogCard {...blog} />
             </SwiperSlide>

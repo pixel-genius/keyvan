@@ -1,5 +1,5 @@
-import { coreApi } from "@/utils/service/instance";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
+import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
 interface AccountLoginPostApiRequest {
@@ -21,7 +21,7 @@ interface AccountLoginPostApiResponse {
 }
 
 const accountLoginPostApi = async (
-  body: AccountLoginPostApiRequest
+  body: AccountLoginPostApiRequest,
 ): Promise<AccountLoginPostApiResponse> => {
   const response = await coreApi.post(path.join(`/account/login/`), {
     body,
@@ -29,7 +29,7 @@ const accountLoginPostApi = async (
   return response.data;
 };
 
-export const UseAccountLoginPost = (
+export const useAccountLoginPost = (
   props?: { body: AccountLoginPostApiRequest } & Partial<
     UseMutationOptions<
       AccountLoginPostApiResponse,
@@ -37,7 +37,7 @@ export const UseAccountLoginPost = (
       AccountLoginPostApiRequest,
       unknown
     >
-  >
+  >,
 ) => {
   const { body, ...restProps } = props || {};
   const query = useMutation({

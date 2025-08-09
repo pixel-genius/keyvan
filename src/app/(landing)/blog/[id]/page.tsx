@@ -1,12 +1,12 @@
 "use client";
-import { UseGetBlogPostsDetail } from "@/utils/apis/blog/posts/[id]/GET/blogPostDetailApi";
+import { useGetBlogPostsDetail } from "@/utils/apis/blog/posts/[id]/GET/blogPostDetailApi";
 import { useParams } from "next/navigation";
 import { Suspense } from "react";
 import Image from "next/image";
 
 function BlogDetailFn() {
-  const params = useParams<{ id: string }>();
-  const post = UseGetBlogPostsDetail({ slug: params?.id });
+  const { id } = useParams<{ id: string }>();
+  const post = useGetBlogPostsDetail({ slug: id });
 
   return (
     <main className="max-w-2xl mx-auto pt-28 px-4" dir="rtl">

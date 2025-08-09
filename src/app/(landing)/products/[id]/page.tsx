@@ -1,6 +1,6 @@
 "use client";
-import { UseGetShopProductDetailPriceHistory } from "@/utils/apis/shop/products/[id]/priceHistory/GET/shopProductDetailPriceHistoryApi";
-import { UseGetShopProductDetail } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
+import { useGetShopProductDetailPriceHistory } from "@/utils/apis/shop/products/[id]/priceHistory/GET/shopProductDetailPriceHistoryApi";
+import { useGetShopProductDetail } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
 import CustomAreaChartCard from "./_components/CustomAreaChartCard";
 import Typography from "@/components/components/atoms/typography";
 import { ChartConfig } from "@/components/components/atoms/chart";
@@ -21,9 +21,9 @@ function ProductDetailFn() {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
 
-  const shopProductDetail = UseGetShopProductDetail({ slug: id });
+  const shopProductDetail = useGetShopProductDetail({ slug: id });
 
-  const shopProductDetailPriceHistory = UseGetShopProductDetailPriceHistory({
+  const shopProductDetailPriceHistory = useGetShopProductDetailPriceHistory({
     slug: id,
   });
 

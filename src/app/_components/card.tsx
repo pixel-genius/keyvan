@@ -1,13 +1,13 @@
-import Image from "next/image";
-import Tomanicon from "../../icons/toman";
-import { Badge } from "@/components/components/atoms/badge";
 import Typography from "@/components/components/atoms/typography";
+import { Badge } from "@/components/components/atoms/badge";
+import Tomanicon from "../../icons/toman";
+import Image from "next/image";
 
 interface Product {
   name: string;
   image: string;
   price: string | number;
-  category: string;
+  category?: string;
 }
 
 const ProductCard = ({ product }: { product: Product }) => {
@@ -26,11 +26,11 @@ const ProductCard = ({ product }: { product: Product }) => {
     <div className="bg-maincard p-4 rounded-xl pb-1.5">
       <div className="flex justify-center items-center mb-2">
         <Image
-          src={product.image}
-          alt={product.name}
+          src={product?.image}
+          alt={product?.name || ""}
           width={400}
           height={400}
-          className="w-full object-cover rounded"
+          className="w-full object-cover rounded max-h-[200px]"
         />
       </div>
       <div className="flex flex-col items-start justify-center gap-2">
@@ -39,10 +39,10 @@ const ProductCard = ({ product }: { product: Product }) => {
           weight="normal"
           className="text-right"
         >
-          {product.name}
+          {product?.name || ""}
         </Typography>
 
-        <Badge variant="default">{product.category}</Badge>
+        <Badge variant="default">{product?.category || ""}</Badge>
       </div>
       <div className="w-auto h-0.5 bg-zinc-700 my-2 rounded-full"></div>
       <div className="flex justify-between items-center">

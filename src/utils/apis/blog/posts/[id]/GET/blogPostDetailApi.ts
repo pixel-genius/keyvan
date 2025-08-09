@@ -26,7 +26,7 @@ const getBlogPostsDetailApi = async (
   return response.data;
 };
 
-export const UseGetBlogPostsDetail = (
+export const useGetBlogPostsDetail = (
   props?: { slug: string } & Partial<
     DefinedInitialDataOptions<
       BlogPostsDetailApiResponse,

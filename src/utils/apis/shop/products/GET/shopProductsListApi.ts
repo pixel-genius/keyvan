@@ -37,7 +37,7 @@ const getShopProductsListApi = async (
   return response.data;
 };
 
-export const UseGetShopProductsList = (
+export const useGetShopProductsList = (
   props?: { params: ShopProductsListApiParams } & Partial<
     DefinedInitialDataOptions<
       ProductsListApiResponse[],

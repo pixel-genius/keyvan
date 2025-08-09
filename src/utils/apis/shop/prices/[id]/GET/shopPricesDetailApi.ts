@@ -6,7 +6,7 @@ import {
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
-export interface ShopProductDetailApiResponse {
+export interface ShopPricesDetailApiResponse {
   id: number;
   name: string;
   description: string | null;
@@ -16,27 +16,27 @@ export interface ShopProductDetailApiResponse {
   latest_price: number;
 }
 
-const getShopProductDetailApi = async (
+const getShopPricesDetailApi = async (
   slug: string,
-): Promise<ShopProductDetailApiResponse> => {
-  const response = await coreApi.get(path.join(`/shop/products/${slug}/`));
+): Promise<ShopPricesDetailApiResponse> => {
+  const response = await coreApi.get(path.join(`/shop/prices/${slug}/`));
   return response.data;
 };
 
-export const useGetShopProductDetail = (
+export const useGetShopPricesDetail = (
   props?: { slug: string } & Partial<
     DefinedInitialDataOptions<
-      ShopProductDetailApiResponse,
+      ShopPricesDetailApiResponse,
       unknown,
-      ShopProductDetailApiResponse,
+      ShopPricesDetailApiResponse,
       QueryKey
     >
   >,
 ) => {
   const { slug, ...restProps } = props || {};
   const query = useQuery({
-    queryKey: ["getShopProductDetail", slug],
-    queryFn: () => getShopProductDetailApi(slug || ""),
+    queryKey: ["getShopPricesDetail", slug],
+    queryFn: () => getShopPricesDetailApi(slug || ""),
     ...restProps,
   });
 

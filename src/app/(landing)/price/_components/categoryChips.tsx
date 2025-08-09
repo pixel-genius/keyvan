@@ -1,6 +1,6 @@
 // components/FilterChips.tsx
-import { Chip } from "@/components/components/atoms/chip";
 import Typography from "@/components/components/atoms/typography";
+import { Chip } from "@/components/components/atoms/chip";
 import React from "react";
 
 type FilterChipsProps = {
@@ -9,7 +9,7 @@ type FilterChipsProps = {
   onFilterChange: (filter: string) => void;
 };
 
-export const FilterChips: React.FC<FilterChipsProps> = ({
+export const CategoryChips: React.FC<FilterChipsProps> = ({
   filters,
   activeFilter,
   onFilterChange,

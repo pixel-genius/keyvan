@@ -1,6 +1,6 @@
 "use client";
 
-import { UseGetShopProductsList } from "@/utils/apis/shop/products/GET/shopProductsListApi";
+import { useGetShopProductsList } from "@/utils/apis/shop/products/GET/shopProductsListApi";
 import Typography from "@/components/components/atoms/typography";
 import { Skeleton } from "@/components/components/atoms/skeleton";
 import { Input } from "@/components/components/molecules/input";
@@ -35,7 +35,7 @@ function ProductsContent() {
     undefined,
   );
 
-  const query = UseGetShopProductsList({
+  const query = useGetShopProductsList({
     params: {
       // category: 1,
       // brand: 1,

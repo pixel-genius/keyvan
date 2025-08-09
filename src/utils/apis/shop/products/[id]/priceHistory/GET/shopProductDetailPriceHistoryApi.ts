@@ -21,7 +21,7 @@ const getShopProductDetailPriceHistoryApi = async (
   return response.data;
 };
 
-export const UseGetShopProductDetailPriceHistory = (
+export const useGetShopProductDetailPriceHistory = (
   props?: { slug: string } & Partial<
     DefinedInitialDataOptions<
       ShopProductDetailPriceHistoryApiResponse[],

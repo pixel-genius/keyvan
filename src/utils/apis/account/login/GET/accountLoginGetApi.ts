@@ -1,9 +1,9 @@
-import { coreApi } from "@/utils/service/instance";
 import {
   DefinedInitialDataOptions,
   QueryKey,
   useQuery,
 } from "@tanstack/react-query";
+import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
 interface AccountLoginGETApiParams {
@@ -16,7 +16,7 @@ interface AccountLoginGETApiResponse {
 }
 
 const accountLoginGETApi = async (
-  params: AccountLoginGETApiParams
+  params: AccountLoginGETApiParams,
 ): Promise<AccountLoginGETApiResponse> => {
   const response = await coreApi.get(path.join(`/account/login/`), {
     params,
@@ -24,7 +24,7 @@ const accountLoginGETApi = async (
   return response.data;
 };
 
-export const UseAccountLoginGET = (
+export const useAccountLoginGET = (
   props?: { params: AccountLoginGETApiParams } & Partial<
     DefinedInitialDataOptions<
       AccountLoginGETApiResponse,
@@ -32,7 +32,7 @@ export const UseAccountLoginGET = (
       AccountLoginGETApiResponse,
       QueryKey
     >
-  >
+  >,
 ) => {
   const { params, ...restProps } = props || {};
   const query = useQuery({

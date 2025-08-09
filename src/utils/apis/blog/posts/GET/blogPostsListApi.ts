@@ -32,7 +32,7 @@ const getBlogPostsListApi = async (
   return response.data;
 };
 
-export const UseGetBlogPostsList = (
+export const useGetBlogPostsList = (
   props?: { params: BlogPostsListApiParams } & Partial<
     DefinedInitialDataOptions<
       BlogPostsListApiResponse[],

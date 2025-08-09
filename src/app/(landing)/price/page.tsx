@@ -1,4 +1,9 @@
 "use client";
+import { useGetShopProductDetailPriceHistory } from "@/utils/apis/shop/products/[id]/priceHistory/GET/shopProductDetailPriceHistoryApi";
+import {
+  ShopPricesListApiResponse,
+  useGetShopPricesList,
+} from "@/utils/apis/shop/prices/GET/shopPricesListApi";
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -10,18 +15,17 @@ import { Textarea } from "@/components/components/atoms/textarea";
 import { Input } from "@/components/components/molecules/input";
 import { Button } from "@/components/components/atoms/button";
 import { PriceItemCard } from "./_components/priceItemCard";
+import { CategoryChips } from "./_components/categoryChips";
+import { formatPrice, toPersianNumbers } from "@/lib/utils";
 import { Chip } from "@/components/components/atoms/chip";
 import BottomSheet from "@/app/_components/BottomSheet";
-import { FilterChips } from "./_components/filterChips";
 import { DayBadge } from "./_components/dayBadge";
+import { format, subDays } from "date-fns-jalali";
 import Counter from "@/app/_components/Counter";
-import { useEffect, useState } from "react";
-import { formatPrice } from "@/lib/utils";
+import { faIR } from "date-fns-jalali/locale";
+import { useMemo, useState } from "react";
 import Tomanicon from "@/icons/toman";
 import { clsx } from "clsx";
-
-// Define types
-type TrendType = "up" | "down";
 
 interface DayData {
   name: string;
@@ -29,114 +33,10 @@ interface DayData {
   date: string;
 }
 
-interface PriceItem {
-  title: string;
-  price: number;
-  trend: TrendType;
-  category?: string;
-}
-
 interface SelectedProduct {
   title: string;
   price: number;
 }
-
-// Sample days data (5 days: today and 4 previous days)
-const daysData: DayData[] = [
-  { name: "پنج‌شنبه", number: "۷", date: "۳ خرداد" }, // 4 روز قبل
-  { name: "جمعه", number: "۸", date: "۴ خرداد" }, // 3 روز قبل
-  { name: "شنبه", number: "۹", date: "۵ خرداد" }, // 2 روز قبل
-  { name: "یکشنبه", number: "۱۰", date: "۶ خرداد" }, // 1 روز قبل
-  { name: "دوشنبه", number: "۱۱", date: "۷ خرداد" }, // امروز
-];
-
-// Sample price items data with categories
-const priceItems: PriceItem[] = [
-  {
-    title: "کمل کامپکت نقره ای کویین",
-    price: 3500000,
-    trend: "up",
-    category: "سیگار",
-  },
-  {
-    title: "کمل کامپکت آبی کویین",
-    price: 3500000,
-    trend: "down",
-    category: "سیگار",
-  },
-  {
-    title: "کمل نقره ای کینگ",
-    price: 3500000,
-    trend: "up",
-    category: "سیگار",
-  },
-  {
-    title: "کمل مشکی کینگ جدید",
-    price: 3500000,
-    trend: "up",
-    category: "سیگار",
-  },
-  {
-    title: "تنباکو دو سیب معمولی",
-    price: 3100000,
-    trend: "down",
-    category: "تنباکو",
-  },
-  {
-    title: "تنباکو نعنا فرانسوی",
-    price: 3300000,
-    trend: "up",
-    category: "تنباکو",
-  },
-  {
-    title: "سی‌تی‌آی بلو",
-    price: 4500000,
-    trend: "down",
-    category: "سی‌تی‌آی",
-  },
-  {
-    title: "سی‌تی‌آی قرمز",
-    price: 4600000,
-    trend: "up",
-    category: "سی‌تی‌آی",
-  },
-  {
-    title: "بی‌تی‌آی کلاسیک",
-    price: 4200000,
-    trend: "down",
-    category: "بی‌تی‌آی",
-  },
-  {
-    title: "بی‌تی‌آی مینت",
-    price: 4300000,
-    trend: "up",
-    category: "بی‌تی‌آی",
-  },
-];
-
-// Generate sample chart data based on Persian months
-const generateChartData = () => {
-  const persianMonths = [
-    "فروردین",
-    "اردیبهشت",
-    "خرداد",
-    "تیر",
-    "مرداد",
-    "شهریور",
-  ];
-
-  return persianMonths.map((month, index) => {
-    // Generate random price values between 3,000,000 and 4,500,000
-    const baseValue = 3000000;
-    const randomValue = Math.floor(Math.random() * 1500000);
-
-    return {
-      id: index + 1,
-      price: baseValue + randomValue,
-      created_at: month, // Using month as created_at for display purposes
-    };
-  });
-};
 
 // Chart configuration
 const chartConfig = {
@@ -148,14 +48,25 @@ const chartConfig = {
 
 const Pricepage = () => {
   const [activeFilter, setActiveFilter] = useState("همه");
+  const daysData = useMemo(() => {
+    const today = new Date();
+    const days: DayData[] = [];
+    for (let i = 0; i < 6; i++) {
+      const date = subDays(today, i);
+      days.push({
+        name: format(date, "EEEE"),
+        number: toPersianNumbers(format(date, "d")),
+        date: format(date, "yyyy/MM/dd", { locale: faIR }),
+      });
+    }
+    return days.reverse();
+  }, []);
+
   const [currentDayIndex, setCurrentDayIndex] = useState(daysData.length - 1); // مقدار اولیه روی آخرین روز
   const [showChart, setShowChart] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<PriceItem | null>(null);
-  const [chartData, setChartData] = useState<
-    ReturnType<typeof generateChartData>
-  >([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredItems, setFilteredItems] = useState<PriceItem[]>(priceItems);
+  const [selectedItem, setSelectedItem] =
+    useState<ShopPricesListApiResponse | null>(null);
   const [showPurchaseBottomSheet, setShowPurchaseBottomSheet] = useState(false);
   const [selectedProduct, setSelectedProduct] =
     useState<SelectedProduct | null>(null);
@@ -163,6 +74,18 @@ const Pricepage = () => {
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
 
   const filters = ["همه", "سیگار", "تنباکو", "سی‌تی‌آی", "بی‌تی‌آی"];
+
+  const shopPricesListQuery = useGetShopPricesList({
+    params: {
+      search: searchQuery || undefined,
+      date: daysData[currentDayIndex].date,
+    },
+  });
+
+  const shopProductDetailPriceHistory = useGetShopProductDetailPriceHistory({
+    enabled: !!selectedItem?.product_id,
+    slug: selectedItem?.product_id?.toString() || "",
+  });
 
   // Brand filters for the bottom sheet
   const brands = [
@@ -174,30 +97,25 @@ const Pricepage = () => {
     "وینستون",
   ];
 
-  // Initialize chart data on client side only
-  useEffect(() => {
-    setChartData(generateChartData());
-  }, []);
-
   // Filter items whenever search query or active filter changes
-  useEffect(() => {
-    let result = priceItems;
+  // useEffect(() => {
+  //   let result = priceItems;
 
-    // Apply category filter
-    if (activeFilter !== "همه") {
-      result = result.filter((item) => item.category === activeFilter);
-    }
+  //   // Apply category filter
+  //   if (activeFilter !== "همه") {
+  //     result = result.filter((item) => item.category === activeFilter);
+  //   }
 
-    // Apply search filter
-    if (searchQuery.trim()) {
-      const query = searchQuery.trim().toLowerCase();
-      result = result.filter((item) =>
-        item.title.toLowerCase().includes(query),
-      );
-    }
+  //   // Apply search filter
+  //   if (searchQuery.trim()) {
+  //     const query = searchQuery.trim().toLowerCase();
+  //     result = result.filter((item) =>
+  //       item.title.toLowerCase().includes(query),
+  //     );
+  //   }
 
-    setFilteredItems(result);
-  }, [searchQuery, activeFilter]);
+  //   setFilteredItems(result);
+  // }, [searchQuery, activeFilter]);
 
   const goToPreviousDay = () => {
     if (currentDayIndex > 0) {
@@ -211,23 +129,22 @@ const Pricepage = () => {
     }
   };
 
-  const handleItemClick = (item: PriceItem) => {
+  const handleItemClick = (item: ShopPricesListApiResponse) => {
     setSelectedItem(item);
-    // Generate new chart data when an item is clicked
-    setChartData(generateChartData());
     setShowChart(true);
   };
 
   const closeChart = () => {
-    setShowChart(false);
     setSelectedItem(null);
+    setShowChart(false);
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
-  const handlePurchase = (item: PriceItem) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handlePurchase = (item: any) => {
     setSelectedProduct({
       title: item.title,
       price: item.price,
@@ -268,7 +185,9 @@ const Pricepage = () => {
           <IconChevronRight size={24} />
           روز قبل
         </button>
-        <DayBadge dayLabel={`${currentDay.name} ${currentDay.date} ۱۴۰۴`} />
+        <DayBadge
+          dayLabel={`${currentDay.name} ${toPersianNumbers(currentDay.date)}`}
+        />
         <button
           onClick={goToNextDay}
           disabled={currentDayIndex === daysData.length - 1}
@@ -302,7 +221,7 @@ const Pricepage = () => {
 
       {/* Category filters */}
       <div className="flex flex-row gap-1 pb-3.5 overflow-x-auto">
-        <FilterChips
+        <CategoryChips
           filters={filters}
           activeFilter={activeFilter}
           onFilterChange={setActiveFilter}
@@ -310,7 +229,7 @@ const Pricepage = () => {
       </div>
 
       {/* Results count */}
-      {filteredItems.length === 0 ? (
+      {shopPricesListQuery?.data?.length === 0 ? (
         <div className="text-center py-8">
           <Typography
             variant="label/md"
@@ -322,12 +241,12 @@ const Pricepage = () => {
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          {filteredItems.map((item, index) => (
+          {shopPricesListQuery?.data?.map((item, index) => (
             <div key={index}>
               <PriceItemCard
-                title={item.title}
+                title={item.name}
                 price={item.price}
-                trend={item.trend}
+                trend={item.is_increamental ? "up" : "down"}
                 onChart={() => handleItemClick(item)}
                 onBuy={() => handlePurchase(item)}
               />
@@ -344,14 +263,14 @@ const Pricepage = () => {
             weight="bold"
             className="mb-4 text-center"
           >
-            نمودار {selectedItem?.title}
+            نمودار {selectedItem?.name}
           </Typography>
 
           {/* Chart using CustomAreaChartCard */}
           <div className="mt-4 mb-8">
             <CustomAreaChartCard
               chartConfig={chartConfig}
-              chartData={chartData}
+              chartData={shopProductDetailPriceHistory.data || []}
             />
 
             {/* Date indicator */}
