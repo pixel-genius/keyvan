@@ -24,12 +24,11 @@ const ProductCard = ({ product }: { product: Product }) => {
 
   return (
     <div className="bg-maincard p-4 rounded-xl pb-1.5">
-      <div className="flex justify-center items-center mb-2">
+      <div className="flex justify-center items-center mb-2 min-h-[150px] relative">
         <Image
           src={product?.image}
           alt={product?.name || ""}
-          width={400}
-          height={400}
+          fill
           className="w-full object-cover rounded max-h-[200px]"
         />
       </div>
