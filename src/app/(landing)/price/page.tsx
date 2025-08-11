@@ -31,6 +31,7 @@ interface DayData {
   name: string;
   number: string;
   date: string;
+  time: string;
 }
 
 interface SelectedProduct {
@@ -57,6 +58,7 @@ const Pricepage = () => {
         name: format(date, "EEEE"),
         number: toPersianNumbers(format(date, "d")),
         date: format(date, "yyyy/MM/dd", { locale: faIR }),
+        time: format(date, "B hh:mm", { locale: faIR }),
       });
     }
     return days.reverse();
@@ -256,9 +258,9 @@ const Pricepage = () => {
             {/* Date indicator */}
             <div className="mt-2 text-center">
               <div className="text-xs text-gray-400">
-                <span>{currentDay?.date}</span>
+                <span>{toPersianNumbers(currentDay?.time)}</span>
                 <span className="mx-1">•</span>
-                <span>۵:۱۵ بعدازظهر</span>
+                <span>{toPersianNumbers(currentDay?.date)}</span>
               </div>
             </div>
           </div>
