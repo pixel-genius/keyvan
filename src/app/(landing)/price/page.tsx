@@ -1,9 +1,9 @@
 "use client";
-import { useGetShopProductDetailPriceHistory } from "@/utils/apis/shop/products/[id]/priceHistory/GET/shopProductDetailPriceHistoryApi";
 import {
   ShopPricesListApiResponse,
   useGetShopPricesList,
 } from "@/utils/apis/shop/prices/GET/shopPricesListApi";
+import { useGetShopProductDetail } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -82,7 +82,7 @@ const Pricepage = () => {
     },
   });
 
-  const shopProductDetailPriceHistory = useGetShopProductDetailPriceHistory({
+  const shopProductDetailQuery = useGetShopProductDetail({
     enabled: !!selectedItem?.product_id,
     slug: selectedItem?.product_id?.toString() || "",
   });
@@ -96,26 +96,6 @@ const Pricepage = () => {
     "مارلبورو",
     "وینستون",
   ];
-
-  // Filter items whenever search query or active filter changes
-  // useEffect(() => {
-  //   let result = priceItems;
-
-  //   // Apply category filter
-  //   if (activeFilter !== "همه") {
-  //     result = result.filter((item) => item.category === activeFilter);
-  //   }
-
-  //   // Apply search filter
-  //   if (searchQuery.trim()) {
-  //     const query = searchQuery.trim().toLowerCase();
-  //     result = result.filter((item) =>
-  //       item.title.toLowerCase().includes(query),
-  //     );
-  //   }
-
-  //   setFilteredItems(result);
-  // }, [searchQuery, activeFilter]);
 
   const goToPreviousDay = () => {
     if (currentDayIndex > 0) {
@@ -270,7 +250,7 @@ const Pricepage = () => {
           <div className="mt-4 mb-8">
             <CustomAreaChartCard
               chartConfig={chartConfig}
-              chartData={shopProductDetailPriceHistory.data || []}
+              chartData={shopProductDetailQuery.data?.price_history || []}
             />
 
             {/* Date indicator */}

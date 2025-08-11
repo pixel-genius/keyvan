@@ -14,6 +14,11 @@ export interface ShopProductDetailApiResponse {
   created_at: string;
   is_active: boolean;
   latest_price: number;
+  price_history: {
+    id: number;
+    price: number;
+    created_at: string;
+  }[];
 }
 
 const getShopProductDetailApi = async (
