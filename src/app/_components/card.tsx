@@ -29,7 +29,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           src={product?.image}
           alt={product?.name || ""}
           fill
-          className="w-full object-cover rounded max-h-[200px]"
+          className="w-full object-cover rounded"
         />
       </div>
       <div className="flex flex-col items-start justify-center gap-2">
