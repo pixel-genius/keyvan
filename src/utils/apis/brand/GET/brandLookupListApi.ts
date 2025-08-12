@@ -1,0 +1,39 @@
+import { DefinedInitialDataOptions, useQuery } from "@tanstack/react-query";
+import { coreApi } from "@/utils/service/instance";
+import { Lookup } from "@/lib/types";
+import path from "path";
+
+type BrandLookupListApiResponse = Lookup[];
+
+const getBrandLookupListApi = async (): Promise<BrandLookupListApiResponse> => {
+  const response = await coreApi.get(path.join("/lookup/brand/"));
+
+  return (
+    response.data || [
+      { name: "کمل", id: 1 },
+      { name: "بهمن", id: 2 },
+      { name: "سی‌تی‌آی", id: 3 },
+      { name: "مارلبورو", id: 4 },
+      { name: "وینستون", id: 5 },
+    ]
+  );
+};
+
+export const useGetBrandLookupList = (
+  props?: Partial<
+    DefinedInitialDataOptions<
+      BrandLookupListApiResponse,
+      unknown,
+      BrandLookupListApiResponse,
+      string[]
+    >
+  >,
+) => {
+  const query = useQuery({
+    queryKey: ["getBrandLookupList"],
+    queryFn: () => getBrandLookupListApi(),
+    ...props,
+  });
+
+  return query;
+};

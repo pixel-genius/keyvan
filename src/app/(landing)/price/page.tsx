@@ -4,20 +4,21 @@ import {
   useGetShopPricesList,
 } from "@/utils/apis/shop/prices/GET/shopPricesListApi";
 import { useGetShopProductDetail } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
+import { ShopProductsListApiParams } from "@/utils/apis/shop/products/GET/shopProductsListApi";
 import {
   IconChevronLeft,
   IconChevronRight,
   IconFilter,
 } from "@tabler/icons-react";
 import CustomAreaChartCard from "../products/[id]/_components/CustomAreaChartCard";
+import CategoryChipsFilter from "@/app/_components/lookups/chips/CategoryChips";
+import BrandChipsFilter from "@/app/_components/lookups/chips/BrandChips";
 import Typography from "@/components/components/atoms/typography";
 import { Textarea } from "@/components/components/atoms/textarea";
 import { Input } from "@/components/components/molecules/input";
 import { Button } from "@/components/components/atoms/button";
 import { PriceItemCard } from "./_components/priceItemCard";
-import { CategoryChips } from "./_components/categoryChips";
 import { formatPrice, toPersianNumbers } from "@/lib/utils";
-import { Chip } from "@/components/components/atoms/chip";
 import BottomSheet from "@/app/_components/BottomSheet";
 import { DayBadge } from "./_components/dayBadge";
 import { format, subDays } from "date-fns-jalali";
@@ -48,7 +49,6 @@ const chartConfig = {
 };
 
 const Pricepage = () => {
-  const [activeFilter, setActiveFilter] = useState("همه");
   const daysData = useMemo(() => {
     const today = new Date();
     const days: DayData[] = [];
@@ -73,31 +73,25 @@ const Pricepage = () => {
   const [selectedProduct, setSelectedProduct] =
     useState<SelectedProduct | null>(null);
   const [showFilterBottomSheet, setShowFilterBottomSheet] = useState(false);
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
 
-  const filters = ["همه", "سیگار", "تنباکو", "سی‌تی‌آی", "بی‌تی‌آی"];
+  const [filterParams, setFilterParams] = useState<ShopProductsListApiParams>({
+    date: daysData[currentDayIndex].date,
+    brand: undefined,
+    category: undefined,
+    limit: 10,
+    page: 1,
+    order: "",
+    search: "",
+  });
 
   const shopPricesListQuery = useGetShopPricesList({
-    params: {
-      search: searchQuery || undefined,
-      date: daysData[currentDayIndex].date,
-    },
+    params: filterParams,
   });
 
   const shopProductDetailQuery = useGetShopProductDetail({
     enabled: !!selectedItem?.product_id,
     slug: selectedItem?.product_id?.toString() || "",
   });
-
-  // Brand filters for the bottom sheet
-  const brands = [
-    "کمل",
-    "تنباکو",
-    "سی‌تی‌آی",
-    "بی‌تی‌آی",
-    "مارلبورو",
-    "وینستون",
-  ];
 
   const goToPreviousDay = () => {
     if (currentDayIndex > 0) {
@@ -141,12 +135,6 @@ const Pricepage = () => {
 
   const handleCloseFilterBottomSheet = () => {
     setShowFilterBottomSheet(false);
-  };
-
-  const toggleBrand = (brand: string) => {
-    setSelectedBrands((prev) =>
-      prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand],
-    );
   };
 
   const currentDay = daysData[currentDayIndex];
@@ -203,10 +191,13 @@ const Pricepage = () => {
 
       {/* Category filters */}
       <div className="flex flex-row gap-1 pb-3.5 overflow-x-auto">
-        <CategoryChips
-          filters={filters}
-          activeFilter={activeFilter}
-          onFilterChange={setActiveFilter}
+        <CategoryChipsFilter
+          onChange={(value) => {
+            setFilterParams((prev) => ({
+              ...prev,
+              category: value.id as number,
+            }));
+          }}
         />
       </div>
 
@@ -282,18 +273,14 @@ const Pricepage = () => {
               برندها
             </Typography>
             <div className="flex text-right justify-end flex-wrap gap-2 mt-2">
-              {brands.map((brand) => (
-                <Chip
-                  key={brand}
-                  onClick={() => toggleBrand(brand)}
-                  variant={
-                    selectedBrands.includes(brand) ? "primary" : "secendery"
-                  }
-                  size="sm"
-                >
-                  {brand}
-                </Chip>
-              ))}
+              <BrandChipsFilter
+                onChange={(value) => {
+                  setFilterParams((prev) => ({
+                    ...prev,
+                    brand: value.id as number,
+                  }));
+                }}
+              />
             </div>
           </div>
           <div className="actions mt-4 flex gap-2">

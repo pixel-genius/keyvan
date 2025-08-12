@@ -3,6 +3,7 @@ import {
   QueryKey,
   useQuery,
 } from "@tanstack/react-query";
+import { ShopProductDetailApiResponse } from "../[id]/GET/shopProductDetailApi";
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
@@ -10,26 +11,21 @@ export interface ShopProductsListApiParams {
   category?: number;
   brand?: number;
   search?: string;
+  date?: string;
+  page?: number;
+  limit?: number;
+  order?: string; // 'field' || '-field' || 'field1,field2' || '-field1,-field2'
 }
 
-interface ProductsListApiResponse {
-  id: number;
-  name: string;
-  description: string | null;
-  image: string;
-  created_at: string;
-  is_active: boolean;
-  latest_price: number;
-  price_history: {
-    id: number;
-    price: number;
-    created_at: string;
-  }[];
+export interface ShopProductsListApiResponse {
+  data: ShopProductDetailApiResponse[];
+  total_page: number;
+  per_page: number;
 }
 
 const getShopProductsListApi = async (
   params: ShopProductsListApiParams,
-): Promise<ProductsListApiResponse[]> => {
+): Promise<ShopProductsListApiResponse> => {
   const response = await coreApi.get(path.join("/shop/products/"), {
     params,
   });
@@ -40,9 +36,9 @@ const getShopProductsListApi = async (
 export const useGetShopProductsList = (
   props?: { params: ShopProductsListApiParams } & Partial<
     DefinedInitialDataOptions<
-      ProductsListApiResponse[],
+      ShopProductsListApiResponse,
       unknown,
-      ProductsListApiResponse[],
+      ShopProductsListApiResponse,
       QueryKey
     >
   >,

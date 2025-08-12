@@ -207,8 +207,8 @@ function ProductsContent() {
             ))}
           </>
         )}
-        {query?.data && query.data.length > 0 ? (
-          query.data.map((product) => (
+        {query?.data && query.data.data?.length > 0 ? (
+          query.data.data?.map((product) => (
             <ProductCard
               key={product.id}
               id={product.id.toString()}
