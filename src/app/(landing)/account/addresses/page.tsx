@@ -2,15 +2,16 @@
 
 import {
   IconChevronLeft,
+  IconEdit,
+  IconLocation,
   IconMapPin,
   IconPlus,
-  IconTrash,
-  IconEdit,
   IconStar,
-  IconLocation,
+  IconTrash,
 } from "@tabler/icons-react";
+import { useGetAccountAddressList } from "@/utils/apis/account/address/GET/accountAddressListGetApi";
 import Typography from "@/components/components/atoms/typography";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/components/atoms/button";
 import BottomSheet from "@/app/_components/BottomSheet";
 import { useRouter } from "next/navigation";
@@ -48,25 +49,27 @@ const AddressesPage = () => {
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
+  const accountAddressListQuery = useGetAccountAddressList();
+
   // Ensure we're on the client side
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  const addresses = [
-    {
-      id: 1,
-      title: "خانه",
-      address: "تهران، خیابان ولیعصر، پلاک 123",
-      isDefault: true,
-    },
-    {
-      id: 2,
-      title: "دفتر کار",
-      address: "تهران، خیابان انقلاب، ساختمان تجاری، طبقه 4",
-      isDefault: false,
-    },
-  ];
+  // const addresses = [
+  //   {
+  //     id: 1,
+  //     title: "خانه",
+  //     address: "تهران، خیابان ولیعصر، پلاک 123",
+  //     isDefault: true,
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "دفتر کار",
+  //     address: "تهران، خیابان انقلاب، ساختمان تجاری، طبقه 4",
+  //     isDefault: false,
+  //   },
+  // ];
 
   const handleMapClick = useCallback(async (lat: number, lng: number) => {
     setSelectedLocation({ lat, lng });
@@ -317,7 +320,7 @@ const AddressesPage = () => {
 
         {/* Addresses List */}
         <div className="space-y-4">
-          {addresses.map((address) => (
+          {accountAddressListQuery?.data?.map((address) => (
             <div
               key={address.id}
               className="bg-card rounded-2xl p-5 shadow-sm border border-border hover:shadow-md transition-all duration-300"
@@ -326,13 +329,13 @@ const AddressesPage = () => {
                 <div className="flex items-center gap-4">
                   <div
                     className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                      address.isDefault ? "bg-primary/10" : "bg-muted"
+                      address.is_default ? "bg-primary/10" : "bg-muted"
                     }`}
                   >
                     <IconMapPin
                       size={24}
                       className={
-                        address.isDefault
+                        address.is_default
                           ? "text-primary"
                           : "text-muted-foreground"
                       }
@@ -354,7 +357,7 @@ const AddressesPage = () => {
                     </Typography>
                   </div>
                 </div>
-                {address.isDefault && (
+                {address.is_default && (
                   <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold">
                     <IconStar size={12} />
                     پیش‌فرض
