@@ -12,6 +12,16 @@ export interface ShopPricesListApiParams {
   date?: string;
   category?: number;
   brand?: number;
+  ordering?: string; // 'field' || '-field' || 'field1,field2' || '-field1,-field2'
+  product_id?: string;
+  product__name?: string;
+  product__category?: string;
+  product__brand?: string;
+  product__is_active?: boolean;
+  product__is_increamental?: boolean;
+  date_before?: string;
+  date_after?: string;
+  page: number;
 }
 
 export interface ShopPricesListApiResponse {

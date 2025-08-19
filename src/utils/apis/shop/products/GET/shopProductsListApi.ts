@@ -11,10 +11,8 @@ export interface ShopProductsListApiParams {
   category?: number;
   brand?: number;
   search?: string;
-  date?: string;
   page?: number;
   limit?: number;
-  order?: string; // 'field' || '-field' || 'field1,field2' || '-field1,-field2'
 }
 
 export interface ShopProductsListApiResponse {
