@@ -1,4 +1,4 @@
-import { useGetBrandLookupList } from "@/utils/apis/brand/GET/brandLookupListApi";
+import { useGetBrandLookupList } from "@/utils/apis/shop/brand/GET/brandLookupListApi";
 import Autocomplete, { AutocompleteProps } from "../../Autocomplete";
 
 type BrandAutoCompleteProps = Omit<AutocompleteProps, "options">;
