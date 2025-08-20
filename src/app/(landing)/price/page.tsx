@@ -1,10 +1,10 @@
 "use client";
 import {
+  ShopPricesListApiParams,
   ShopPricesListApiResponse,
   useGetShopPricesList,
 } from "@/utils/apis/shop/prices/GET/shopPricesListApi";
 import { useGetShopProductDetail } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
-import { ShopProductsListApiParams } from "@/utils/apis/shop/products/GET/shopProductsListApi";
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -74,13 +74,13 @@ const Pricepage = () => {
     useState<SelectedProduct | null>(null);
   const [showFilterBottomSheet, setShowFilterBottomSheet] = useState(false);
 
-  const [filterParams, setFilterParams] = useState<ShopProductsListApiParams>({
+  const [filterParams, setFilterParams] = useState<ShopPricesListApiParams>({
     date: daysData[currentDayIndex].date,
     brand: undefined,
     category: undefined,
-    limit: 10,
+    // limit: 10,
     page: 1,
-    order: "",
+    ordering: "",
     search: "",
   });
 
