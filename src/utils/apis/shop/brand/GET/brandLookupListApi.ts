@@ -3,10 +3,16 @@ import { coreApi } from "@/utils/service/instance";
 import { Lookup } from "@/lib/types";
 import path from "path";
 
-type BrandLookupListApiResponse = Lookup[];
+interface BrandLookupListApiResponseObj extends Lookup {
+  description: string;
+  created_at: string;
+  is_active: boolean;
+}
+
+type BrandLookupListApiResponse = BrandLookupListApiResponseObj[];
 
 const getBrandLookupListApi = async (): Promise<BrandLookupListApiResponse> => {
-  const response = await coreApi.get(path.join("/lookup/brand/"));
+  const response = await coreApi.get(path.join("/shop/brands/"));
 
   return (
     response.data || [

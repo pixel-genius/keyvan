@@ -1,5 +1,5 @@
 // components/FilterChips.tsx
-import { useGetBrandLookupList } from "@/utils/apis/brand/GET/brandLookupListApi";
+import { useGetBrandLookupList } from "@/utils/apis/shop/brand/GET/brandLookupListApi";
 import Typography from "@/components/components/atoms/typography";
 import { Chip } from "@/components/components/atoms/chip";
 import React, { useState } from "react";

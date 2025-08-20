@@ -1,4 +1,4 @@
-import { useGetCategoryLookupList } from "@/utils/apis/category/GET/categoryLookupListApi";
+import { useGetCategoryLookupList } from "@/utils/apis/shop/category/GET/categoryLookupListApi";
 import Autocomplete, { AutocompleteProps } from "../../Autocomplete";
 
 type CategoryAutoCompleteProps = Omit<AutocompleteProps, "options">;
