@@ -52,7 +52,7 @@ const Pricepage = () => {
   const daysData = useMemo(() => {
     const today = new Date();
     const days: DayData[] = [];
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i <= 6; i++) {
       const date = subDays(today, i);
       days.push({
         name: format(date, "EEEE"),
@@ -96,12 +96,20 @@ const Pricepage = () => {
   const goToPreviousDay = () => {
     if (currentDayIndex > 0) {
       setCurrentDayIndex(currentDayIndex - 1);
+      setFilterParams((prev) => ({
+        ...prev,
+        date: daysData[currentDayIndex - 1].date,
+      }));
     }
   };
 
   const goToNextDay = () => {
     if (currentDayIndex < daysData.length - 1) {
       setCurrentDayIndex(currentDayIndex + 1);
+      setFilterParams((prev) => ({
+        ...prev,
+        date: daysData[currentDayIndex + 1].date,
+      }));
     }
   };
 
@@ -217,7 +225,7 @@ const Pricepage = () => {
           {shopPricesListQuery?.data?.map((item, index) => (
             <div key={index}>
               <PriceItemCard
-                title={item.name}
+                title={item.product}
                 price={item.price}
                 trend={item.is_increamental ? "up" : "down"}
                 onChart={() => handleItemClick(item)}
@@ -236,7 +244,7 @@ const Pricepage = () => {
             weight="bold"
             className="mb-4 text-center"
           >
-            نمودار {selectedItem?.name}
+            نمودار {selectedItem?.product}
           </Typography>
 
           {/* Chart using CustomAreaChartCard */}

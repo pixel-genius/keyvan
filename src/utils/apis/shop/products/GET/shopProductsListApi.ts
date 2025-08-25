@@ -16,9 +16,10 @@ export interface ShopProductsListApiParams {
 }
 
 export interface ShopProductsListApiResponse {
-  data: ShopProductDetailApiResponse[];
-  total_page: number;
-  per_page: number;
+  results: ShopProductDetailApiResponse[];
+  count: number;
+  next: string | null;
+  previous: string | null;
 }
 
 const getShopProductsListApi = async (

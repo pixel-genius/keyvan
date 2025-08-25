@@ -29,7 +29,7 @@ export interface ShopPricesListApiResponse {
   product_id: number;
   price: number;
   created_at: string;
-  name: string;
+  product: string;
   category: Lookup;
   brand: Lookup;
   is_increamental: boolean;
