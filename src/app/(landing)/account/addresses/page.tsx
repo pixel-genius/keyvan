@@ -9,7 +9,7 @@ import {
   IconStar,
   IconTrash,
 } from "@tabler/icons-react";
-import { useGetAccountAddressList } from "@/utils/apis/account/address/GET/accountAddressListGetApi";
+import { useGetAccountAddressList } from "@/utils/apis/account/addresses/GET/accountAddressesListGetApi";
 import Typography from "@/components/components/atoms/typography";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/components/atoms/button";

@@ -3,20 +3,19 @@ import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
 export interface AccountAddressPatchApiPayload {
-  user_id: number;
-  address: string;
+  text: string;
   title: string;
-  lat: string;
-  long: string;
+  latitude: string;
+  longitude: string;
   is_default: boolean;
 }
 
 export type AccountAddressPatchApiResponse = {
   id: number;
   title: string;
-  lat: string;
-  long: string;
-  address: string;
+  latitude: string;
+  longitude: string;
+  text: string;
   is_default: boolean;
 }[];
 
@@ -25,7 +24,7 @@ const patchAccountAddressApi = async (
   payload: Partial<AccountAddressPatchApiPayload>,
 ): Promise<AccountAddressPatchApiResponse> => {
   const response = await coreApi.patch(
-    path.join("/account/address/"),
+    path.join("/account/addresses/"),
     payload, // POST body
   );
   return response.data;
