@@ -1,13 +1,11 @@
 import PWAInstaller from "@/components/PWAInstaller";
 import { ReactNode } from "react";
-import { Toaster } from "sonner";
 import Image from "next/image";
 import "../globals.css";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex items-center justify-center min-h-screen" dir="rtl">
-      <Toaster position="top-center" />
       <div className="w-full max-w-md bg-card shadow-lg">
         <div className="h-screen flex flex-col">
           <div className="flex text-center px-2 pt-28 flex-col items-center justify-center gap-2.5">

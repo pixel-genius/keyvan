@@ -67,9 +67,7 @@ const OtpPage = () => {
               </Typography>
               <Typography className="pb-2" variant={"label/sm"}>
                 {/* ویرایش شماره  */}
-                کد تأیید را به شمارهٔ <span className="font-bold">
-                  {phone}
-                </span>{" "}
+                کد تأیید را به شمارهٔ <span className="font-bold">{phone}</span>
                 فرستادیم.
               </Typography>
 

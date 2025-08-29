@@ -63,11 +63,9 @@ export default function RootLayout({
       >
         <ApiProvider>
           <LayoutClientWrapper>
-            <main className="pb-44 max-w-lg w-full mx-auto">
-              {children}
-              <Toaster />
-            </main>
+            <main className="pb-44 max-w-lg w-full mx-auto">{children}</main>
             <PWAStatus />
+            <Toaster richColors />
           </LayoutClientWrapper>
         </ApiProvider>
       </body>

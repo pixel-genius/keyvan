@@ -1,34 +1,41 @@
 "use client";
 
+import { useGetAccountAuthOtpLoginApi } from "@/utils/apis/account/auth/otp_login/GET/accountAuthOtpLoginGetApi";
 import { Input } from "@/components/components/molecules/input";
 import { Button } from "@/components/components/atoms/button";
+import { useAuthStore } from "@/utils/store/userAuth.store";
 import BottomSheet from "@/app/_components/BottomSheet";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import React from "react";
+import React, { useState } from "react";
+import { toast } from "sonner";
+import Link from "next/link";
 
 const LoginPage = () => {
   const router = useRouter();
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [nationalId, setNationalId] = useState("");
+  const { setAuthStore } = useAuthStore();
+
+  const loginMutate = useGetAccountAuthOtpLoginApi({
+    onSuccess: () => {
+      setAuthStore({ phoneNumber });
+      router.push("/auth/otp/");
+    },
+    onError: (error) => {
+      if (error?.response?.data?.error === "User not found")
+        toast.error("کاربر با این شماره تلفن وجود ندارد");
+      else toast.error("خطا در ورود");
+    },
+  });
 
   const handleContinue = () => {
-    // Store phone number and national ID in localStorage for demo
-    localStorage.setItem("demo_phone", phoneNumber);
-    localStorage.setItem("demo_national_id", nationalId);
-    router.push("/auth/otp");
+    loginMutate.mutate({ phone_number: phoneNumber });
+    // router.push("/auth/otp");
   };
 
   // Only allow numbers and max 11 digits
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "").slice(0, 11);
     setPhoneNumber(value);
-  };
-
-  // Only allow numbers and max 10 digits for national ID
-  const handleNationalIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, "").slice(0, 10);
-    setNationalId(value);
   };
 
   return (
@@ -58,7 +65,7 @@ const LoginPage = () => {
                 type="tel"
                 maxLength={11}
               />
-              <Input
+              {/* <Input
                 dir="rtl"
                 className="text-right pb-2"
                 placeholder="کد ملی"
@@ -66,17 +73,24 @@ const LoginPage = () => {
                 onChange={handleNationalIdChange}
                 type="text"
                 maxLength={10}
-              />
+              /> */}
+              <p className="text-sm font-light">
+                حساب کاربری ندارید ؟ برای ثبت نام &nbsp;
+                <Link href="/auth/register" className="underline">
+                  کلیک
+                </Link>
+                &nbsp; کنید
+              </p>
               <Button
                 variant={"primary"}
                 onClick={handleContinue}
-                disabled={phoneNumber.length !== 11 || nationalId.length !== 10}
+                disabled={phoneNumber.length !== 11}
               >
                 ادامه
               </Button>
             </div>
             <p className="text-sm font-light">
-              ورود شما به معنای پذیرش{" "}
+              ورود شما به معنای پذیرش
               <span className="underline"> شرایط و قوانین </span>
               پلتفرم تمباکو است
             </p>
