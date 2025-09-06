@@ -3,7 +3,7 @@ import {
   QueryKey,
   useQuery,
 } from "@tanstack/react-query";
-import { ShopOrderDetailApiResponse } from "../[order_id]/GET/shopOrderDetailGetApi";
+import { ShopOrderDetailApiResponse } from "../[id]/GET/shopOrderDetailGetApi";
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
 

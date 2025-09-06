@@ -3,7 +3,7 @@ import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
 export interface ShopCartItemsPutApiPayload {
-  slug: string;
+  id: string;
   quantity: number;
 }
 
@@ -18,11 +18,11 @@ export interface ShopCartItemsPutApiResponse {
 
 // PUT API function
 const putShopCartItemsApi = async ({
-  slug,
+  id,
   ...payload
 }: ShopCartItemsPutApiPayload): Promise<ShopCartItemsPutApiResponse> => {
   const response = await coreApi.put(
-    path.join(`/shop/cart/items/${slug}/`),
+    path.join(`/shop/cart/items/${id}/`),
     payload,
   );
   return response.data;

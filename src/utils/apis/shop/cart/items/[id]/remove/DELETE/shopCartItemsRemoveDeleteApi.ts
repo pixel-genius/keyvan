@@ -10,10 +10,10 @@ export interface shopCartItemsRemoveDeleteApiPayload {
 
 // DELETE API function
 const deleteShopCartItemsRemoveApi = async (
-  itemId: shopCartItemsRemoveDeleteApiPayload,
+  id: shopCartItemsRemoveDeleteApiPayload,
 ): Promise<ShopCartApiResponse> => {
   const response = await coreApi.delete(
-    path.join(`/shop/cart/items/${itemId}/remove/`),
+    path.join(`/shop/cart/items/${id}/remove/`),
   );
   return response.data;
 };

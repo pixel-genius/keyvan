@@ -1,4 +1,4 @@
-import { ShopOrderDetailApiResponse } from "../../[order_id]/GET/shopOrderDetailGetApi";
+import { ShopOrderDetailApiResponse } from "../../[id]/GET/shopOrderDetailGetApi";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
