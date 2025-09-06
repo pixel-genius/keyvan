@@ -3,7 +3,7 @@ import { coreApi } from "@/utils/service/instance";
 import { Lookup } from "@/lib/types";
 import path from "path";
 
-interface CategoryLookupListApiResponseObj extends Lookup {
+export interface CategoryLookupListApiResponseObj extends Lookup {
   description: string;
   created_at: string;
   is_active: boolean;

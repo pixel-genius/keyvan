@@ -1,8 +1,10 @@
+import { CategoryLookupListApiResponseObj } from "../../../category/GET/categoryLookupListApi";
 import {
   DefinedInitialDataOptions,
   QueryKey,
   useQuery,
 } from "@tanstack/react-query";
+import { BrandLookupListApiResponseObj } from "../../../brand/GET/brandLookupListApi";
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
@@ -14,11 +16,14 @@ export interface ShopProductDetailApiResponse {
   created_at: string;
   is_active: boolean;
   latest_price: number;
+  brand: BrandLookupListApiResponseObj;
+  category: CategoryLookupListApiResponseObj;
   price_history: {
     id: number;
     price: number;
     created_at: string;
   }[];
+  is_increamental: boolean;
 }
 
 const getShopProductDetailApi = async (
