@@ -1,21 +1,19 @@
+import { ShopProductDetailApiResponse } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
 import Typography from "@/components/components/atoms/typography";
 import { Badge } from "@/components/components/atoms/badge";
 import Tomanicon from "../../icons/toman";
 import Image from "next/image";
 
-interface Product {
-  name: string;
-  image: string;
-  price: string | number;
-  category?: string;
-}
-
-const ProductCard = ({ product }: { product: Product }) => {
+const ProductCard = ({
+  product,
+}: {
+  product: ShopProductDetailApiResponse;
+}) => {
   // اطمینان از این که قیمت عددی است
   const price =
-    typeof product.price === "string"
-      ? parseFloat(product.price)
-      : product.price;
+    typeof product.latest_price === "string"
+      ? parseFloat(product.latest_price)
+      : product.latest_price;
 
   // فرمت کردن قیمت به تومان
   const formattedPrice = price
@@ -41,7 +39,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           {product?.name || ""}
         </Typography>
 
-        <Badge variant="default">{product?.category || ""}</Badge>
+        <Badge variant="default">{product?.category.name || ""}</Badge>
       </div>
       <div className="w-auto h-0.5 bg-zinc-700 my-2 rounded-full"></div>
       <div className="flex justify-between items-center">

@@ -124,9 +124,7 @@ const LandingPage = () => {
         {shopProductsQuery?.data?.results?.length &&
           shopProductsQuery.data.results?.map((product, index) => (
             <SwiperSlide key={index} style={{ maxHeight: "300px" }}>
-              <ProductCard
-                product={{ ...product, price: product.latest_price }}
-              />
+              <ProductCard product={product} />
             </SwiperSlide>
           ))}
       </Swiper>
