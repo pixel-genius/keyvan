@@ -1,14 +1,13 @@
 import Cookies from "js-cookie";
 
-const tokenName = process?.env?.NEXT_PUBLIC_APP_NAME_COOKIE || "";
 export const setToken = (token: string) => {
-  Cookies.set(tokenName, token, {
-    expires: 1,
+  Cookies.set("auth-token", token, {
+    expires: 7,
   });
 };
 
 export const removeToken = () => {
-  Cookies.remove(tokenName);
+  Cookies.remove("auth-token");
 };
 
-export const getToken = () => Cookies.get(tokenName);
+export const getToken = () => Cookies.get("auth-token");

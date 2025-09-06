@@ -2,30 +2,29 @@ import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
-export interface AccountAddressPostApiPayload {
-  user_id: number;
+export interface AccountAddressesPostApiPayload {
   title: string;
-  address: string;
-  lat: string;
-  long: string;
+  text: string;
+  latitude: string;
+  longitude: string;
   is_default: boolean;
 }
 
-export type AccountAddressPostApiResponse = {
+export type AccountAddressesPostApiResponse = {
   id: number;
-  lat: string;
   title: string;
-  long: string;
-  address: string;
+  latitude: string;
+  longitude: string;
+  text: string;
   is_default: boolean;
 }[];
 
 // POST API function
 const postAccountAddressApi = async (
-  payload: AccountAddressPostApiPayload,
-): Promise<AccountAddressPostApiResponse> => {
+  payload: AccountAddressesPostApiPayload,
+): Promise<AccountAddressesPostApiResponse> => {
   const response = await coreApi.post(
-    path.join("/account/address/"),
+    path.join("/account/addresses/"),
     payload, // POST body
   );
   return response.data;
@@ -34,15 +33,15 @@ const postAccountAddressApi = async (
 // useMutation Hook with proper types
 export const usePostAccountAddress = (
   options?: UseMutationOptions<
-    AccountAddressPostApiResponse,
+    AccountAddressesPostApiResponse,
     unknown,
-    AccountAddressPostApiPayload
+    AccountAddressesPostApiPayload
   >,
 ) => {
   return useMutation<
-    AccountAddressPostApiResponse,
+    AccountAddressesPostApiResponse,
     unknown,
-    AccountAddressPostApiPayload
+    AccountAddressesPostApiPayload
   >({
     mutationFn: postAccountAddressApi,
     mutationKey: ["postAccountAddressApi"],

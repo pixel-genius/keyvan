@@ -64,7 +64,7 @@ const Registrationpage = () => {
           <div className="flex flex-col gap-2">
             <Typography variant={"heading/xs"}>خوش آمدید</Typography>
             <Typography variant={"paragraph/md"}>
-              برای تکمیل فرایند ثبت نام لطفا اطلاعات با دقت پر کنید{" "}
+              برای تکمیل فرایند ثبت نام لطفا اطلاعات با دقت پر کنید
             </Typography>
           </div>
 

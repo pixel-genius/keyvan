@@ -7,7 +7,6 @@ export interface AccountAuthOtpLoginGetApiParams {
   phone_number: string;
 }
 
-// POST API function
 const getAccountAuthOtpLoginApi = async (
   params: AccountAuthOtpLoginGetApiParams,
 ): Promise<unknown> => {
@@ -17,7 +16,6 @@ const getAccountAuthOtpLoginApi = async (
   return response.data;
 };
 
-// useMutation Hook with proper types
 export const useGetAccountAuthOtpLoginApi = (
   options?: UseMutationOptions<
     unknown,

@@ -74,7 +74,7 @@ const OtpPage = () => {
               <button
                 type="button"
                 className="flex items-center gap-1 text-primary underline text-xs hover:text-primary/80 transition-colors"
-                onClick={() => router.push("/auth/login")}
+                onClick={() => router.push("/auth/authenticate")}
                 style={{
                   background: "none",
                   border: "none",

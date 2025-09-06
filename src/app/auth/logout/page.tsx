@@ -1,23 +1,24 @@
 "use client";
-import { useEffect } from "react";
+import { removeToken } from "@/utils/cookie";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const LogoutPage = () => {
   const router = useRouter();
 
   useEffect(() => {
     // Call the API route to clear the cookie
-    fetch("/api/logout", { method: "POST" })
-      .then(() => {
-        // Clear localStorage/sessionStorage if needed
-        localStorage.clear();
-        sessionStorage.clear();
-        // Redirect to login
-        router.replace("/auth/login");
-      });
+    fetch("/account/auth/logout", { method: "POST" }).then(() => {
+      // Clear Cookie if needed
+      removeToken();
+      // Redirect to login
+      router.replace("/auth/authenticate");
+    });
   }, [router]);
 
-  return <div style={{textAlign: 'center', marginTop: '2rem'}}>در حال خروج...</div>;
+  return (
+    <div style={{ textAlign: "center", marginTop: "2rem" }}>در حال خروج...</div>
+  );
 };
 
-export default LogoutPage; 
+export default LogoutPage;

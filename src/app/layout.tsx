@@ -20,6 +20,8 @@ export const metadata = {
   title: "Keyvan App",
   description: "A modern Progressive Web App",
   manifest: "/manifest.json",
+  content:
+    "width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover",
   icons: {
     icon: [
       { url: "/img/logo-PWA.png", sizes: "192x192", type: "image/png" },
