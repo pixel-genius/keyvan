@@ -1,3 +1,4 @@
+import { AccountProfileGetApiResponse } from "../apis/account/profile/GET/accountProfileGetApi";
 import { create } from "zustand";
 
 enum AuthenticateFormStateEnum {
@@ -9,28 +10,7 @@ enum AuthenticateFormStateEnum {
 
 type KeyOFAuthenticateFormState = keyof typeof AuthenticateFormStateEnum;
 interface UserInfoProfile {
-  userProfileInfo?: {
-    firstName?: string | null;
-    lastName?: string | null;
-    email?: string | null;
-    date_of_birth?: string | null;
-    address?: string;
-    bio?: string;
-    certificate?: {
-      id: number;
-      file: string;
-      original_filename: string;
-      size: number;
-      created_at: string;
-    };
-    license?: {
-      id: number;
-      file: string;
-      original_filename: string;
-      size: number;
-      created_at: string;
-    };
-  };
+  userProfileInfo?: AccountProfileGetApiResponse;
 }
 interface AuthStoreVariables {
   authenticateFormState: KeyOFAuthenticateFormState;
@@ -52,5 +32,5 @@ const useAuthStore = create<AuthStore>((set) => ({
     set((state) => ({ ...state, ...data })),
 }));
 
+export { AuthenticateFormStateEnum, useAuthStore };
 export type { KeyOFAuthenticateFormState };
-export { useAuthStore, AuthenticateFormStateEnum };
