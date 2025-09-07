@@ -12,6 +12,7 @@ export type AccountAuthOtpLoginPostApiResponse = {
   phone_number: string;
   token: string;
   user_id: number;
+  is_verified: boolean;
 };
 
 // POST API function

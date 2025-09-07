@@ -1,8 +1,4 @@
-import {
-  DefinedInitialDataOptions,
-  QueryKey,
-  useQuery,
-} from "@tanstack/react-query";
+import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
@@ -24,7 +20,7 @@ const getAccountAddressListApi =
 
 export const useGetAccountAddressList = (
   props?: Partial<
-    DefinedInitialDataOptions<
+    UseQueryOptions<
       AccountAddressesListApiResponse,
       unknown,
       AccountAddressesListApiResponse,

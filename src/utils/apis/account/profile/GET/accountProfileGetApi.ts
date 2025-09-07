@@ -1,19 +1,29 @@
-import {
-  DefinedInitialDataOptions,
-  QueryKey,
-  useQuery,
-} from "@tanstack/react-query";
+import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
 type AccountProfileGetApiResponse = {
-  id: number;
-  title: string;
-  lat: string;
-  long: string;
-  address: string;
-  is_default: boolean;
-}[];
+  firstName?: string | null;
+  lastName?: string | null;
+  email?: string | null;
+  date_of_birth?: string | null;
+  address?: string;
+  bio?: string;
+  certificate?: {
+    id: number;
+    file: string;
+    original_filename: string;
+    size: number;
+    created_at: string;
+  };
+  license?: {
+    id: number;
+    file: string;
+    original_filename: string;
+    size: number;
+    created_at: string;
+  };
+};
 
 const getAccountProfileApi =
   async (): Promise<AccountProfileGetApiResponse> => {
@@ -24,7 +34,7 @@ const getAccountProfileApi =
 
 export const useGetAccountProfileGetApi = (
   props?: Partial<
-    DefinedInitialDataOptions<
+    UseQueryOptions<
       AccountProfileGetApiResponse,
       unknown,
       AccountProfileGetApiResponse,

@@ -19,7 +19,6 @@ const ProductCard = ({
   const formattedPrice = price
     ? new Intl.NumberFormat("fa-IR").format(price)
     : "0";
-
   return (
     <div className="bg-maincard p-4 rounded-xl pb-1.5">
       <div className="flex justify-center items-center mb-2 min-h-[150px] relative">
@@ -39,7 +38,9 @@ const ProductCard = ({
           {product?.name || ""}
         </Typography>
 
-        <Badge variant="default">{product?.category.name || ""}</Badge>
+        {product?.category && (
+          <Badge variant="default">{product?.category?.name || ""}</Badge>
+        )}
       </div>
       <div className="w-auto h-0.5 bg-zinc-700 my-2 rounded-full"></div>
       <div className="flex justify-between items-center">

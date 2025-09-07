@@ -23,6 +23,7 @@ import Typography from "@/components/components/atoms/typography";
 import CardItem from "../_components/CardItem";
 import BlogCard from "../_components/BlogCard";
 import ProductCard from "../_components/card";
+import Link from "next/link";
 
 const LandingPage = () => {
   const blogPostsQuery = useGetBlogPostsList();
@@ -85,11 +86,11 @@ const LandingPage = () => {
       </div>
 
       <div className="flex justify-between items-center gap-8 pt-8  pb-4">
-        <div className="flex flex-col items-center">
+        <Link href="/products/" className="flex flex-col items-center">
           <Typography variant="label/xs" weight="normal">
             مشاهده
           </Typography>
-        </div>
+        </Link>
 
         <div className="flex flex-col items-center">
           <Typography variant="label/md" weight="normal">
@@ -130,11 +131,11 @@ const LandingPage = () => {
       </Swiper>
 
       <div className="flex justify-between items-center gap-8 pt-8  pb-4">
-        <div className="flex flex-col items-center">
+        <Link href="/blogs/" className="flex flex-col items-center">
           <Typography variant="label/xs" weight="normal">
             مشاهده
           </Typography>
-        </div>
+        </Link>
 
         <div className="flex flex-col items-center">
           <Typography variant="label/md" weight="normal">

@@ -1,8 +1,4 @@
-import {
-  DefinedInitialDataOptions,
-  QueryKey,
-  useQuery,
-} from "@tanstack/react-query";
+import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
@@ -34,7 +30,7 @@ const getBlogPostsListApi = async (
 
 export const useGetBlogPostsList = (
   props?: { params: BlogPostsListApiParams } & Partial<
-    DefinedInitialDataOptions<
+    UseQueryOptions<
       BlogPostsListApiResponse[],
       unknown,
       BlogPostsListApiResponse[],

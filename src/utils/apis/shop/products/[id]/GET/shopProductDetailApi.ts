@@ -1,10 +1,6 @@
 import { CategoryLookupListApiResponseObj } from "../../../category/GET/categoryLookupListApi";
-import {
-  DefinedInitialDataOptions,
-  QueryKey,
-  useQuery,
-} from "@tanstack/react-query";
 import { BrandLookupListApiResponseObj } from "../../../brand/GET/brandLookupListApi";
+import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
@@ -35,7 +31,7 @@ const getShopProductDetailApi = async (
 
 export const useGetShopProductDetail = (
   props?: { slug: string } & Partial<
-    DefinedInitialDataOptions<
+    UseQueryOptions<
       ShopProductDetailApiResponse,
       unknown,
       ShopProductDetailApiResponse,

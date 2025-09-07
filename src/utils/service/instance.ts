@@ -1,4 +1,4 @@
-import { getToken } from "../cookie";
+import { getToken, removeToken } from "../cookie";
 import axios from "axios";
 
 export const coreApi = axios.create({
@@ -24,8 +24,8 @@ coreApi.interceptors.request.use((config) => {
 coreApi.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (error.response.status === 401) {
+      removeToken();
       window.location.pathname = "/auth/authenticate";
     }
     return Promise.reject(error);

@@ -12,7 +12,6 @@ export function middleware(request: NextRequest) {
   if (!isAuthenticated && !isAuthPage) {
     return NextResponse.redirect(new URL("/auth/authenticate", request.url));
   }
-
   // If the user is authenticated and trying to access auth pages (except logout and pending approval)
   if (isAuthenticated && isAuthPage && !pathname.startsWith("/auth/logout")) {
     return NextResponse.redirect(new URL("/", request.url));

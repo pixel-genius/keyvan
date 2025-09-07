@@ -1,9 +1,5 @@
-import {
-  DefinedInitialDataOptions,
-  QueryKey,
-  useQuery,
-} from "@tanstack/react-query";
 import { ShopProductDetailApiResponse } from "../[id]/GET/shopProductDetailApi";
+import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
@@ -34,7 +30,7 @@ const getShopProductsListApi = async (
 
 export const useGetShopProductsList = (
   props?: { params: ShopProductsListApiParams } & Partial<
-    DefinedInitialDataOptions<
+    UseQueryOptions<
       ShopProductsListApiResponse,
       unknown,
       ShopProductsListApiResponse,

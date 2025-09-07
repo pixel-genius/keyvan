@@ -1,4 +1,4 @@
-import { DefinedInitialDataOptions, useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { coreApi } from "@/utils/service/instance";
 import { Lookup } from "@/lib/types";
 import path from "path";
@@ -27,7 +27,7 @@ const getBrandLookupListApi = async (): Promise<BrandLookupListApiResponse> => {
 
 export const useGetBrandLookupList = (
   props?: Partial<
-    DefinedInitialDataOptions<
+    UseQueryOptions<
       BrandLookupListApiResponse,
       unknown,
       BrandLookupListApiResponse,

@@ -1,4 +1,4 @@
-import { DefinedInitialDataOptions, useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { coreApi } from "@/utils/service/instance";
 import { Lookup } from "@/lib/types";
 import path from "path";
@@ -28,7 +28,7 @@ const getCategoryLookupListApi =
 
 export const useGetCategoryLookupList = (
   props?: Partial<
-    DefinedInitialDataOptions<
+    UseQueryOptions<
       CategoryLookupListApiResponse,
       unknown,
       CategoryLookupListApiResponse,

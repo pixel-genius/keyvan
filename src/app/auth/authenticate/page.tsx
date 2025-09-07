@@ -15,9 +15,9 @@ import {
 import Typography from "@/components/components/atoms/typography";
 import { Input } from "@/components/components/molecules/input";
 import { Button } from "@/components/components/atoms/button";
+import React, { useEffect, useMemo, useState } from "react";
 import BottomSheet from "@/app/_components/BottomSheet";
 import FileUpload from "@/app/_components/FileUpload";
-import React, { useEffect, useState } from "react";
 import { IconPencil } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { setToken } from "@/utils/cookie";
@@ -36,7 +36,6 @@ const AuthenticatePage = () => {
   const router = useRouter();
   const { authenticateFormState, setAuthStore } = useAuthStore();
   const [countdownDate, setCountdownDate] = useState<number | null>(null);
-
   useEffect(() => {
     if (authenticateFormState === AuthenticateFormStateEnum.OTP)
       setCountdownDate(Date.now() + 120000);
@@ -63,6 +62,10 @@ const AuthenticatePage = () => {
 
   const loginOtpMutatePost = usePostAccountAuthOtpLoginApi({
     onSuccess: (res) => {
+      // if (res.is_verified) {
+      //   setToken(res.token);
+      //   router.replace("/");
+      // } else router.replace("/auth/pend-approval");
       setToken(res.token);
       router.replace("/");
     },
@@ -72,10 +75,13 @@ const AuthenticatePage = () => {
   });
 
   const registerMutate = usePostAccountAuthRegister({
-    onSuccess: () => {
-      router.replace("/auth/pend-approved");
+    onSuccess: (res) => {
+      if (res.success) setAuthStore(AuthenticateFormStateEnum.OTP);
+      else toast.error("این شماره تلفن برای کد ملی ذکر شده نیست!");
     },
-    onError: () => {},
+    onError: () => {
+      toast.error("خطا در ثبت نام");
+    },
   });
 
   const handleContinue = () => {
@@ -94,6 +100,31 @@ const AuthenticatePage = () => {
         otp_code: formFields.otpCode,
       });
   };
+  const submitBtnDisabled = useMemo(() => {
+    let valid = true;
+    const phoneNumberValid = formFields.phoneNumber.length === 11,
+      nationalCodeValid = formFields.nationalCode.length === 10;
+    switch (authenticateFormState) {
+      default:
+        valid = !phoneNumberValid;
+        break;
+      case AuthenticateFormStateEnum.OTP:
+        valid = formFields.otpCode.length !== 4;
+        break;
+      case AuthenticateFormStateEnum.REGISTER_STEP1:
+        valid = !phoneNumberValid && !nationalCodeValid;
+        break;
+      case AuthenticateFormStateEnum.REGISTER_STEP2:
+        valid =
+          !phoneNumberValid &&
+          !nationalCodeValid &&
+          !formFields.lastName &&
+          !formFields.firstName;
+        break;
+    }
+
+    return valid;
+  }, [authenticateFormState, formFields]);
 
   const bottomSheetTitle = () => {
     switch (authenticateFormState) {
@@ -178,7 +209,29 @@ const AuthenticatePage = () => {
                       <InputOTPSlot index={3} />
                     </InputOTPGroup>
                   </InputOTP>
-                  {countdownDate && <Countdown date={countdownDate} />}
+                  {countdownDate ? (
+                    <Countdown
+                      date={countdownDate}
+                      renderer={({ formatted }) => (
+                        <span dir="ltr">
+                          {formatted.minutes}:{formatted.seconds}
+                        </span>
+                      )}
+                      onComplete={() => {
+                        setCountdownDate(null);
+                      }}
+                    />
+                  ) : (
+                    <Button
+                      variant="secondary"
+                      size={"sm"}
+                      onClick={() => {
+                        setCountdownDate(Date.now() + 120000);
+                      }}
+                    >
+                      ارسال کد
+                    </Button>
+                  )}
                 </div>
               ) : (
                 <>
@@ -242,7 +295,7 @@ const AuthenticatePage = () => {
               <Button
                 variant={"primary"}
                 onClick={handleContinue}
-                disabled={formFields.phoneNumber.length !== 11}
+                disabled={submitBtnDisabled}
               >
                 {authenticateFormState ===
                   AuthenticateFormStateEnum.REGISTER_STEP2 && "ارسال"}

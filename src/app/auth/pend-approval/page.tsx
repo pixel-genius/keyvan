@@ -8,33 +8,6 @@ import { useState } from "react";
 const Registrationdonpage = () => {
   const [isOpen] = useState(true);
 
-  // useEffect(() => {
-  //   // Set the pending token in a cookie for the middleware to access
-  //   const pendingTokenStr = localStorage.getItem("pendingToken");
-  //   if (pendingTokenStr) {
-  //     // Set the cookie with the same structure as in localStorage
-  //     Cookies.set('pendingToken', pendingTokenStr, {
-  //       expires: 1, // 1 day
-  //       path: '/',
-  //       sameSite: 'strict'
-  //     });
-  //   }
-
-  //   const timer = setInterval(() => {
-  //     setTimeLeft((prev) => {
-  //       if (prev <= 1) {
-  //         clearInterval(timer);
-  //         // Force a page reload to trigger the middleware check
-  //         window.location.href = '/auth/pend-approved';
-  //         return 0;
-  //       }
-  //       return prev - 1;
-  //     });
-  //   }, 1000);
-
-  //   return () => clearInterval(timer);
-  // }, []);
-
   return (
     <div className="h-full">
       <BottomSheet
