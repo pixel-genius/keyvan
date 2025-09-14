@@ -5,6 +5,7 @@ import { useGetShopProductsListInfiniteApi } from "@/utils/apis/shop/products/GE
 import { useGetCategoryLookupListApi } from "@/utils/apis/shop/category/GET/categoryLookupListApi";
 import { usePostShopCartAddApi } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
 import { useGetBrandLookupListApi } from "@/utils/apis/shop/brand/GET/brandLookupListApi";
+import AddToCartBottomSheet from "@/app/_components/AddToCartBottomSheet";
 import Typography from "@/components/components/atoms/typography";
 import { Skeleton } from "@/components/components/atoms/skeleton";
 import { Input } from "@/components/components/molecules/input";
@@ -18,10 +19,7 @@ import BottomSheet from "@/app/_components/BottomSheet";
 import { useDebounce } from "@/utils/hooks/useDebounce";
 import { useSearchParams } from "next/navigation";
 import { IconFilter } from "@tabler/icons-react";
-import Counter from "@/app/_components/Counter";
 import Header from "@/app/_components/Header";
-import { formatPrice } from "@/lib/utils";
-import Tomanicon from "@/icons/toman";
 
 interface Params {
   category?: number;
@@ -302,51 +300,14 @@ function ProductsContent() {
         )}
         <div ref={observerRef} style={{ height: 10 }} />
       </div>
-
-      <BottomSheet isOpen={isBottomSheetOpen} onClose={handleCloseBottomSheet}>
-        {selectedProduct && (
-          <div className="pb-15">
-            <hr className="w-1/2 mx-auto border-2 rounded-full mb-4" />
-            <Typography
-              variant="label/lg"
-              weight="semi-bold"
-              className="mb-4 text-center"
-            >
-              افزودن محصول به سبد
-            </Typography>
-            <Typography
-              variant="label/sm"
-              weight="bold"
-              className="mb-4 text-center"
-            >
-              {selectedProduct.name}
-            </Typography>
-            <div className="flex items-center justify-center gap-1 mb-4">
-              <Typography variant="label/sm" weight="bold">
-                {formatPrice(selectedProduct.latest_price)}
-              </Typography>
-              <Tomanicon size={18} />
-            </div>
-            <Counter
-              onChange={(count) => {
-                setSelectedProduct((prev) => {
-                  if (!prev) return null;
-                  return { ...prev, count };
-                });
-              }}
-            />
-            {/* <Textarea placeholder="توضیحات (اختیاری)" className="mb-4" /> */}
-            <Button
-              className="w-full"
-              variant="primary"
-              disabled={shopAddCartMutate.isPending}
-              onClick={onAddToCart}
-            >
-              افزودن به سبد خرید
-            </Button>
-          </div>
-        )}
-      </BottomSheet>
+      <AddToCartBottomSheet
+        disabled={shopAddCartMutate.isPending}
+        isOpen={isBottomSheetOpen}
+        onClose={handleCloseBottomSheet}
+        onAddToCart={onAddToCart}
+        selectedProduct={selectedProduct}
+        setSelectedProduct={setSelectedProduct}
+      />
     </div>
   );
 }
