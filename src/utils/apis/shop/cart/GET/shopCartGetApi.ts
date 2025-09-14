@@ -27,7 +27,7 @@ const getShopCartApi = async (): Promise<ShopCartApiResponse> => {
   return response.data;
 };
 
-export const useGetShopPricesList = (
+export const useGetShopCartListApi = (
   props?: Partial<
     UseQueryOptions<ShopCartApiResponse, unknown, ShopCartApiResponse, QueryKey>
   >,

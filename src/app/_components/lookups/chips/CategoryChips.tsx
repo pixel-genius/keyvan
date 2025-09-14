@@ -1,5 +1,5 @@
 // components/FilterChips.tsx
-import { useGetCategoryLookupList } from "@/utils/apis/shop/category/GET/categoryLookupListApi";
+import { useGetCategoryLookupListApi } from "@/utils/apis/shop/category/GET/categoryLookupListApi";
 import Typography from "@/components/components/atoms/typography";
 import { Chip } from "@/components/components/atoms/chip";
 import React, { useState } from "react";
@@ -14,7 +14,7 @@ const CategoryChipsFilter: React.FC<CategoryChipsFilterProps> = ({
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<Lookup | null>(null);
 
-  const categoryLookupQuery = useGetCategoryLookupList();
+  const categoryLookupQuery = useGetCategoryLookupListApi();
 
   return (
     <div className="flex gap-2">

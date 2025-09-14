@@ -2,6 +2,7 @@
 
 import Typography from "@/components/components/atoms/typography";
 import { IconShoppingCart, IconMenu2 } from "@tabler/icons-react";
+import { useAuthStore } from "@/utils/store/authenticate.store";
 import { Button } from "@/components/components/atoms/button";
 import OrderConfirmation from "./OrderConfirmation";
 import { useRouter } from "next/navigation";
@@ -22,6 +23,8 @@ type CartItem = {
 
 const Navbar = () => {
   const router = useRouter();
+  const { shopCart } = useAuthStore();
+
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isOrderConfirmationOpen, setIsOrderConfirmationOpen] = useState(false);
 
@@ -94,12 +97,6 @@ const Navbar = () => {
     router.push("/"); // Navigate to home page
   };
 
-  // Calculate total items in cart
-  const totalItems = cartItems.reduce(
-    (total, item) => total + item.quantity,
-    0,
-  );
-
   return (
     <>
       <nav className="bg-maincard flex justify-center z-50 fixed top-0 w-full items-center px-4 py-4">
@@ -123,9 +120,9 @@ const Navbar = () => {
               className="cursor-pointer"
               onClick={() => setIsCartOpen(true)}
             />
-            {totalItems > 0 && (
+            {Number(shopCart?.total_items) > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                {totalItems}
+                {shopCart?.total_items}
               </span>
             )}
           </div>
@@ -143,23 +140,23 @@ const Navbar = () => {
             سبد سفارش
           </Typography>
 
-          {cartItems.length > 0 ? (
+          {Number(shopCart?.total_items) > 0 ? (
             <>
               <Typography
                 variant="label/sm"
                 weight="normal"
                 className="mb-4 text-center"
               >
-                تعداد اقلام : <span>{totalItems}</span>
+                تعداد اقلام : <span>{shopCart?.total_items}</span>
               </Typography>
 
               <div className="mb-4">
-                {cartItems.map((item) => (
+                {shopCart?.items?.map((item) => (
                   <CartItemCard
                     key={item.id}
-                    id={item.id}
-                    name={item.name}
-                    image={item.image}
+                    id={String(item.id)}
+                    name={item.product.name}
+                    image={item.product.image}
                     quantity={item.quantity}
                     onRemove={handleRemoveItem}
                     onIncreaseQuantity={handleIncreaseQuantity}

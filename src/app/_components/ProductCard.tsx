@@ -1,13 +1,13 @@
 "use client";
 
 import { Card, CardContent } from "@/components/components/atoms/card";
-import Typography from "@/components/components/atoms/typography";
 import { IconEye, IconShoppingCartPlus } from "@tabler/icons-react";
-import Image from "next/image";
+import Typography from "@/components/components/atoms/typography";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import Tomanicon from "@/icons/toman";
 import { formatPrice } from "@/lib/utils";
+import Tomanicon from "@/icons/toman";
+import { useState } from "react";
+import Image from "next/image";
 
 interface ProductCardProps {
   id?: string;
@@ -46,9 +46,9 @@ export default function ProductCard({
       <CardContent className="p-4 flex items-center space-x-4">
         <div className="w-16 h-16 relative rounded-lg overflow-hidden bg-gray-700 flex items-center justify-center">
           {isValidImageUrl ? (
-            <Image 
-              src={imageUrl} 
-              alt={title} 
+            <Image
+              src={imageUrl}
+              alt={title}
               fill
               className="object-cover"
               onError={handleImageError}

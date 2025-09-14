@@ -26,7 +26,7 @@ const getCategoryLookupListApi =
     );
   };
 
-export const useGetCategoryLookupList = (
+export const useGetCategoryLookupListApi = (
   props?: Partial<
     UseQueryOptions<
       CategoryLookupListApiResponse,

@@ -1,10 +1,10 @@
-import { useGetCategoryLookupList } from "@/utils/apis/shop/category/GET/categoryLookupListApi";
+import { useGetCategoryLookupListApi } from "@/utils/apis/shop/category/GET/categoryLookupListApi";
 import Autocomplete, { AutocompleteProps } from "../../Autocomplete";
 
 type CategoryAutoCompleteProps = Omit<AutocompleteProps, "options">;
 
 const CategoryAutoComplete = (props: CategoryAutoCompleteProps) => {
-  const categoryLookupQuery = useGetCategoryLookupList();
+  const categoryLookupQuery = useGetCategoryLookupListApi();
 
   return <Autocomplete options={categoryLookupQuery.data || []} {...props} />;
 };

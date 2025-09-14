@@ -2,10 +2,18 @@
 
 import { Button } from "@/components/components/atoms/button";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function Counter() {
+interface CounterProps {
+  onChange: (count: number) => void;
+}
+
+export default function Counter({ onChange }: CounterProps) {
   const [count, setCount] = useState(25);
+
+  useEffect(() => {
+    onChange(count);
+  }, [count]);
 
   return (
     <div className="flex items-center space-x-4 pb-5 rounded-lg w-full text-white">

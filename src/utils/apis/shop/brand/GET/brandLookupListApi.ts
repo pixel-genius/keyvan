@@ -25,7 +25,7 @@ const getBrandLookupListApi = async (): Promise<BrandLookupListApiResponse> => {
   );
 };
 
-export const useGetBrandLookupList = (
+export const useGetBrandLookupListApi = (
   props?: Partial<
     UseQueryOptions<
       BrandLookupListApiResponse,

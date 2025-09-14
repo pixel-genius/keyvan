@@ -1,6 +1,11 @@
 "use client";
 
+import { ShopProductDetailApiResponse } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
+import { useGetCategoryLookupListApi } from "@/utils/apis/shop/category/GET/categoryLookupListApi";
 import { useGetShopProductsList } from "@/utils/apis/shop/products/GET/shopProductsListApi";
+import { usePostShopCartAddApi } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
+import { useGetBrandLookupListApi } from "@/utils/apis/shop/brand/GET/brandLookupListApi";
+import { useGetShopCartListApi } from "@/utils/apis/shop/cart/GET/shopCartGetApi";
 import Typography from "@/components/components/atoms/typography";
 import { Skeleton } from "@/components/components/atoms/skeleton";
 import { Input } from "@/components/components/molecules/input";
@@ -12,42 +17,67 @@ import BottomSheet from "@/app/_components/BottomSheet";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { IconFilter } from "@tabler/icons-react";
+import Counter from "@/app/_components/Counter";
 import Header from "@/app/_components/Header";
+import { formatPrice } from "@/lib/utils";
+import Tomanicon from "@/icons/toman";
 
-const cigaretteBrands = [
-  "مارلبورو",
-  "وینستون",
-  "داویدوف",
-  "کنت",
-  "پارلیامنت",
-  "دانهیل",
-  "لاکی استرایک",
-  "پال مال",
-];
+interface Params {
+  category?: number;
+  brand?: number;
+  page?: number;
+  limit?: number;
+}
+
+interface SelectedProduct extends ShopProductDetailApiResponse {
+  count?: number;
+}
 
 function ProductsContent() {
-  // const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [categoryFilter, setCategoryFilter] = useState<string | undefined>(
-    undefined,
-  );
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] =
+    useState<SelectedProduct | null>(null);
+  const [enabledCartApi, setEnabledCartApi] = useState<boolean>(false);
+  const [params, setParams] = useState<Params>({
+    category: undefined,
+    brand: undefined,
+    page: 1,
+    limit: 10,
+  });
 
-  const query = useGetShopProductsList({
-    params: {
-      // category: 1,
-      // brand: 1,
-      // search: "",
+  const shopProductListQuery = useGetShopProductsList({
+    params,
+  });
+
+  const shopAddCartMutate = usePostShopCartAddApi({
+    onSuccess: () => {
+      setEnabledCartApi(true);
     },
   });
+
+  const shopCartQuery = useGetShopCartListApi({
+    enabled: enabledCartApi,
+  });
+
+  useEffect(() => {
+    if (shopCartQuery.isFetched) setEnabledCartApi(false);
+  }, [shopCartQuery.isFetched]);
+
+  const categories = useGetCategoryLookupListApi();
+  const brands = useGetBrandLookupListApi();
 
   // استفاده از usePathname و useSearchParams برای مدیریت مسیر
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    setCategoryFilter(searchParams.get("category") || undefined);
+    setParams((prev) => ({
+      ...prev,
+      category: searchParams?.get("category")
+        ? Number(searchParams.get("category"))
+        : undefined,
+    }));
   }, [searchParams]);
 
   const handleBackClick = () => {
@@ -63,18 +93,18 @@ function ProductsContent() {
     setIsFilterSheetOpen(true);
   };
 
-  const toggleCategory = (category: string) => {
-    setSelectedCategories((prev) =>
-      prev.includes(category)
-        ? prev.filter((c) => c !== category)
-        : [...prev, category],
-    );
+  const toggleCategory = (category: number) => {
+    setParams((prev) => ({
+      ...prev,
+      category: category,
+    }));
   };
 
-  const toggleBrand = (brand: string) => {
-    setSelectedBrands((prev) =>
-      prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand],
-    );
+  const toggleBrand = (brand: number) => {
+    setParams((prev) => ({
+      ...prev,
+      brand: brand,
+    }));
   };
 
   const applyFilters = () => {
@@ -82,16 +112,43 @@ function ProductsContent() {
   };
 
   const resetFilters = () => {
-    setSelectedCategories([]);
-    setSelectedBrands([]);
+    setParams({
+      category: undefined,
+      brand: undefined,
+      page: 1,
+      limit: 10,
+    });
   };
+
+  const handleCloseBottomSheet = () => {
+    setIsBottomSheetOpen(false);
+  };
+
+  const onAddToCart = () => {
+    if (selectedProduct?.id && selectedProduct?.count) {
+      shopAddCartMutate.mutate({
+        product_id: selectedProduct?.id,
+        quantity: selectedProduct?.count,
+      });
+    }
+  };
+
+  const onAddProductToCart = (id: number) => {
+    setIsBottomSheetOpen(true);
+    setSelectedProduct(
+      shopProductListQuery.data?.results.find((item) => item.id === id) || null,
+    );
+  };
+
   // The API does not provide a category field. If needed, extract categories from another source.
-  const categories: string[] = [];
 
   return (
     <div className="mx-auto px-4 pt-28  min-h-full">
       <Header
-        title={categoryFilter ? categoryFilter : "محصولات"}
+        title={
+          categories.data?.find((item) => item.id === params.category)?.name ||
+          "محصولات"
+        }
         onBackClick={handleBackClick}
       />
 
@@ -125,18 +182,16 @@ function ProductsContent() {
               دسته‌بندی‌ها
             </Typography>
             <div className="flex text-right justify-end flex-wrap gap-2 mt-2">
-              {categories.map((category) => (
+              {categories.data?.map((category) => (
                 <Chip
-                  key={category}
-                  onClick={() => toggleCategory(category)}
+                  key={category.id + category.name}
+                  onClick={() => toggleCategory(Number(category.id))}
                   variant={
-                    selectedCategories.includes(category)
-                      ? "primary"
-                      : "secendery"
+                    params.category === category.id ? "primary" : "secendery"
                   }
                   size="sm"
                 >
-                  {category}
+                  {category.name}
                 </Chip>
               ))}
             </div>
@@ -150,16 +205,14 @@ function ProductsContent() {
               برندها
             </Typography>
             <div className="flex text-right justify-end flex-wrap gap-2 mt-2">
-              {cigaretteBrands.map((brand) => (
+              {brands.data?.map((brand) => (
                 <Chip
-                  key={brand}
-                  onClick={() => toggleBrand(brand)}
-                  variant={
-                    selectedBrands.includes(brand) ? "primary" : "secendery"
-                  }
+                  key={brand.id + brand.name}
+                  onClick={() => toggleBrand(Number(brand.id))}
+                  variant={params.brand === brand.id ? "primary" : "secendery"}
                   size="sm"
                 >
-                  {brand}
+                  {brand.name}
                 </Chip>
               ))}
             </div>
@@ -180,7 +233,7 @@ function ProductsContent() {
       </BottomSheet>
 
       <div className="flex flex-col gap-2 mt-4">
-        {query.isFetching && (
+        {shopProductListQuery.isFetching && (
           <>
             {[...Array(6)].map((_, index) => (
               <div key={index} className="bg-black rounded-2xl p-4" dir="rtl">
@@ -207,8 +260,9 @@ function ProductsContent() {
             ))}
           </>
         )}
-        {query?.data && query.data.results?.length > 0 ? (
-          query.data.results?.map((product) => (
+        {shopProductListQuery?.data &&
+        shopProductListQuery.data.results?.length > 0 ? (
+          shopProductListQuery.data.results?.map((product) => (
             <ProductCard
               key={product.id}
               id={product.id.toString()}
@@ -216,8 +270,10 @@ function ProductsContent() {
               title={product.name}
               subtitle={product.description as string}
               price={product.latest_price.toString()}
-              // category={product.category} // Not available from API
-              onAddToCart={() => {}}
+              category={product.category?.name as string} // Not available from API
+              onAddToCart={() => {
+                onAddProductToCart(product.id);
+              }}
             />
           ))
         ) : (
@@ -229,7 +285,7 @@ function ProductsContent() {
         )}
       </div>
 
-      {/* <BottomSheet isOpen={isBottomSheetOpen} onClose={handleCloseBottomSheet}>
+      <BottomSheet isOpen={isBottomSheetOpen} onClose={handleCloseBottomSheet}>
         {selectedProduct && (
           <div className="pb-15">
             <hr className="w-1/2 mx-auto border-2 rounded-full mb-4" />
@@ -245,29 +301,33 @@ function ProductsContent() {
               weight="bold"
               className="mb-4 text-center"
             >
-              {selectedProduct.title}
+              {selectedProduct.name}
             </Typography>
             <div className="flex items-center justify-center gap-1 mb-4">
               <Typography variant="label/sm" weight="bold">
-                {formatPrice(selectedProduct.price)}
+                {formatPrice(selectedProduct.latest_price)}
               </Typography>
               <Tomanicon size={18} />
             </div>
-            <Counter />
-            <Textarea placeholder="توضیحات (اختیاری)" className="mb-4" />
-            <Button
-              className="w-full"
-              variant="primary"
-              onClick={handleCloseBottomSheet}
-            >
+            <Counter
+              onChange={(count) => {
+                setSelectedProduct((prev) => {
+                  if (!prev) return null;
+                  return { ...prev, count };
+                });
+              }}
+            />
+            {/* <Textarea placeholder="توضیحات (اختیاری)" className="mb-4" /> */}
+            <Button className="w-full" variant="primary" onClick={onAddToCart}>
               افزودن به سبد خرید
             </Button>
           </div>
         )}
-      </BottomSheet> */}
+      </BottomSheet>
     </div>
   );
 }
+
 export default function ProductsPage() {
   return (
     <Suspense

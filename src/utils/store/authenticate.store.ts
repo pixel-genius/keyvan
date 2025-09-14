@@ -1,4 +1,5 @@
 import { AccountProfileGetApiResponse } from "../apis/account/profile/GET/accountProfileGetApi";
+import { ShopCartApiResponse } from "../apis/shop/cart/GET/shopCartGetApi";
 import { create } from "zustand";
 
 enum AuthenticateFormStateEnum {
@@ -11,6 +12,7 @@ enum AuthenticateFormStateEnum {
 type KeyOFAuthenticateFormState = keyof typeof AuthenticateFormStateEnum;
 interface UserInfoProfile {
   userProfileInfo?: AccountProfileGetApiResponse;
+  shopCart?: Partial<ShopCartApiResponse>;
 }
 interface AuthStoreVariables {
   authenticateFormState: KeyOFAuthenticateFormState;
@@ -26,6 +28,7 @@ type AuthStore = AuthStoreVariables & AuthStoreFns & UserInfoProfile;
 const useAuthStore = create<AuthStore>((set) => ({
   authenticateFormState: AuthenticateFormStateEnum.LOGIN,
   userProfileInfo: {},
+  shopCart: {},
   setAuthStore: (arg: KeyOFAuthenticateFormState) =>
     set(() => ({ authenticateFormState: arg })),
   setUserInfo: (data?: UserInfoProfile) =>

@@ -1,5 +1,5 @@
 // components/FilterChips.tsx
-import { useGetBrandLookupList } from "@/utils/apis/shop/brand/GET/brandLookupListApi";
+import { useGetBrandLookupListApi } from "@/utils/apis/shop/brand/GET/brandLookupListApi";
 import Typography from "@/components/components/atoms/typography";
 import { Chip } from "@/components/components/atoms/chip";
 import React, { useState } from "react";
@@ -12,7 +12,7 @@ type BrandChipsFilterProps = {
 const BrandChipsFilter: React.FC<BrandChipsFilterProps> = ({ onChange }) => {
   const [selectedBrand, setSelectedBrand] = useState<Lookup | null>(null);
 
-  const brandLookupQuery = useGetBrandLookupList();
+  const brandLookupQuery = useGetBrandLookupListApi();
 
   return (
     <div className="flex gap-2">
