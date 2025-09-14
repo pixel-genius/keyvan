@@ -1,5 +1,6 @@
 "use client";
 
+import { useDeleteShopCartItemsRemoveApi } from "@/utils/apis/shop/cart/items/[id]/remove/DELETE/shopCartItemsRemoveDeleteApi";
 import Typography from "@/components/components/atoms/typography";
 import { IconShoppingCart, IconMenu2 } from "@tabler/icons-react";
 import { useAuthStore } from "@/utils/store/authenticate.store";
@@ -23,11 +24,15 @@ type CartItem = {
 
 const Navbar = () => {
   const router = useRouter();
-  const { shopCart } = useAuthStore();
+  const { shopCart, setUserInfo } = useAuthStore();
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isOrderConfirmationOpen, setIsOrderConfirmationOpen] = useState(false);
-
+  const shopDeleteCartItemMutate = useDeleteShopCartItemsRemoveApi({
+    onSuccess: (res) => {
+      setUserInfo({ shopCart: res });
+    },
+  });
   // Sample cart items - in a real app, this would come from a state management solution
   const [cartItems, setCartItems] = useState<CartItem[]>([
     {
@@ -55,7 +60,7 @@ const Navbar = () => {
 
   // Function to remove an item from the cart
   const handleRemoveItem = (id: string) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
+    shopDeleteCartItemMutate.mutate(+id);
   };
 
   // Function to increase quantity of an item

@@ -13,7 +13,7 @@ export default function Counter({ onChange }: CounterProps) {
 
   useEffect(() => {
     onChange?.(count);
-  }, [count, onChange]);
+  }, [count]);
 
   return (
     <div className="flex items-center space-x-4 pb-5 rounded-lg w-full text-white">

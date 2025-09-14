@@ -17,7 +17,7 @@ import {
   IconNews,
 } from "@tabler/icons-react";
 
-import { useGetShopProductsList } from "@/utils/apis/shop/products/GET/shopProductsListApi";
+import { useGetShopProductsListApi } from "@/utils/apis/shop/products/GET/shopProductsListApi";
 import { useGetBlogPostsList } from "@/utils/apis/blog/posts/GET/blogPostsListApi";
 import Typography from "@/components/components/atoms/typography";
 import CardItem from "../_components/CardItem";
@@ -27,7 +27,7 @@ import Link from "next/link";
 
 const LandingPage = () => {
   const blogPostsQuery = useGetBlogPostsList();
-  const shopProductsQuery = useGetShopProductsList();
+  const shopProductsQuery = useGetShopProductsListApi();
 
   return (
     <div className="px-4 pt-28">

@@ -1,5 +1,11 @@
+import {
+  QueryKey,
+  useInfiniteQuery,
+  UseInfiniteQueryOptions,
+  useQuery,
+  UseQueryOptions,
+} from "@tanstack/react-query";
 import { ShopProductDetailApiResponse } from "../[id]/GET/shopProductDetailApi";
-import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
@@ -28,7 +34,7 @@ const getShopProductsListApi = async (
   return response.data;
 };
 
-export const useGetShopProductsList = (
+export const useGetShopProductsListApi = (
   props?: { params: ShopProductsListApiParams } & Partial<
     UseQueryOptions<
       ShopProductsListApiResponse,
@@ -46,4 +52,37 @@ export const useGetShopProductsList = (
   });
 
   return query;
+};
+
+export const useGetShopProductsListInfiniteApi = (
+  props?: {
+    params?: Omit<ShopProductsListApiParams, "page">;
+  } & Partial<
+    UseInfiniteQueryOptions<
+      ShopProductsListApiResponse,
+      unknown,
+      ShopProductDetailApiResponse[],
+      QueryKey,
+      number
+    >
+  >,
+) => {
+  const { params, ...restProps } = props || {};
+
+  return useInfiniteQuery<
+    ShopProductsListApiResponse,
+    unknown,
+    ShopProductDetailApiResponse[],
+    QueryKey,
+    number
+  >({
+    queryKey: ["getShopProductsListInfinite", params],
+    queryFn: ({ pageParam = 1 }) =>
+      getShopProductsListApi({ ...(params || {}), page: pageParam }),
+    initialPageParam: 1,
+    select: (data) => data.pages.flatMap((page) => page.results),
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.next ? allPages.length + 1 : undefined,
+    ...restProps,
+  });
 };

@@ -1,20 +1,21 @@
 "use client";
 
 import { ShopProductDetailApiResponse } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
+import { useGetShopProductsListInfiniteApi } from "@/utils/apis/shop/products/GET/shopProductsListApi";
 import { useGetCategoryLookupListApi } from "@/utils/apis/shop/category/GET/categoryLookupListApi";
-import { useGetShopProductsList } from "@/utils/apis/shop/products/GET/shopProductsListApi";
 import { usePostShopCartAddApi } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
 import { useGetBrandLookupListApi } from "@/utils/apis/shop/brand/GET/brandLookupListApi";
-import { useGetShopCartListApi } from "@/utils/apis/shop/cart/GET/shopCartGetApi";
 import Typography from "@/components/components/atoms/typography";
 import { Skeleton } from "@/components/components/atoms/skeleton";
 import { Input } from "@/components/components/molecules/input";
+import { useAuthStore } from "@/utils/store/authenticate.store";
 import { Button } from "@/components/components/atoms/button";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { Chip } from "@/components/components/atoms/chip";
 import ProductCard from "@/app/_components/ProductCard";
 // Import the API fetch function and type
 import BottomSheet from "@/app/_components/BottomSheet";
-import { Suspense, useEffect, useState } from "react";
+import { useDebounce } from "@/utils/hooks/useDebounce";
 import { useSearchParams } from "next/navigation";
 import { IconFilter } from "@tabler/icons-react";
 import Counter from "@/app/_components/Counter";
@@ -25,7 +26,6 @@ import Tomanicon from "@/icons/toman";
 interface Params {
   category?: number;
   brand?: number;
-  page?: number;
   limit?: number;
 }
 
@@ -36,34 +36,27 @@ interface SelectedProduct extends ShopProductDetailApiResponse {
 function ProductsContent() {
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] =
     useState<SelectedProduct | null>(null);
-  const [enabledCartApi, setEnabledCartApi] = useState<boolean>(false);
+  const { setUserInfo } = useAuthStore();
   const [params, setParams] = useState<Params>({
     category: undefined,
     brand: undefined,
-    page: 1,
     limit: 10,
   });
 
-  const shopProductListQuery = useGetShopProductsList({
-    params,
+  const shopProductListQuery = useGetShopProductsListInfiniteApi({
+    params: { ...params, search: debouncedSearchQuery },
   });
 
   const shopAddCartMutate = usePostShopCartAddApi({
-    onSuccess: () => {
-      setEnabledCartApi(true);
+    onSuccess: (res) => {
+      setUserInfo({ shopCart: res });
+      setIsBottomSheetOpen(false);
     },
   });
-
-  const shopCartQuery = useGetShopCartListApi({
-    enabled: enabledCartApi,
-  });
-
-  useEffect(() => {
-    if (shopCartQuery.isFetched) setEnabledCartApi(false);
-  }, [shopCartQuery.isFetched]);
 
   const categories = useGetCategoryLookupListApi();
   const brands = useGetBrandLookupListApi();
@@ -84,6 +77,32 @@ function ProductsContent() {
     // Simulate a back navigation
     window.history.back();
   };
+
+  const observerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!observerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (
+          entries[0].isIntersecting &&
+          shopProductListQuery.hasNextPage &&
+          !shopProductListQuery.isFetchingNextPage
+        ) {
+          shopProductListQuery.fetchNextPage();
+        }
+      },
+      { threshold: 1 },
+    );
+
+    observer.observe(observerRef.current);
+    return () => observer.disconnect();
+  }, [
+    shopProductListQuery.fetchNextPage,
+    shopProductListQuery.hasNextPage,
+    shopProductListQuery.isFetchingNextPage,
+  ]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -115,9 +134,9 @@ function ProductsContent() {
     setParams({
       category: undefined,
       brand: undefined,
-      page: 1,
       limit: 10,
     });
+    setIsFilterSheetOpen(false);
   };
 
   const handleCloseBottomSheet = () => {
@@ -136,10 +155,9 @@ function ProductsContent() {
   const onAddProductToCart = (id: number) => {
     setIsBottomSheetOpen(true);
     setSelectedProduct(
-      shopProductListQuery.data?.results.find((item) => item.id === id) || null,
+      shopProductListQuery.data?.find((item) => item.id === id) || null,
     );
   };
-
   // The API does not provide a category field. If needed, extract categories from another source.
 
   return (
@@ -233,7 +251,7 @@ function ProductsContent() {
       </BottomSheet>
 
       <div className="flex flex-col gap-2 mt-4">
-        {shopProductListQuery.isFetching && (
+        {shopProductListQuery.isFetching ? (
           <>
             {[...Array(6)].map((_, index) => (
               <div key={index} className="bg-black rounded-2xl p-4" dir="rtl">
@@ -259,10 +277,9 @@ function ProductsContent() {
               </div>
             ))}
           </>
-        )}
-        {shopProductListQuery?.data &&
-        shopProductListQuery.data.results?.length > 0 ? (
-          shopProductListQuery.data.results?.map((product) => (
+        ) : shopProductListQuery?.data &&
+          shopProductListQuery.data?.length > 0 ? (
+          shopProductListQuery.data?.map((product) => (
             <ProductCard
               key={product.id}
               id={product.id.toString()}
@@ -283,6 +300,7 @@ function ProductsContent() {
             </Typography>
           </div>
         )}
+        <div ref={observerRef} style={{ height: 10 }} />
       </div>
 
       <BottomSheet isOpen={isBottomSheetOpen} onClose={handleCloseBottomSheet}>
@@ -318,7 +336,12 @@ function ProductsContent() {
               }}
             />
             {/* <Textarea placeholder="توضیحات (اختیاری)" className="mb-4" /> */}
-            <Button className="w-full" variant="primary" onClick={onAddToCart}>
+            <Button
+              className="w-full"
+              variant="primary"
+              disabled={shopAddCartMutate.isPending}
+              onClick={onAddToCart}
+            >
               افزودن به سبد خرید
             </Button>
           </div>

@@ -3,14 +3,9 @@ import { ShopCartApiResponse } from "../../../../GET/shopCartGetApi";
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
-export interface shopCartItemsRemoveDeleteApiPayload {
-  national_code: string;
-  phone_number: string;
-}
-
 // DELETE API function
 const deleteShopCartItemsRemoveApi = async (
-  id: shopCartItemsRemoveDeleteApiPayload,
+  id: number,
 ): Promise<ShopCartApiResponse> => {
   const response = await coreApi.delete(
     path.join(`/shop/cart/items/${id}/remove/`),
@@ -20,17 +15,9 @@ const deleteShopCartItemsRemoveApi = async (
 
 // useMutation Hook with proper types
 export const useDeleteShopCartItemsRemoveApi = (
-  options?: UseMutationOptions<
-    ShopCartApiResponse,
-    unknown,
-    shopCartItemsRemoveDeleteApiPayload
-  >,
+  options?: UseMutationOptions<ShopCartApiResponse, unknown, number>,
 ) => {
-  return useMutation<
-    ShopCartApiResponse,
-    unknown,
-    shopCartItemsRemoveDeleteApiPayload
-  >({
+  return useMutation<ShopCartApiResponse, unknown, number>({
     mutationFn: deleteShopCartItemsRemoveApi,
     mutationKey: ["deleteShopCartItemsRemoveApi"],
     ...options,
