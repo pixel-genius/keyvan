@@ -5,14 +5,14 @@ import { IconMinus, IconPlus } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
 interface CounterProps {
-  onChange: (count: number) => void;
+  onChange?: (count: number) => void;
 }
 
 export default function Counter({ onChange }: CounterProps) {
   const [count, setCount] = useState(25);
 
   useEffect(() => {
-    onChange(count);
+    onChange?.(count);
   }, [count]);
 
   return (
