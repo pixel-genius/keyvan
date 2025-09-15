@@ -1,6 +1,7 @@
 // components/FilterChips.tsx
 import { useGetBrandLookupListApi } from "@/utils/apis/shop/brand/GET/brandLookupListApi";
 import Typography from "@/components/components/atoms/typography";
+import { Skeleton } from "@/components/components/atoms/skeleton";
 import { Chip } from "@/components/components/atoms/chip";
 import React, { useState } from "react";
 import { Lookup } from "@/lib/types";
@@ -16,6 +17,10 @@ const BrandChipsFilter: React.FC<BrandChipsFilterProps> = ({ onChange }) => {
 
   return (
     <div className="flex gap-2">
+      {brandLookupQuery.isFetching &&
+        [...Array(6)].map((_, index) => (
+          <Skeleton key={index} className="h-9 w-16 bg-card rounded-sm" />
+        ))}
       {brandLookupQuery?.data?.map((item) => (
         <Chip
           key={item.name + item.id}

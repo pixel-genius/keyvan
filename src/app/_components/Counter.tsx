@@ -16,7 +16,10 @@ export default function Counter({ onChange }: CounterProps) {
   }, [count]);
 
   return (
-    <div className="flex items-center space-x-4 pb-5 rounded-lg w-full text-white">
+    <div
+      dir="ltr"
+      className="flex items-center space-x-4 pb-5 rounded-lg w-full text-white"
+    >
       <Button
         variant="primary"
         className="w-full"

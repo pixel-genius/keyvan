@@ -1,5 +1,6 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { coreApi } from "@/utils/service/instance";
+import { AxiosError } from "axios";
 import path from "path";
 
 export interface AccountAuthRegisterPostApiPayload {
@@ -31,13 +32,21 @@ const postAccountAuthRegisterApi = async (
 export const usePostAccountAuthRegister = (
   options?: UseMutationOptions<
     AccountAuthRegisterPostApiResponse,
-    unknown,
+    AxiosError<{
+      details: string;
+      message: string;
+      success: boolean;
+    }>,
     AccountAuthRegisterPostApiPayload
   >,
 ) => {
   return useMutation<
     AccountAuthRegisterPostApiResponse,
-    unknown,
+    AxiosError<{
+      details: string;
+      message: string;
+      success: boolean;
+    }>,
     AccountAuthRegisterPostApiPayload
   >({
     mutationFn: postAccountAuthRegisterApi,

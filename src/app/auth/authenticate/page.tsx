@@ -54,7 +54,7 @@ const AuthenticatePage = () => {
       setAuthStore(AuthenticateFormStateEnum.OTP);
     },
     onError: (error) => {
-      if (error?.status === 404) {
+      if (!error.response?.data?.has_account) {
         setAuthStore(AuthenticateFormStateEnum.REGISTER_STEP1);
       } else toast.error("خطا در ورود");
     },
@@ -77,10 +77,11 @@ const AuthenticatePage = () => {
   const registerMutate = usePostAccountAuthRegister({
     onSuccess: (res) => {
       if (res.success) setAuthStore(AuthenticateFormStateEnum.OTP);
-      else toast.error("این شماره تلفن برای کد ملی ذکر شده نیست!");
     },
-    onError: () => {
-      toast.error("خطا در ثبت نام");
+    onError: (error) => {
+      if (!error.response?.data.success)
+        toast.error("این شماره تلفن برای کد ملی ذکر شده نیست!");
+      else toast.error("خطا در ورود!");
     },
   });
 

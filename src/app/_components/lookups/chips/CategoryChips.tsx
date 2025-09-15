@@ -1,6 +1,7 @@
 // components/FilterChips.tsx
 import { useGetCategoryLookupListApi } from "@/utils/apis/shop/category/GET/categoryLookupListApi";
 import Typography from "@/components/components/atoms/typography";
+import { Skeleton } from "@/components/components/atoms/skeleton";
 import { Chip } from "@/components/components/atoms/chip";
 import React, { useState } from "react";
 import { Lookup } from "@/lib/types";
@@ -18,6 +19,10 @@ const CategoryChipsFilter: React.FC<CategoryChipsFilterProps> = ({
 
   return (
     <div className="flex gap-2">
+      {categoryLookupQuery.isFetching &&
+        [...Array(6)].map((_, index) => (
+          <Skeleton key={index} className="h-9 w-16 bg-card rounded-sm" />
+        ))}
       {categoryLookupQuery?.data?.map((item) => (
         <Chip
           key={item.name + item.id}

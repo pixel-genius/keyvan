@@ -1,6 +1,10 @@
 "use client";
 
 import {
+  AccountAddressesPostApiPayload,
+  usePostAccountAddress,
+} from "@/utils/apis/account/addresses/POST/accountAddressesPostApi";
+import {
   IconChevronLeft,
   IconEdit,
   IconLocation,
@@ -10,9 +14,13 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import { useGetAccountAddressList } from "@/utils/apis/account/addresses/GET/accountAddressesListGetApi";
+import { BaseInput } from "@/components/components/atoms/base-input";
 import Typography from "@/components/components/atoms/typography";
+import { Skeleton } from "@/components/components/atoms/skeleton";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Switch } from "@/components/components/atoms/switch";
 import { Button } from "@/components/components/atoms/button";
+import OpenLayersMap from "@neshan-maps-platform/ol/Map";
 import BottomSheet from "@/app/_components/BottomSheet";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
@@ -31,25 +39,47 @@ const NeshanMap = dynamic(
   },
 );
 
-interface SelectedLocation {
-  lat: number;
-  lng: number;
+interface FormFields {
+  title: string | null;
+  text: string | null;
+  longitude: number | null;
+  latitude: number | null;
+  is_default: boolean;
 }
 
 const AddressesPage = () => {
   const router = useRouter();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mapRef = useRef<any>(null);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isLoading, setIsLoading] = useState(false);
+
   const [isAddAddressOpen, setIsAddAddressOpen] = useState(false);
-  const [selectedLocation, setSelectedLocation] =
-    useState<SelectedLocation | null>(null);
-  const [addressDetails, setAddressDetails] = useState("");
+
+  const [formFields, setFormFields] = useState<FormFields>({
+    title: null,
+    text: null,
+    longitude: null,
+    latitude: null,
+    is_default: false,
+  });
+  const [errorAddress, setErrorAddress] = useState<string | null>(null);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
   const accountAddressListQuery = useGetAccountAddressList();
+  const accountAddressPostMutate = usePostAccountAddress({
+    onSuccess: () => {
+      setIsAddAddressOpen(false);
+      setErrorAddress(null);
+      setFormFields({
+        title: null,
+        text: null,
+        longitude: null,
+        latitude: null,
+        is_default: false,
+      });
+      accountAddressListQuery.refetch();
+    },
+  });
 
   // Ensure we're on the client side
   useEffect(() => {
@@ -70,10 +100,9 @@ const AddressesPage = () => {
   //     isDefault: false,
   //   },
   // ];
-
+  console.log(formFields);
   const handleMapClick = useCallback(async (lat: number, lng: number) => {
-    setSelectedLocation({ lat, lng });
-    setIsLoading(true);
+    setFormFields((prev) => ({ ...prev, latitude: lat, longitude: lng }));
 
     console.log("Selected location:", { lat, lng });
 
@@ -168,17 +197,17 @@ const AddressesPage = () => {
       }
 
       if (formattedAddress) {
-        setAddressDetails(formattedAddress);
+        setErrorAddress(null);
+        setFormFields((prev) => ({ ...prev, text: formattedAddress }));
       } else {
-        setAddressDetails("آدرس یافت نشد");
+        setErrorAddress("آدرس یافت نشد");
+        setFormFields((prev) => ({ ...prev, text: null }));
       }
     } catch (error) {
       console.error("API Call Error:", error);
       // Fallback to coordinates if API fails
       const fallbackAddress = `موقعیت انتخاب شده: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-      setAddressDetails(fallbackAddress);
-    } finally {
-      setIsLoading(false);
+      setErrorAddress(fallbackAddress);
     }
   }, []);
 
@@ -197,7 +226,11 @@ const AddressesPage = () => {
         console.log("Current location:", { latitude, longitude });
 
         // Set selected location
-        setSelectedLocation({ lat: latitude, lng: longitude });
+        setFormFields((prev) => ({
+          ...prev,
+          latitude: latitude,
+          longitude: longitude,
+        }));
 
         // Move map to current location
         if (mapRef.current && mapRef.current.map) {
@@ -246,27 +279,28 @@ const AddressesPage = () => {
   }, [handleMapClick]);
 
   const handleSaveAddress = () => {
-    if (addressDetails) {
+    if (
+      formFields.text !== null &&
+      formFields.longitude !== null &&
+      formFields.latitude !== null
+    ) {
+      accountAddressPostMutate.mutate({
+        ...formFields,
+        longitude: formFields.longitude.toString(),
+        latitude: formFields.latitude.toString(),
+      } as AccountAddressesPostApiPayload);
+
       console.log("Saving address:", {
-        address: addressDetails,
-        location: selectedLocation,
+        address: formFields,
+        location: formFields.longitude + " , " + formFields.latitude,
       });
-      setIsAddAddressOpen(false);
-      setAddressDetails("");
-      setSelectedLocation(null);
     }
   };
 
   const onMapInit = useCallback(
-    (map: unknown) => {
+    (map: OpenLayersMap) => {
       console.log("Map initialized!", map);
-      const mapInstance = map as {
-        on: (
-          event: string,
-          callback: (event: { coordinate: [number, number] }) => void,
-        ) => void;
-      };
-      mapInstance.on("click", (event: { coordinate: [number, number] }) => {
+      map.on("click", (event) => {
         const coordinate = event.coordinate;
         const lat = coordinate[1];
         const lng = coordinate[0];
@@ -275,12 +309,17 @@ const AddressesPage = () => {
     },
     [handleMapClick],
   );
-
   // Clean up when closing bottom sheet
   useEffect(() => {
     if (!isAddAddressOpen) {
-      setSelectedLocation(null);
-      setAddressDetails("");
+      setFormFields({
+        title: null,
+        text: null,
+        longitude: null,
+        latitude: null,
+        is_default: false,
+      });
+      setErrorAddress("");
     }
   }, [isAddAddressOpen]);
 
@@ -310,7 +349,8 @@ const AddressesPage = () => {
         {/* Add New Address Button */}
         <button
           onClick={() => setIsAddAddressOpen(true)}
-          className="w-full bg-primary text-primary-foreground py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3"
+          disabled={accountAddressListQuery.isFetching}
+          className="w-full bg-primary disabled:bg-muted disabled:text-white text-primary-foreground py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3"
         >
           <IconPlus size={20} />
           <Typography variant={"paragraph/md"} weight="bold">
@@ -320,66 +360,78 @@ const AddressesPage = () => {
 
         {/* Addresses List */}
         <div className="space-y-4">
-          {accountAddressListQuery?.data?.map((address) => (
-            <div
-              key={address.id}
-              className="bg-card rounded-2xl p-5 shadow-sm border border-border hover:shadow-md transition-all duration-300"
-            >
-              <div className="flex justify-between items-start mb-4">
-                <div className="flex items-center gap-4">
-                  <div
-                    className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                      address.is_default ? "bg-primary/10" : "bg-muted"
-                    }`}
-                  >
-                    <IconMapPin
-                      size={24}
-                      className={
-                        address.is_default
-                          ? "text-primary"
-                          : "text-muted-foreground"
-                      }
-                    />
-                  </div>
-                  <div>
-                    <Typography
-                      variant={"paragraph/sm"}
-                      weight="bold"
-                      className="text-foreground"
+          {accountAddressListQuery.isFetching ? (
+            [...Array(4)].map((_, index) => (
+              <Skeleton key={index} className="w-full h-20 bg-card" />
+            ))
+          ) : accountAddressListQuery?.data?.data.length ? (
+            accountAddressListQuery.data.data.map((address) => (
+              <div
+                key={address.id}
+                className="bg-card rounded-2xl p-5 shadow-sm border border-border hover:shadow-md transition-all duration-300"
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex items-center gap-4">
+                    <div
+                      className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                        address.is_default ? "bg-primary/10" : "bg-muted"
+                      }`}
                     >
-                      {address.title}
-                    </Typography>
-                    <Typography
-                      variant={"paragraph/xs"}
-                      className="text-muted-foreground"
-                    >
-                      {address.address}
-                    </Typography>
+                      <IconMapPin
+                        size={24}
+                        className={
+                          address.is_default
+                            ? "text-primary"
+                            : "text-muted-foreground"
+                        }
+                      />
+                    </div>
+                    <div>
+                      <Typography
+                        variant={"paragraph/sm"}
+                        weight="bold"
+                        className="text-foreground"
+                      >
+                        {address.title}
+                      </Typography>
+                      <Typography
+                        variant={"paragraph/xs"}
+                        className="text-muted-foreground"
+                      >
+                        {address.address}
+                      </Typography>
+                    </div>
                   </div>
+                  {address.is_default && (
+                    <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold">
+                      <IconStar size={12} />
+                      پیش‌فرض
+                    </div>
+                  )}
                 </div>
-                {address.is_default && (
-                  <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold">
-                    <IconStar size={12} />
-                    پیش‌فرض
-                  </div>
-                )}
-              </div>
 
-              <div className="flex gap-2">
-                <button className="flex-1 bg-primary/10 text-primary py-2 rounded-xl text-xs font-bold hover:bg-primary/20 transition-colors flex items-center justify-center gap-1">
-                  <IconEdit size={14} />
-                  ویرایش
-                </button>
-                <button className="flex-1 bg-muted text-muted-foreground py-2 rounded-xl text-xs font-bold hover:bg-muted/80 transition-colors flex items-center justify-center gap-1">
-                  <IconStar size={14} />
-                  پیش‌فرض
-                </button>
-                <button className="p-2 text-destructive hover:bg-destructive/10 rounded-xl transition-colors">
-                  <IconTrash size={16} />
-                </button>
+                <div className="flex gap-2">
+                  <button className="flex-1 bg-primary/10 text-primary py-2 rounded-xl text-xs font-bold hover:bg-primary/20 transition-colors flex items-center justify-center gap-1">
+                    <IconEdit size={14} />
+                    ویرایش
+                  </button>
+                  <button className="flex-1 bg-muted text-muted-foreground py-2 rounded-xl text-xs font-bold hover:bg-muted/80 transition-colors flex items-center justify-center gap-1">
+                    <IconStar size={14} />
+                    پیش‌فرض
+                  </button>
+                  <button className="p-2 text-destructive hover:bg-destructive/10 rounded-xl transition-colors">
+                    <IconTrash size={16} />
+                  </button>
+                </div>
               </div>
+            ))
+          ) : (
+            <div className="text-center py-8">
+              <Typography variant="label/md" weight="normal">
+                آدرسی یافت نشد
+              </Typography>
             </div>
-          ))}
+          )}
         </div>
       </div>
 
@@ -410,17 +462,19 @@ const AddressesPage = () => {
             </Typography>
             <div className="h-64 rounded-2xl overflow-hidden border border-border relative">
               {isClient && (
-                <NeshanMap
-                  ref={mapRef}
-                  mapKey="web.fd5c5f700ad64865aa83da3a0fabbb63"
-                  defaultType="neshan"
-                  center={{ latitude: 35.6892, longitude: 51.389 }}
-                  zoom={13}
-                  style={{ height: "100%", width: "100%" }}
-                  onInit={onMapInit}
-                  traffic={false}
-                  poi={false}
-                />
+                <>
+                  <NeshanMap
+                    ref={mapRef}
+                    mapKey={process.env.NEXT_PUBLIC_MAP_KEY as string}
+                    defaultType="neshan"
+                    center={{ latitude: 35.6892, longitude: 51.389 }}
+                    zoom={13}
+                    style={{ height: "100%", width: "100%" }}
+                    onInit={onMapInit}
+                    traffic={false}
+                    poi={false}
+                  />
+                </>
               )}
 
               {/* My Location Button */}
@@ -450,26 +504,66 @@ const AddressesPage = () => {
           {/* Address Details */}
 
           {/* Manual Address Input */}
-          <div>
+          <BaseInput
+            dir="rtl"
+            className="text-right mb-4 !bg-transparent"
+            placeholder="عنوان آدرس"
+            type="text"
+            name="title"
+            value={formFields.title || undefined}
+            maxLength={11}
+            onChange={(e) => {
+              setFormFields((prev) => ({
+                ...prev,
+                title: e.currentTarget.value,
+              }));
+            }}
+          />
+          <Typography
+            variant={"paragraph/sm"}
+            weight="bold"
+            className="mb-3 text-foreground"
+          >
+            یا آدرس را دستی وارد کنید
+          </Typography>
+          <textarea
+            value={errorAddress || formFields.text?.toString()}
+            onChange={(e) => {
+              setFormFields((prev) => ({
+                ...prev,
+                text: e.currentTarget.value,
+              }));
+            }}
+            placeholder="آدرس کامل خود را اینجا وارد کنید..."
+            className="w-full mb-1 p-4 border border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-background text-foreground min-h-[100px] resize-none"
+          />
+          <div className="flex items-center gap-2 flex-row">
             <Typography
               variant={"paragraph/sm"}
               weight="bold"
-              className="mb-3 text-foreground"
+              className="text-foreground"
             >
-              یا آدرس را دستی وارد کنید
+              آدرس پیش فرض
             </Typography>
-            <textarea
-              value={addressDetails}
-              onChange={(e) => setAddressDetails(e.target.value)}
-              placeholder="آدرس کامل خود را اینجا وارد کنید..."
-              className="w-full p-4 border border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-background text-foreground min-h-[100px] resize-none"
+            <Switch
+              dir="ltr"
+              onChange={(e) => {
+                setFormFields((prev) => ({
+                  ...prev,
+                  is_default: e.currentTarget.ariaChecked === "true",
+                }));
+              }}
             />
           </div>
-
           {/* Save Button */}
           <Button
             onClick={handleSaveAddress}
-            disabled={!addressDetails}
+            disabled={
+              !formFields.latitude ||
+              !formFields.longitude ||
+              !formFields.text ||
+              accountAddressPostMutate.isPending
+            }
             className="w-full bg-primary text-primary-foreground py-4 rounded-2xl font-bold disabled:bg-muted disabled:cursor-not-allowed hover:shadow-lg transition-all duration-300"
           >
             <Typography variant={"paragraph/md"} weight="bold">

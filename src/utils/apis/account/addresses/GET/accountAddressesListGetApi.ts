@@ -2,7 +2,7 @@ import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
-type AccountAddressesListApiResponse = {
+type AccountAddressesList = {
   id: number;
   title: string;
   lat: string;
@@ -10,11 +10,15 @@ type AccountAddressesListApiResponse = {
   address: string;
   is_default: boolean;
 }[];
+interface AccountAddressesListApiResponse {
+  count: number;
+  data: AccountAddressesList;
+  success: boolean;
+}
 
 const getAccountAddressListApi =
   async (): Promise<AccountAddressesListApiResponse> => {
     const response = await coreApi.get(path.join("/account/addresses/"));
-
     return response.data;
   };
 

@@ -4,7 +4,8 @@ import {
   ShopPricesListApiResponse,
   useGetShopPricesList,
 } from "@/utils/apis/shop/prices/GET/shopPricesListApi";
-import { ShopProductDetailApiResponse, useGetShopProductDetail } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
+import { ShopProductDetailApiResponse } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
+import { usePostShopCartAddApi } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -13,23 +14,20 @@ import {
 import CustomAreaChartCard from "../products/[id]/_components/CustomAreaChartCard";
 import CategoryChipsFilter from "@/app/_components/lookups/chips/CategoryChips";
 import BrandChipsFilter from "@/app/_components/lookups/chips/BrandChips";
+import AddToCartBottomSheet from "@/app/_components/AddToCartBottomSheet";
 import Typography from "@/components/components/atoms/typography";
-import { Textarea } from "@/components/components/atoms/textarea";
+import { Skeleton } from "@/components/components/atoms/skeleton";
 import { Input } from "@/components/components/molecules/input";
+import { useAuthStore } from "@/utils/store/authenticate.store";
 import { Button } from "@/components/components/atoms/button";
 import { PriceItemCard } from "./_components/priceItemCard";
-import { formatPrice, toPersianNumbers } from "@/lib/utils";
 import BottomSheet from "@/app/_components/BottomSheet";
 import { DayBadge } from "./_components/dayBadge";
 import { format, subDays } from "date-fns-jalali";
-import Counter from "@/app/_components/Counter";
+import { toPersianNumbers } from "@/lib/utils";
 import { faIR } from "date-fns-jalali/locale";
 import { useMemo, useState } from "react";
-import Tomanicon from "@/icons/toman";
 import { clsx } from "clsx";
-import AddToCartBottomSheet from "@/app/_components/AddToCartBottomSheet";
-import { usePostShopCartAddApi } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
-import { useAuthStore } from "@/utils/store/authenticate.store";
 
 interface DayData {
   name: string;
@@ -84,14 +82,9 @@ const Pricepage = () => {
     ordering: "",
     search: "",
   });
-  
+
   const shopPricesListQuery = useGetShopPricesList({
     params: filterParams,
-  });
-
-  const shopProductDetailQuery = useGetShopProductDetail({
-    enabled: !!selectedItem?.product_id,
-    slug: selectedItem?.product_id?.toString() || "",
   });
 
   const shopAddCartMutate = usePostShopCartAddApi({
@@ -135,14 +128,12 @@ const Pricepage = () => {
     setSearchQuery(e.target.value);
   };
 
-   
-  
-  const handlePurchase = (item: any) => {
-    setSelectedProduct({
-      title: item.title,
-      price: item.price,
-    });
+  const onAddProductToCart = (id: number) => {
     setShowPurchaseBottomSheet(true);
+    setSelectedProduct(
+      shopPricesListQuery.data?.find((item) => item.product.id === id)
+        ?.product || null,
+    );
   };
 
   const handleClosePurchaseBottomSheet = () => {
@@ -157,7 +148,6 @@ const Pricepage = () => {
   const currentDay = daysData[currentDayIndex];
 
   const onAddToCart = () => {
-
     if (selectedProduct?.id && selectedProduct?.count) {
       shopAddCartMutate.mutate({
         product_id: selectedProduct?.id,
@@ -165,7 +155,7 @@ const Pricepage = () => {
       });
     }
   };
-  
+
   return (
     <div dir="rtl" className="px-4 pt-28 ">
       <div className="flex flex-row items-center justify-between ">
@@ -229,6 +219,25 @@ const Pricepage = () => {
       </div>
 
       {/* Results count */}
+      {shopPricesListQuery.isFetching &&
+        [...Array(6)].map((_, index) => (
+          <div
+            key={index}
+            className="flex justify-between items-center border-b pb-3.5 border-zinc-700 pt-2"
+          >
+            <div className="flex flex-col gap-2 ">
+              <Skeleton className="h-5 w-16 bg-card rounded-sm" />
+              <div className="flex gap-1.5 items-center">
+                <Skeleton className="h-5 w-20 bg-card rounded-sm" />
+              </div>
+            </div>
+            <div className="flex items-center gap-2 w-50">
+              <Skeleton className="h-9 w-1/5 rounded-full bg-card" />
+              <Skeleton className="h-9 w-2/5 bg-card" />
+              <Skeleton className="h-9 w-2/5 bg-card" />
+            </div>
+          </div>
+        ))}
       {shopPricesListQuery?.data?.length === 0 ? (
         <div className="text-center py-8">
           <Typography
@@ -244,11 +253,13 @@ const Pricepage = () => {
           {shopPricesListQuery?.data?.map((item, index) => (
             <div key={index}>
               <PriceItemCard
-                title={item.product}
+                title={item.product.name}
                 price={item.price}
                 trend={item.is_increamental ? "up" : "down"}
                 onChart={() => handleItemClick(item)}
-                onBuy={() => handlePurchase(item)}
+                onBuy={() => {
+                  onAddProductToCart(item.product.id);
+                }}
               />
             </div>
           ))}
@@ -263,14 +274,14 @@ const Pricepage = () => {
             weight="bold"
             className="mb-4 text-center"
           >
-            نمودار {selectedItem?.product}
+            نمودار {selectedItem?.product.name || null}
           </Typography>
 
           {/* Chart using CustomAreaChartCard */}
           <div className="mt-4 mb-8">
             <CustomAreaChartCard
               chartConfig={chartConfig}
-              chartData={shopProductDetailQuery.data?.price_history || []}
+              chartData={selectedItem?.product.price_history || []}
             />
 
             {/* Date indicator */}
@@ -299,7 +310,7 @@ const Pricepage = () => {
             >
               برندها
             </Typography>
-            <div className="flex text-right justify-end flex-wrap gap-2 mt-2">
+            <div className="flex text-right flex-wrap gap-2 mt-2">
               <BrandChipsFilter
                 onChange={(value) => {
                   setFilterParams((prev) => ({
@@ -338,45 +349,6 @@ const Pricepage = () => {
         selectedProduct={selectedProduct}
         setSelectedProduct={setSelectedProduct}
       />
-      <BottomSheet
-        isOpen={showPurchaseBottomSheet}
-        onClose={handleClosePurchaseBottomSheet}
-      >
-        {selectedProduct && (
-          <div className="pb-15">
-            <hr className="w-1/2 mx-auto border-2 rounded-full mb-4" />
-            <Typography
-              variant="label/lg"
-              weight="semi-bold"
-              className="mb-4 text-center"
-            >
-              افزودن محصول به سبد
-            </Typography>
-            <Typography
-              variant="label/sm"
-              weight="bold"
-              className="mb-4 text-center"
-            >
-              {selectedProduct.title}
-            </Typography>
-            <div className="flex items-center justify-center gap-1 mb-4">
-              <Typography variant="label/sm" weight="bold">
-                {formatPrice(selectedProduct.price)}
-              </Typography>
-              <Tomanicon size={18} />
-            </div>
-            <Counter />
-            <Textarea placeholder="توضیحات (اختیاری)" className="mb-4" />
-            <Button
-              className="w-full"
-              variant="primary"
-              onClick={handleClosePurchaseBottomSheet}
-            >
-              افزودن به سبد خرید
-            </Button>
-          </div>
-        )}
-      </BottomSheet>
     </div>
   );
 };

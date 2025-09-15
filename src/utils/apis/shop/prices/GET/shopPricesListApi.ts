@@ -1,3 +1,4 @@
+import { ShopProductDetailApiResponse } from "../../products/[id]/GET/shopProductDetailApi";
 import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { coreApi } from "@/utils/service/instance";
 import { Lookup } from "@/lib/types";
@@ -22,10 +23,9 @@ export interface ShopPricesListApiParams {
 
 export interface ShopPricesListApiResponse {
   id: number;
-  product_id: number;
   price: number;
   created_at: string;
-  product: string;
+  product: ShopProductDetailApiResponse;
   category: Lookup;
   brand: Lookup;
   is_increamental: boolean;

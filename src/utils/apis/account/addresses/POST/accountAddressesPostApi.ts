@@ -3,7 +3,7 @@ import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
 export interface AccountAddressesPostApiPayload {
-  title: string;
+  title?: string;
   text: string;
   latitude: string;
   longitude: string;
@@ -12,7 +12,7 @@ export interface AccountAddressesPostApiPayload {
 
 export type AccountAddressesPostApiResponse = {
   id: number;
-  title: string;
+  title: string | null;
   latitude: string;
   longitude: string;
   text: string;
