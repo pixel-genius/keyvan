@@ -4,7 +4,7 @@ import {
   ShopPricesListApiResponse,
   useGetShopPricesList,
 } from "@/utils/apis/shop/prices/GET/shopPricesListApi";
-import { useGetShopProductDetail } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
+import { ShopProductDetailApiResponse, useGetShopProductDetail } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -27,6 +27,9 @@ import { faIR } from "date-fns-jalali/locale";
 import { useMemo, useState } from "react";
 import Tomanicon from "@/icons/toman";
 import { clsx } from "clsx";
+import AddToCartBottomSheet from "@/app/_components/AddToCartBottomSheet";
+import { usePostShopCartAddApi } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
+import { useAuthStore } from "@/utils/store/authenticate.store";
 
 interface DayData {
   name: string;
@@ -34,10 +37,8 @@ interface DayData {
   date: string;
   time: string;
 }
-
-interface SelectedProduct {
-  title: string;
-  price: number;
+interface SelectedProduct extends ShopProductDetailApiResponse {
+  count?: number;
 }
 
 // Chart configuration
@@ -73,7 +74,7 @@ const Pricepage = () => {
   const [selectedProduct, setSelectedProduct] =
     useState<SelectedProduct | null>(null);
   const [showFilterBottomSheet, setShowFilterBottomSheet] = useState(false);
-
+  const { setUserInfo } = useAuthStore();
   const [filterParams, setFilterParams] = useState<ShopPricesListApiParams>({
     date: daysData[currentDayIndex].date,
     brand: undefined,
@@ -83,7 +84,7 @@ const Pricepage = () => {
     ordering: "",
     search: "",
   });
-
+  
   const shopPricesListQuery = useGetShopPricesList({
     params: filterParams,
   });
@@ -91,6 +92,13 @@ const Pricepage = () => {
   const shopProductDetailQuery = useGetShopProductDetail({
     enabled: !!selectedItem?.product_id,
     slug: selectedItem?.product_id?.toString() || "",
+  });
+
+  const shopAddCartMutate = usePostShopCartAddApi({
+    onSuccess: (res) => {
+      setUserInfo({ shopCart: res });
+      setShowPurchaseBottomSheet(false);
+    },
   });
 
   const goToPreviousDay = () => {
@@ -127,7 +135,8 @@ const Pricepage = () => {
     setSearchQuery(e.target.value);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
+  
   const handlePurchase = (item: any) => {
     setSelectedProduct({
       title: item.title,
@@ -147,6 +156,16 @@ const Pricepage = () => {
 
   const currentDay = daysData[currentDayIndex];
 
+  const onAddToCart = () => {
+
+    if (selectedProduct?.id && selectedProduct?.count) {
+      shopAddCartMutate.mutate({
+        product_id: selectedProduct?.id,
+        quantity: selectedProduct?.count,
+      });
+    }
+  };
+  
   return (
     <div dir="rtl" className="px-4 pt-28 ">
       <div className="flex flex-row items-center justify-between ">
@@ -311,6 +330,14 @@ const Pricepage = () => {
       </BottomSheet>
 
       {/* Purchase Bottom Sheet */}
+      <AddToCartBottomSheet
+        disabled={shopAddCartMutate.isPending}
+        isOpen={showPurchaseBottomSheet}
+        onClose={handleClosePurchaseBottomSheet}
+        onAddToCart={onAddToCart}
+        selectedProduct={selectedProduct}
+        setSelectedProduct={setSelectedProduct}
+      />
       <BottomSheet
         isOpen={showPurchaseBottomSheet}
         onClose={handleClosePurchaseBottomSheet}

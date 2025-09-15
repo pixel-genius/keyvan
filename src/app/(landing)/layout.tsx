@@ -10,10 +10,9 @@ export default function LandingLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { setUserInfo, userProfileInfo } = useAuthStore();
-  const accountProfileInfo = useGetAccountProfileGetApi({
-    enabled: !userProfileInfo,
-  });
+  const { setUserInfo } = useAuthStore();
+
+  const accountProfileInfo = useGetAccountProfileGetApi();
 
   const shopCartList = useGetShopCartListApi();
 

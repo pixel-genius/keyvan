@@ -151,10 +151,10 @@ function ProductsContent() {
   };
 
   const onAddProductToCart = (id: number) => {
-    setIsBottomSheetOpen(true);
     setSelectedProduct(
       shopProductListQuery.data?.find((item) => item.id === id) || null,
     );
+    setIsBottomSheetOpen(true);
   };
   // The API does not provide a category field. If needed, extract categories from another source.
 

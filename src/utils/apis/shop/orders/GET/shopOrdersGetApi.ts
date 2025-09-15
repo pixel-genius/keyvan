@@ -9,7 +9,7 @@ const getShopOrdersApi = async (): Promise<ShopOrderDetailApiResponse[]> => {
   return response.data;
 };
 
-export const useGetShopOrdersApi = (
+export const useGetShopOrdersListApi = (
   props?: Partial<
     UseQueryOptions<
       ShopOrderDetailApiResponse[],
