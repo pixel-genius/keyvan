@@ -6,6 +6,7 @@ import path from "path";
 interface AccountFilesUploadPostApiRequest {
   file: File;
   category: UploadFileApiCategory;
+  user_id?: number;
 }
 
 interface AccountFilesUploadPostApiResponse {
@@ -21,17 +22,25 @@ interface AccountFilesUploadPostApiResponse {
 const accountFilesUploadPostApi = async (
   body: AccountFilesUploadPostApiRequest,
 ): Promise<AccountFilesUploadPostApiResponse> => {
-  const { category, file } = body;
+  const { user_id, category, file } = body;
   const formData = new FormData();
   formData.append("file", file);
   formData.append("category", category);
-
-  const response = await coreApi.post(path.join(`/account/files/upload/`), {
-    formData,
-    headers: {
-      "Content-type": "multipart/form-data",
+  if (user_id !== undefined) {
+    formData.append("user_id", String(user_id));
+  }
+  console.log(formData);
+  const response = await coreApi.post(
+    path.join(`/account/files/upload/`),
+    {
+      formData,
     },
-  });
+    {
+      headers: {
+        "Content-type": "multipart/form-data",
+      },
+    },
+  );
 
   return response.data;
 };

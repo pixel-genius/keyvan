@@ -9,6 +9,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/components/atoms/input-otp";
+import { usePutAccountProfileApi } from "@/utils/apis/account/profile/PUT/accountProfilePutApi";
 import {
   AuthenticateFormStateEnum,
   useAuthStore,
@@ -39,6 +40,7 @@ const AuthenticatePage = () => {
   const router = useRouter();
   const { authenticateFormState, setAuthStore } = useAuthStore();
   const [countdownDate, setCountdownDate] = useState<number | null>(null);
+  const [userId, setUserId] = useState<number | null>(null);
   useEffect(() => {
     if (authenticateFormState === AuthenticateFormStateEnum.OTP)
       setCountdownDate(Date.now() + 120000);
@@ -53,6 +55,7 @@ const AuthenticatePage = () => {
     license_file: undefined,
     certificate_file: undefined,
   });
+
   useEffect(() => {
     return () => {
       setAuthStore(AuthenticateFormStateEnum.LOGIN);
@@ -112,13 +115,20 @@ const AuthenticatePage = () => {
   const registerMutate = usePostAccountAuthRegister({
     onSuccess: (res) => {
       if (res.success) {
-        setAuthStore(AuthenticateFormStateEnum.PEND_APPROVAL);
+        setUserId(res.user_id);
+        setAuthStore(AuthenticateFormStateEnum.REGISTER_STEP2);
       }
     },
     onError: (error) => {
       if (!error.response?.data.success)
         toast.error("این شماره تلفن برای کد ملی ذکر شده نیست!");
       else toast.error("خطا در ورود!");
+    },
+  });
+
+  const accountProfileMutate = usePutAccountProfileApi({
+    onSuccess: () => {
+      setAuthStore(AuthenticateFormStateEnum.PEND_APPROVAL);
     },
   });
 
@@ -283,17 +293,20 @@ const AuthenticatePage = () => {
                 </div>
               ) : (
                 <>
-                  <Input
-                    dir="rtl"
-                    className="text-right pb-2"
-                    placeholder="شماره همراه"
-                    value={formFields.phoneNumber}
-                    onChange={handleChange}
-                    type="tel"
-                    name="phoneNumber"
-                    maxLength={11}
-                  />
-
+                  {(authenticateFormState === AuthenticateFormStateEnum.LOGIN ||
+                    authenticateFormState ===
+                      AuthenticateFormStateEnum.REGISTER_STEP1) && (
+                    <Input
+                      dir="rtl"
+                      className="text-right pb-2"
+                      placeholder="شماره همراه"
+                      value={formFields.phoneNumber}
+                      onChange={handleChange}
+                      type="tel"
+                      name="phoneNumber"
+                      maxLength={11}
+                    />
+                  )}
                   {authenticateFormState ===
                     AuthenticateFormStateEnum.REGISTER_STEP1 && (
                     <Input
@@ -327,9 +340,12 @@ const AuthenticatePage = () => {
                       </div>
                       <div className="flex flex-col gap-2">
                         <FileUpload
+                          isLoading={accountFileUploadMutate.isPending}
+                          disabled={accountProfileMutate.isPending}
                           label="مجوز توزیع استانی یا کشوری (اختیاری)"
                           onChange={(file) => {
                             accountFileUploadMutate.mutate({
+                              user_id: userId as number,
                               category: "business_license",
                               file: file as File,
                             });
@@ -337,9 +353,12 @@ const AuthenticatePage = () => {
                         />
 
                         <FileUpload
+                          isLoading={accountFileUploadMutate.isPending}
+                          disabled={accountProfileMutate.isPending}
                           label="جواز کسب (اختیاری)"
                           onChange={(file) => {
                             accountFileUploadMutate.mutate({
+                              user_id: userId as number,
                               category: "certification",
                               file: file as File,
                             });

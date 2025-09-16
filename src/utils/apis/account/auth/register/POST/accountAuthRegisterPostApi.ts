@@ -9,12 +9,10 @@ export interface AccountAuthRegisterPostApiPayload {
 }
 
 export interface AccountAuthRegisterPostApiResponse {
-  success: boolean;
   message: string;
   phone_number: string;
-  national_code: string;
-  otp_code: string;
-  debug_note: string;
+  success: boolean;
+  user_id: number;
 }
 
 // POST API function

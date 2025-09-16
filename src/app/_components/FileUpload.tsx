@@ -7,9 +7,17 @@ interface FileUploadProps {
   label: string;
   onChange?: (file: File | null) => void;
   accept?: string;
+  disabled?: boolean;
+  isLoading?: boolean;
 }
 
-const FileUpload = ({ label, onChange, accept = ".pdf,.jpg,.jpeg,.png" }: FileUploadProps) => {
+const FileUpload = ({
+  label,
+  onChange,
+  disabled,
+  isLoading,
+  accept = ".pdf,.jpg,.jpeg,.png",
+}: FileUploadProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleClick = () => {
@@ -22,19 +30,24 @@ const FileUpload = ({ label, onChange, accept = ".pdf,.jpg,.jpeg,.png" }: FileUp
   };
 
   return (
-    <div 
+    <div
       className="flex justify-between items-center w-full border  rounded p-3 bg-card/30"
       onClick={handleClick}
     >
       <span className="text-muted-foreground text-sm">{label}</span>
-      <Button variant={"secondary"} size={"sm"} state="warning">
-        انتخاب فایل
+      <Button
+        disabled={disabled || isLoading}
+        variant={"secondary"}
+        size={"sm"}
+        state="warning"
+      >
+        {isLoading ? "در حال بارگذاری..." : "انتخاب فایل"}
       </Button>
-    
-      <input 
-        type="file" 
+
+      <input
+        type="file"
         ref={inputRef}
-        className="hidden" 
+        className="hidden"
         accept={accept}
         onChange={handleChange}
       />
@@ -42,4 +55,4 @@ const FileUpload = ({ label, onChange, accept = ".pdf,.jpg,.jpeg,.png" }: FileUp
   );
 };
 
-export default FileUpload; 
+export default FileUpload;
