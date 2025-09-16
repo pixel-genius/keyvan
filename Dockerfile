@@ -10,24 +10,18 @@ ENV PATH="/root/.bun/bin:${PATH}"
 # ایجاد و تنظیم دایرکتوری کاری
 WORKDIR /app
 
-# کپی کردن فایل‌های پکیج و قفل
+# کپی کردن پکیج‌ها و فایل‌های مربوط به پروژه
 COPY package.json bun.lock ./
+COPY tsconfig.json ./
 
 # نصب dependencies
-RUN bun install --frozen-lockfile
+RUN bun install
 
-# کپی کردن فایل‌های پیکربندی
-COPY tsconfig.json next.config.ts postcss.config.mjs prettier.config.mjs components.json ./
-COPY eslint.config.mjs ./
+# کپی کردن بقیه فایل‌های پروژه
+COPY . .
 
-# کپی کردن دایرکتوری src
-COPY src/ ./src/
-
-# کپی کردن فایل‌های عمومی
-COPY public/ ./public/
-
-# ساخت پروژه Next.js
-RUN bun run build:stage
+# ساخت پروژه تایپ‌اسکریپت
+RUN bun run build
 
 # تنظیم پورت
 EXPOSE 3000
