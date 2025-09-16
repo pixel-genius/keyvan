@@ -41,6 +41,13 @@ const AuthenticatePage = () => {
   const { authenticateFormState, setAuthStore } = useAuthStore();
   const [countdownDate, setCountdownDate] = useState<number | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
+  const [uploadingStates, setUploadingStates] = useState<{
+    business_license: boolean;
+    certification: boolean;
+  }>({
+    business_license: false,
+    certification: false,
+  });
   useEffect(() => {
     if (authenticateFormState === AuthenticateFormStateEnum.OTP)
       setCountdownDate(Date.now() + 120000);
@@ -76,8 +83,10 @@ const AuthenticatePage = () => {
       toast.success("فایل با موفقیت آپلود شد");
       if (res.category === "business_license") {
         setFormFields((prev) => ({ ...prev, license_file: res.id }));
+        setUploadingStates((prev) => ({ ...prev, business_license: false }));
       } else {
         setFormFields((prev) => ({ ...prev, certificate_file: res.id }));
+        setUploadingStates((prev) => ({ ...prev, certification: false }));
       }
     },
     onError: () => {
@@ -341,9 +350,16 @@ const AuthenticatePage = () => {
                       <div className="flex flex-col gap-2">
                         <FileUpload
                           isLoading={accountFileUploadMutate.isPending}
-                          disabled={accountProfileMutate.isPending}
+                          disabled={
+                            accountProfileMutate.isPending &&
+                            uploadingStates.business_license
+                          }
                           label="مجوز توزیع استانی یا کشوری (اختیاری)"
                           onChange={(file) => {
+                            setUploadingStates((prev) => ({
+                              ...prev,
+                              business_license: true,
+                            }));
                             accountFileUploadMutate.mutate({
                               user_id: userId as number,
                               category: "business_license",
@@ -354,9 +370,16 @@ const AuthenticatePage = () => {
 
                         <FileUpload
                           isLoading={accountFileUploadMutate.isPending}
-                          disabled={accountProfileMutate.isPending}
+                          disabled={
+                            accountProfileMutate.isPending &&
+                            uploadingStates.certification
+                          }
                           label="جواز کسب (اختیاری)"
                           onChange={(file) => {
+                            setUploadingStates((prev) => ({
+                              ...prev,
+                              certification: true,
+                            }));
                             accountFileUploadMutate.mutate({
                               user_id: userId as number,
                               category: "certification",
