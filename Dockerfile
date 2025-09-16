@@ -27,7 +27,7 @@ COPY src/ ./src/
 COPY public/ ./public/
 
 # ساخت پروژه Next.js
-RUN bun run build
+RUN bun run build:stage
 
 # تنظیم پورت
 EXPOSE 3000
