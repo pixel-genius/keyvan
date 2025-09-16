@@ -76,7 +76,10 @@ const AuthenticatePage = () => {
 
   const registerMutate = usePostAccountAuthRegister({
     onSuccess: (res) => {
-      if (res.success) setAuthStore(AuthenticateFormStateEnum.OTP);
+      if (res.success) {
+        setAuthStore(AuthenticateFormStateEnum.OTP);
+        loginOtpMutateGet.mutate({ phone_number: formFields.phoneNumber });
+      }
     },
     onError: (error) => {
       if (!error.response?.data.success)
@@ -228,6 +231,9 @@ const AuthenticatePage = () => {
                       size={"sm"}
                       onClick={() => {
                         setCountdownDate(Date.now() + 120000);
+                        loginOtpMutateGet.mutate({
+                          phone_number: formFields.phoneNumber,
+                        });
                       }}
                     >
                       ارسال کد
