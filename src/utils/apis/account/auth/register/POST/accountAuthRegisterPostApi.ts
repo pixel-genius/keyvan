@@ -4,8 +4,13 @@ import { AxiosError } from "axios";
 import path from "path";
 
 export interface AccountAuthRegisterPostApiPayload {
-  national_code: string;
-  phone_number: string;
+  user_id?: number;
+  national_code?: string;
+  phone_number?: string;
+  first_name?: string;
+  last_name?: string;
+  license_id?: number;
+  certificate_id?: number;
 }
 
 export interface AccountAuthRegisterPostApiResponse {

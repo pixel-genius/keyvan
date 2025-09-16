@@ -9,7 +9,7 @@ interface AccountFilesUploadPostApiRequest {
   user_id?: number;
 }
 
-interface AccountFilesUploadPostApiResponse {
+export type AccountFilesUploadPostApiFileObject = {
   id: number;
   file: string;
   original_filename: string;
@@ -17,6 +17,10 @@ interface AccountFilesUploadPostApiResponse {
   size: number;
   created_at: string;
   category: string;
+};
+export interface AccountFilesUploadPostApiResponse {
+  file: AccountFilesUploadPostApiFileObject;
+  message: string;
 }
 
 const accountFilesUploadPostApi = async (
@@ -29,12 +33,9 @@ const accountFilesUploadPostApi = async (
   if (user_id !== undefined) {
     formData.append("user_id", String(user_id));
   }
-  console.log(formData);
   const response = await coreApi.post(
     path.join(`/account/files/upload/`),
-    {
-      formData,
-    },
+    formData,
     {
       headers: {
         "Content-type": "multipart/form-data",

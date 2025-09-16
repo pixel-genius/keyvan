@@ -13,6 +13,8 @@ export interface AccountProfilePutApiPayload {
   date_of_birth?: string;
   address?: string;
   bio?: string;
+  certificate_file?: number;
+  license_file?: number;
 }
 
 export type AccountProfilePutApiResponse = AccountProfileGetApiResponse;

@@ -1,15 +1,17 @@
 "use client";
 
+import {
+  AccountFilesUploadPostApiResponse,
+  useAccountFilesUploadPost,
+} from "@/utils/apis/account/files/upload/POST/accountFilesUploadPostApi";
 import { usePostAccountAuthOtpLoginApi } from "@/utils/apis/account/auth/otp_login/POST/accountAuthOtpLoginPostApi";
 import { useGetAccountAuthOtpLoginApi } from "@/utils/apis/account/auth/otp_login/GET/accountAuthOtpLoginGetApi";
 import { usePostAccountAuthRegister } from "@/utils/apis/account/auth/register/POST/accountAuthRegisterPostApi";
-import { useAccountFilesUploadPost } from "@/utils/apis/account/files/upload/POST/accountFilesUploadPostApi";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/components/atoms/input-otp";
-import { usePutAccountProfileApi } from "@/utils/apis/account/profile/PUT/accountProfilePutApi";
 import {
   AuthenticateFormStateEnum,
   useAuthStore,
@@ -32,8 +34,8 @@ interface FormFieldsState {
   firstName: string;
   lastName: string;
   otpCode: string;
-  certificate_file: number | undefined;
-  license_file: number | undefined;
+  certificate_file: AccountFilesUploadPostApiResponse["file"] | undefined;
+  license_file: AccountFilesUploadPostApiResponse["file"] | undefined;
 }
 
 const AuthenticatePage = () => {
@@ -81,11 +83,11 @@ const AuthenticatePage = () => {
   const accountFileUploadMutate = useAccountFilesUploadPost({
     onSuccess: (res) => {
       toast.success("فایل با موفقیت آپلود شد");
-      if (res.category === "business_license") {
-        setFormFields((prev) => ({ ...prev, license_file: res.id }));
+      if (res.file.category === "business_license") {
+        setFormFields((prev) => ({ ...prev, license_file: res.file }));
         setUploadingStates((prev) => ({ ...prev, business_license: false }));
       } else {
-        setFormFields((prev) => ({ ...prev, certificate_file: res.id }));
+        setFormFields((prev) => ({ ...prev, certificate_file: res.file }));
         setUploadingStates((prev) => ({ ...prev, certification: false }));
       }
     },
@@ -114,7 +116,13 @@ const AuthenticatePage = () => {
       if (res.is_verified) {
         setToken(res.token);
         router.replace("/");
-      } else setAuthStore(AuthenticateFormStateEnum.PEND_APPROVAL);
+      } else {
+        if (formFields.nationalCode) {
+          setAuthStore(AuthenticateFormStateEnum.REGISTER_STEP2);
+          return;
+        }
+        setAuthStore(AuthenticateFormStateEnum.PEND_APPROVAL);
+      }
     },
     onError: () => {
       toast.error("خطا در ورود");
@@ -124,20 +132,21 @@ const AuthenticatePage = () => {
   const registerMutate = usePostAccountAuthRegister({
     onSuccess: (res) => {
       if (res.success) {
-        setUserId(res.user_id);
-        setAuthStore(AuthenticateFormStateEnum.REGISTER_STEP2);
+        if (userId) {
+          setAuthStore(AuthenticateFormStateEnum.PEND_APPROVAL);
+        } else {
+          setUserId(res.user_id);
+          setAuthStore(AuthenticateFormStateEnum.OTP);
+        }
       }
     },
     onError: (error) => {
-      if (!error.response?.data.success)
+      if (!userId && !error.response?.data.success) {
         toast.error("این شماره تلفن برای کد ملی ذکر شده نیست!");
-      else toast.error("خطا در ورود!");
-    },
-  });
-
-  const accountProfileMutate = usePutAccountProfileApi({
-    onSuccess: () => {
-      setAuthStore(AuthenticateFormStateEnum.PEND_APPROVAL);
+        return;
+      }
+      if (userId) toast.error("خطا در ثبت نام!");
+      toast.error("خطا در ورود!");
     },
   });
 
@@ -156,7 +165,17 @@ const AuthenticatePage = () => {
         phone_number: formFields.phoneNumber,
         otp_code: formFields.otpCode,
       });
+    if (authenticateFormState === AuthenticateFormStateEnum.REGISTER_STEP2) {
+      registerMutate.mutate({
+        user_id: userId as number,
+        first_name: formFields.firstName,
+        last_name: formFields.lastName,
+        license_id: formFields.license_file?.id as number,
+        certificate_id: formFields.certificate_file?.id as number,
+      });
+    }
   };
+
   const submitBtnDisabled = useMemo(() => {
     let valid = true;
     const phoneNumberValid = formFields.phoneNumber.length === 11,
@@ -170,14 +189,19 @@ const AuthenticatePage = () => {
         break;
       case AuthenticateFormStateEnum.REGISTER_STEP1:
         valid =
-          (!phoneNumberValid && !nationalCodeValid) || registerMutate.isPending;
+          (!phoneNumberValid && !nationalCodeValid) ||
+          registerMutate.isPending ||
+          loginOtpMutateGet.isPending;
         break;
       case AuthenticateFormStateEnum.REGISTER_STEP2:
         valid =
           !phoneNumberValid &&
           !nationalCodeValid &&
           !formFields.lastName &&
-          !formFields.firstName;
+          !formFields.firstName &&
+          formFields.certificate_file === undefined &&
+          formFields.license_file === undefined;
+
         break;
     }
 
@@ -349,12 +373,16 @@ const AuthenticatePage = () => {
                       </div>
                       <div className="flex flex-col gap-2">
                         <FileUpload
-                          isLoading={accountFileUploadMutate.isPending}
-                          disabled={
-                            accountProfileMutate.isPending &&
+                          isLoading={
+                            accountFileUploadMutate.isPending &&
                             uploadingStates.business_license
                           }
-                          label="مجوز توزیع استانی یا کشوری (اختیاری)"
+                          disabled={
+                            registerMutate.isPending &&
+                            uploadingStates.business_license
+                          }
+                          file={formFields.license_file}
+                          label="مجوز توزیع استانی یا کشوری"
                           onChange={(file) => {
                             setUploadingStates((prev) => ({
                               ...prev,
@@ -369,12 +397,16 @@ const AuthenticatePage = () => {
                         />
 
                         <FileUpload
-                          isLoading={accountFileUploadMutate.isPending}
-                          disabled={
-                            accountProfileMutate.isPending &&
+                          isLoading={
+                            accountFileUploadMutate.isPending &&
                             uploadingStates.certification
                           }
-                          label="جواز کسب (اختیاری)"
+                          disabled={
+                            registerMutate.isPending &&
+                            uploadingStates.certification
+                          }
+                          file={formFields.certificate_file}
+                          label="جواز کسب"
                           onChange={(file) => {
                             setUploadingStates((prev) => ({
                               ...prev,

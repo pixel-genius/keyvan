@@ -1,5 +1,6 @@
 "use client";
 
+import { AccountFilesUploadPostApiResponse } from "@/utils/apis/account/files/upload/POST/accountFilesUploadPostApi";
 import { Button } from "@/components/components/atoms/button";
 import { useRef } from "react";
 
@@ -9,6 +10,7 @@ interface FileUploadProps {
   accept?: string;
   disabled?: boolean;
   isLoading?: boolean;
+  file?: AccountFilesUploadPostApiResponse["file"] | null;
 }
 
 const FileUpload = ({
@@ -16,14 +18,13 @@ const FileUpload = ({
   onChange,
   disabled,
   isLoading,
+  file,
   accept = ".pdf,.jpg,.jpeg,.png",
 }: FileUploadProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
-
   const handleClick = () => {
     inputRef.current?.click();
   };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     if (onChange) onChange(file);
@@ -34,7 +35,14 @@ const FileUpload = ({
       className="flex justify-between items-center w-full border  rounded p-3 bg-card/30"
       onClick={handleClick}
     >
-      <span className="text-muted-foreground text-sm">{label}</span>
+      <div className="inline-flex flex-col">
+        <span className="text-muted-foreground text-sm">{label}</span>
+        {file && (
+          <span className="text-muted-foreground text-sm">
+            {file?.original_filename || ""}
+          </span>
+        )}
+      </div>
       <Button
         disabled={disabled || isLoading}
         variant={"secondary"}
