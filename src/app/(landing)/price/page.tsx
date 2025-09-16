@@ -22,6 +22,7 @@ import { useAuthStore } from "@/utils/store/authenticate.store";
 import { Button } from "@/components/components/atoms/button";
 import { PriceItemCard } from "./_components/priceItemCard";
 import BottomSheet from "@/app/_components/BottomSheet";
+import { useDebounce } from "@/utils/hooks/useDebounce";
 import { DayBadge } from "./_components/dayBadge";
 import { format, subDays } from "date-fns-jalali";
 import { toPersianNumbers } from "@/lib/utils";
@@ -66,6 +67,7 @@ const Pricepage = () => {
   const [currentDayIndex, setCurrentDayIndex] = useState(daysData.length - 1); // مقدار اولیه روی آخرین روز
   const [showChart, setShowChart] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const [selectedItem, setSelectedItem] =
     useState<ShopProductDetailApiResponse | null>(null);
   const [showPurchaseBottomSheet, setShowPurchaseBottomSheet] = useState(false);
@@ -75,15 +77,18 @@ const Pricepage = () => {
   const { setUserInfo } = useAuthStore();
   const [filterParams, setFilterParams] = useState<ShopProductsListApiParams>({
     price_date: daysData[currentDayIndex].date,
-    brand: undefined,
     category: undefined,
+    brand: undefined,
     // limit: 10,
     page: 1,
     search: "",
   });
 
+  const [brandFilter, setBrandFilter] = useState<number | undefined>(undefined);
+
   const shopProductListQuery = useGetShopProductsListInfiniteApi({
-    params: { ...filterParams, limit: 10 },
+    params: { ...filterParams, limit: 10, search: debouncedSearchQuery },
+    enabled: !showFilterBottomSheet,
   });
 
   const { observerRef } = useInfiniteScroll(shopProductListQuery);
@@ -145,6 +150,11 @@ const Pricepage = () => {
     setShowFilterBottomSheet(false);
   };
 
+  const handleApplyFilters = () => {
+    setFilterParams((prev) => ({ ...prev, brand: brandFilter }));
+    handleCloseFilterBottomSheet();
+  };
+
   const currentDay = daysData[currentDayIndex];
 
   const onAddToCart = () => {
@@ -199,16 +209,22 @@ const Pricepage = () => {
           className="flex-1"
         />
         <div
-          className="border-2 border-zinc-700 rounded p-2 cursor-pointer h-[50px] w-[50px] flex items-center justify-center"
+          className="border-2 relative border-zinc-700 rounded p-2 cursor-pointer h-[50px] w-[50px] flex items-center justify-center"
           onClick={() => setShowFilterBottomSheet(true)}
         >
           <IconFilter size="24" stroke={1.5} />
+          {!!filterParams.brand && (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              1
+            </span>
+          )}
         </div>
       </div>
 
       {/* Category filters */}
       <div className="flex flex-row gap-1 pb-3.5 overflow-x-auto">
         <CategoryChipsFilter
+          value={filterParams.category}
           onChange={(value) => {
             setFilterParams((prev) => ({
               ...prev,
@@ -313,11 +329,9 @@ const Pricepage = () => {
             </Typography>
             <div className="flex text-right flex-wrap gap-2 mt-2">
               <BrandChipsFilter
+                value={filterParams.brand}
                 onChange={(value) => {
-                  setFilterParams((prev) => ({
-                    ...prev,
-                    brand: value.id as number,
-                  }));
+                  setBrandFilter(Number(value.id));
                 }}
               />
             </div>
@@ -333,7 +347,7 @@ const Pricepage = () => {
             <Button
               variant="primary"
               className="flex-1"
-              onClick={handleCloseFilterBottomSheet}
+              onClick={handleApplyFilters}
             >
               اعمال فیلتر
             </Button>

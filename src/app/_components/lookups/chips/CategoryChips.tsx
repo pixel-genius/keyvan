@@ -7,11 +7,13 @@ import React, { useState } from "react";
 import { Lookup } from "@/lib/types";
 
 type CategoryChipsFilterProps = {
+  value?: number;
   onChange: (value: Lookup) => void;
 };
 
 const CategoryChipsFilter: React.FC<CategoryChipsFilterProps> = ({
   onChange,
+  value,
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<Lookup | null>(null);
 
@@ -26,7 +28,11 @@ const CategoryChipsFilter: React.FC<CategoryChipsFilterProps> = ({
       {categoryLookupQuery?.data?.map((item) => (
         <Chip
           key={item.name + item.id}
-          variant={item.id === selectedCategory?.id ? "primary" : "secendery"}
+          variant={
+            item.id === selectedCategory?.id || value === item.id
+              ? "primary"
+              : "secendery"
+          }
           size="sm"
           onClick={() => {
             setSelectedCategory(item);

@@ -7,10 +7,14 @@ import React, { useState } from "react";
 import { Lookup } from "@/lib/types";
 
 type BrandChipsFilterProps = {
+  value?: number;
   onChange: (value: Lookup) => void;
 };
 
-const BrandChipsFilter: React.FC<BrandChipsFilterProps> = ({ onChange }) => {
+const BrandChipsFilter: React.FC<BrandChipsFilterProps> = ({
+  onChange,
+  value,
+}) => {
   const [selectedBrand, setSelectedBrand] = useState<Lookup | null>(null);
 
   const brandLookupQuery = useGetBrandLookupListApi();
@@ -24,7 +28,11 @@ const BrandChipsFilter: React.FC<BrandChipsFilterProps> = ({ onChange }) => {
       {brandLookupQuery?.data?.map((item) => (
         <Chip
           key={item.name + item.id}
-          variant={item.id === selectedBrand?.id ? "primary" : "secendery"}
+          variant={
+            item.id === selectedBrand?.id || value === item.id
+              ? "primary"
+              : "secendery"
+          }
           size="sm"
           onClick={() => {
             setSelectedBrand(item);

@@ -12,6 +12,7 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
         // above 0 to avoid refetching immediately on the client
         staleTime: 60 * 1000,
         refetchOnWindowFocus: false,
+        experimental_prefetchInRender: true,
       },
     },
   });
