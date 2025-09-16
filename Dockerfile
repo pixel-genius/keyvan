@@ -1,41 +1,30 @@
-# Stage 1: Build
-FROM oven/bun:1.1.22 AS builder
+# انتخاب تصویر پایه
+FROM node:18-buster as base
 
-# مسیر کاری
+# نصب Bun
+RUN curl -fsSL https://bun.sh/install | bash
+
+# تنظیم متغیر محیطی برای Bun
+ENV PATH="/root/.bun/bin:${PATH}"
+
+# ایجاد و تنظیم دایرکتوری کاری
 WORKDIR /app
 
-# فقط فایل‌های package رو کپی می‌کنیم تا کش npm/bun حفظ بشه
-COPY package.json bun.lockb ./
-COPY tsconfig.json next.config.js postcss.config.js tailwind.config.js ./
+# کپی کردن پکیج‌ها و فایل‌های مربوط به پروژه
+COPY package.json bun.lock ./
+COPY tsconfig.json ./
 
-# نصب dependencies (با cache بهتر)
-RUN bun install --frozen-lockfile
+# نصب dependencies
+RUN bun install
 
-# کپی بقیه کد پروژه
+# کپی کردن بقیه فایل‌های پروژه
 COPY . .
 
-# ساخت پروژه
+# ساخت پروژه تایپ‌اسکریپت
 RUN bun run build
 
-
-# Stage 2: Production
-FROM oven/bun:1.1.22-slim AS runner
-
-# مسیر کاری
-WORKDIR /app
-
-# تنها فایل‌های ضروری برای اجرا رو کپی می‌کنیم
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/node_modules ./node_modules
-
-# تعیین متغیرهای محیطی
-ENV NODE_ENV=production \
-    PORT=3000 \
-    HOST=0.0.0.0
-
+# تنظیم پورت
 EXPOSE 3000
 
-# دستور اجرا
+# دستور برای شروع اپلیکیشن
 CMD ["bun", "start"]
