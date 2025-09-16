@@ -3,23 +3,24 @@ import { coreApi } from "@/utils/service/instance";
 import { AxiosError } from "axios";
 import path from "path";
 
-export interface AccountAuthRegisterPostApiPayload {
-  national_code: string;
-  phone_number: string;
+export interface AccountAuthRegisterPutApiPayload {
+  user_id: number;
+  first_name: string;
+  last_name: string;
 }
 
-export interface AccountAuthRegisterPostApiResponse {
+export interface AccountAuthRegisterPutApiResponse {
   message: string;
   phone_number: string;
   success: boolean;
   user_id: number;
 }
 
-// POST API function
-const postAccountAuthRegisterApi = async (
-  payload: AccountAuthRegisterPostApiPayload,
-): Promise<AccountAuthRegisterPostApiResponse> => {
-  const response = await coreApi.post(
+// PUT API function
+const putAccountAuthRegisterApi = async (
+  payload: AccountAuthRegisterPutApiPayload,
+): Promise<AccountAuthRegisterPutApiResponse> => {
+  const response = await coreApi.put(
     path.join("/account/auth/register/"),
     payload, // POST body
   );
@@ -27,28 +28,28 @@ const postAccountAuthRegisterApi = async (
 };
 
 // useMutation Hook with proper types
-export const usePostAccountAuthRegister = (
+export const usePutAccountAuthRegister = (
   options?: UseMutationOptions<
-    AccountAuthRegisterPostApiResponse,
+    AccountAuthRegisterPutApiResponse,
     AxiosError<{
       details: string;
       message: string;
       success: boolean;
     }>,
-    AccountAuthRegisterPostApiPayload
+    AccountAuthRegisterPutApiPayload
   >,
 ) => {
   return useMutation<
-    AccountAuthRegisterPostApiResponse,
+    AccountAuthRegisterPutApiResponse,
     AxiosError<{
       details: string;
       message: string;
       success: boolean;
     }>,
-    AccountAuthRegisterPostApiPayload
+    AccountAuthRegisterPutApiPayload
   >({
-    mutationFn: postAccountAuthRegisterApi,
-    mutationKey: ["postAccountAuthRegisterApi"],
+    mutationFn: putAccountAuthRegisterApi,
+    mutationKey: ["putAccountAuthRegisterApi"],
     ...options,
   });
 };

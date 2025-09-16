@@ -1,15 +1,18 @@
 import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { coreApi } from "@/utils/service/instance";
+import { Lookup } from "@/lib/types";
 import path from "path";
 
 export interface ShopPricesDetailApiResponse {
-  id: number;
-  name: string;
-  description: string | null;
-  image: string;
+  brand: Lookup | null;
+  category: Lookup | null;
   created_at: string;
-  is_active: boolean;
-  latest_price: number;
+  description: string;
+  id: number;
+  image: string;
+  is_increamental: boolean;
+  name: string;
+  price: number;
 }
 
 const getShopPricesDetailApi = async (

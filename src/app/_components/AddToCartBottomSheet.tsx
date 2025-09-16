@@ -1,4 +1,3 @@
-import { ShopProductDetailApiResponse } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
 import Typography from "@/components/components/atoms/typography";
 import { Button } from "@/components/components/atoms/button";
 import { Dispatch, SetStateAction } from "react";
@@ -7,22 +6,18 @@ import BottomSheet from "./BottomSheet";
 import Tomanicon from "@/icons/toman";
 import Counter from "./Counter";
 
+export type SelectedItemAddCartBottomSheet = {
+  id: number;
+  name: string;
+  price: number;
+  count?: number;
+} | null;
+
 interface AddToCartBottomSheetProps {
   isOpen: boolean;
-  selectedProduct:
-    | (ShopProductDetailApiResponse & {
-        count?: number;
-      })
-    | null;
+  selectedItem: SelectedItemAddCartBottomSheet;
   disabled: boolean;
-  setSelectedProduct: Dispatch<
-    SetStateAction<
-      | (ShopProductDetailApiResponse & {
-          count?: number;
-        })
-      | null
-    >
-  >;
+  setSelectedItem: Dispatch<SetStateAction<SelectedItemAddCartBottomSheet>>;
   onClose: () => void;
   onAddToCart: () => void;
 }
@@ -30,14 +25,14 @@ interface AddToCartBottomSheetProps {
 const AddToCartBottomSheet = ({
   isOpen,
   onClose,
-  selectedProduct,
-  setSelectedProduct,
+  selectedItem,
+  setSelectedItem,
   disabled,
   onAddToCart,
 }: AddToCartBottomSheetProps) => {
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose}>
-      {selectedProduct && (
+      {selectedItem && (
         <div className="pb-15">
           <hr className="w-1/2 mx-auto border-2 rounded-full mb-4" />
           <Typography
@@ -52,17 +47,17 @@ const AddToCartBottomSheet = ({
             weight="bold"
             className="mb-4 text-center"
           >
-            {selectedProduct.name}
+            {selectedItem.name}
           </Typography>
           <div className="flex items-center justify-center gap-1 mb-4">
             <Typography variant="label/sm" weight="bold">
-              {formatPrice(selectedProduct.latest_price)}
+              {formatPrice(selectedItem.price)}
             </Typography>
             <Tomanicon size={18} />
           </div>
           <Counter
             onChange={(count) => {
-              setSelectedProduct((prev) => {
+              setSelectedItem((prev) => {
                 if (!prev) return prev;
                 return { ...prev, count };
               });

@@ -1,9 +1,10 @@
 "use client";
 import { useGetShopProductDetailPriceHistory } from "@/utils/apis/shop/products/[id]/priceHistory/GET/shopProductDetailPriceHistoryApi";
-import { ShopProductDetailApiResponse } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
+import AddToCartBottomSheet, {
+  SelectedItemAddCartBottomSheet,
+} from "@/app/_components/AddToCartBottomSheet";
 import { useGetShopProductDetail } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
 import { usePostShopCartAddApi } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
-import AddToCartBottomSheet from "@/app/_components/AddToCartBottomSheet";
 import { IconChevronLeft, IconShoppingCart } from "@tabler/icons-react";
 import CustomAreaChartCard from "./_components/CustomAreaChartCard";
 import Typography from "@/components/components/atoms/typography";
@@ -22,10 +23,6 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-type SelectedProduct = ShopProductDetailApiResponse & {
-  count?: number;
-};
-
 function ProductDetailFn() {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
@@ -33,7 +30,7 @@ function ProductDetailFn() {
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] =
-    useState<SelectedProduct | null>(null);
+    useState<SelectedItemAddCartBottomSheet | null>(null);
 
   const shopProductDetail = useGetShopProductDetail({ slug: id });
 
@@ -54,7 +51,12 @@ function ProductDetailFn() {
 
   const handleAddToCartClick = () => {
     if (shopProductDetail.data) {
-      setSelectedProduct({ ...shopProductDetail.data, count: 25 });
+      setSelectedProduct({
+        count: 25,
+        id: shopProductDetail.data.id,
+        name: shopProductDetail.data.name,
+        price: shopProductDetail.data.latest_price,
+      });
       setIsBottomSheetOpen(true);
     }
   };
@@ -181,8 +183,8 @@ function ProductDetailFn() {
       <AddToCartBottomSheet
         isOpen={isBottomSheetOpen}
         onClose={() => setIsBottomSheetOpen(false)}
-        selectedProduct={selectedProduct}
-        setSelectedProduct={setSelectedProduct}
+        selectedItem={selectedProduct}
+        setSelectedItem={setSelectedProduct}
         disabled={isAddingToCart}
         onAddToCart={handleAddToCart}
       />

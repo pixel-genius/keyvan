@@ -7,6 +7,7 @@ import {
 import { usePostAccountAuthOtpLoginApi } from "@/utils/apis/account/auth/otp_login/POST/accountAuthOtpLoginPostApi";
 import { useGetAccountAuthOtpLoginApi } from "@/utils/apis/account/auth/otp_login/GET/accountAuthOtpLoginGetApi";
 import { usePostAccountAuthRegister } from "@/utils/apis/account/auth/register/POST/accountAuthRegisterPostApi";
+import { usePutAccountAuthRegister } from "@/utils/apis/account/auth/register/PUT/accountAuthRegisterPutApi";
 import {
   InputOTP,
   InputOTPGroup,
@@ -129,15 +130,11 @@ const AuthenticatePage = () => {
     },
   });
 
-  const registerMutate = usePostAccountAuthRegister({
+  const registerPostMutate = usePostAccountAuthRegister({
     onSuccess: (res) => {
       if (res.success) {
-        if (userId) {
-          setAuthStore(AuthenticateFormStateEnum.PEND_APPROVAL);
-        } else {
-          setUserId(res.user_id);
-          setAuthStore(AuthenticateFormStateEnum.OTP);
-        }
+        setUserId(res.user_id);
+        setAuthStore(AuthenticateFormStateEnum.OTP);
       }
     },
     onError: (error) => {
@@ -145,8 +142,16 @@ const AuthenticatePage = () => {
         toast.error("این شماره تلفن برای کد ملی ذکر شده نیست!");
         return;
       }
-      if (userId) toast.error("خطا در ثبت نام!");
-      toast.error("خطا در ورود!");
+      if (userId) toast.error("خطا در ورود!");
+    },
+  });
+
+  const registerPutMutate = usePutAccountAuthRegister({
+    onSuccess: () => {
+      setAuthStore(AuthenticateFormStateEnum.PEND_APPROVAL);
+    },
+    onError: () => {
+      toast.error("خطا در ثبت نام!");
     },
   });
 
@@ -155,7 +160,7 @@ const AuthenticatePage = () => {
       loginOtpMutateGet.mutate({ phone_number: formFields.phoneNumber });
 
     if (authenticateFormState === AuthenticateFormStateEnum.REGISTER_STEP1)
-      registerMutate.mutate({
+      registerPostMutate.mutate({
         national_code: formFields.nationalCode,
         phone_number: formFields.phoneNumber,
       });
@@ -166,12 +171,10 @@ const AuthenticatePage = () => {
         otp_code: formFields.otpCode,
       });
     if (authenticateFormState === AuthenticateFormStateEnum.REGISTER_STEP2) {
-      registerMutate.mutate({
+      registerPutMutate.mutate({
         user_id: userId as number,
         first_name: formFields.firstName,
         last_name: formFields.lastName,
-        license_id: formFields.license_file?.id as number,
-        certificate_id: formFields.certificate_file?.id as number,
       });
     }
   };
@@ -190,7 +193,7 @@ const AuthenticatePage = () => {
       case AuthenticateFormStateEnum.REGISTER_STEP1:
         valid =
           (!phoneNumberValid && !nationalCodeValid) ||
-          registerMutate.isPending ||
+          registerPostMutate.isPending ||
           loginOtpMutateGet.isPending;
         break;
       case AuthenticateFormStateEnum.REGISTER_STEP2:
@@ -200,8 +203,8 @@ const AuthenticatePage = () => {
           !formFields.lastName &&
           !formFields.firstName &&
           formFields.certificate_file === undefined &&
-          formFields.license_file === undefined;
-
+          formFields.license_file === undefined &&
+          registerPutMutate.isPending;
         break;
     }
 
@@ -209,7 +212,7 @@ const AuthenticatePage = () => {
   }, [
     authenticateFormState,
     formFields,
-    registerMutate.isPending,
+    registerPostMutate.isPending,
     loginOtpMutateGet.isPending,
     loginOtpMutatePost.isPending,
   ]);
@@ -378,7 +381,7 @@ const AuthenticatePage = () => {
                             uploadingStates.business_license
                           }
                           disabled={
-                            registerMutate.isPending &&
+                            registerPutMutate.isPending &&
                             uploadingStates.business_license
                           }
                           file={formFields.license_file}
@@ -402,7 +405,7 @@ const AuthenticatePage = () => {
                             uploadingStates.certification
                           }
                           disabled={
-                            registerMutate.isPending &&
+                            registerPutMutate.isPending &&
                             uploadingStates.certification
                           }
                           file={formFields.certificate_file}

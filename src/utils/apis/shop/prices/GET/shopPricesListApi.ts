@@ -1,7 +1,6 @@
-import { ShopProductDetailApiResponse } from "../../products/[id]/GET/shopProductDetailApi";
+import { ShopPricesDetailApiResponse } from "../[id]/GET/shopPricesDetailApi";
 import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { coreApi } from "@/utils/service/instance";
-import { Lookup } from "@/lib/types";
 import path from "path";
 
 export interface ShopPricesListApiParams {
@@ -21,19 +20,11 @@ export interface ShopPricesListApiParams {
   page: number;
 }
 
-export interface ShopPricesListApiResponse {
-  id: number;
-  price: number;
-  created_at: string;
-  product: ShopProductDetailApiResponse;
-  category: Lookup;
-  brand: Lookup;
-  is_increamental: boolean;
-}
+export type ShopPricesListApiResponse = ShopPricesDetailApiResponse[];
 
 const getShopPricesListApi = async (
   props?: ShopPricesListApiParams,
-): Promise<ShopPricesListApiResponse[]> => {
+): Promise<ShopPricesListApiResponse> => {
   const response = await coreApi.get(path.join("/shop/prices/"), {
     params: props,
   });
@@ -44,9 +35,9 @@ const getShopPricesListApi = async (
 export const useGetShopPricesList = (
   props?: { params: ShopPricesListApiParams } & Partial<
     UseQueryOptions<
-      ShopPricesListApiResponse[],
+      ShopPricesListApiResponse,
       unknown,
-      ShopPricesListApiResponse[],
+      ShopPricesListApiResponse,
       QueryKey
     >
   >,
