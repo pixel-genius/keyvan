@@ -19,13 +19,13 @@ const getAccountAuthOtpLoginApi = async (
 export const useGetAccountAuthOtpLoginApi = (
   options?: UseMutationOptions<
     unknown,
-    AxiosError<{ has_account: boolean }>,
+    AxiosError<{ has_account: boolean; is_verified: false }>,
     AccountAuthOtpLoginGetApiParams
   >,
 ) => {
   return useMutation<
     unknown,
-    AxiosError<{ has_account: boolean }>,
+    AxiosError<{ has_account: boolean; is_verified: false }>,
     AccountAuthOtpLoginGetApiParams
   >({
     mutationFn: getAccountAuthOtpLoginApi,

@@ -1,6 +1,5 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { coreApi } from "@/utils/service/instance";
-import { AxiosError } from "axios";
 import path from "path";
 
 export interface AccountAuthOtpLoginPostApiPayload {
@@ -31,17 +30,13 @@ const postAccountAuthOtpLoginApi = async (
 export const usePostAccountAuthOtpLoginApi = (
   options?: UseMutationOptions<
     AccountAuthOtpLoginPostApiResponse,
-    AxiosError<{
-      is_verified: boolean;
-    }>,
+    unknown,
     AccountAuthOtpLoginPostApiPayload
   >,
 ) => {
   return useMutation<
     AccountAuthOtpLoginPostApiResponse,
-    AxiosError<{
-      is_verified: boolean;
-    }>,
+    unknown,
     AccountAuthOtpLoginPostApiPayload
   >({
     mutationFn: postAccountAuthOtpLoginApi,

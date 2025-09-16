@@ -7,6 +7,7 @@ enum AuthenticateFormStateEnum {
   REGISTER_STEP2 = "REGISTER_STEP2",
   LOGIN = "LOGIN",
   OTP = "OTP",
+  PEND_APPROVAL = "PEND_APPROVAL",
 }
 
 type KeyOFAuthenticateFormState = keyof typeof AuthenticateFormStateEnum;

@@ -12,13 +12,13 @@ import {
   AuthenticateFormStateEnum,
   useAuthStore,
 } from "@/utils/store/authenticate.store";
+import { IconPencil, IconProgressCheck } from "@tabler/icons-react";
 import Typography from "@/components/components/atoms/typography";
 import { Input } from "@/components/components/molecules/input";
 import { Button } from "@/components/components/atoms/button";
 import React, { useEffect, useMemo, useState } from "react";
 import BottomSheet from "@/app/_components/BottomSheet";
 import FileUpload from "@/app/_components/FileUpload";
-import { IconPencil } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { setToken } from "@/utils/cookie";
 import Countdown from "react-countdown";
@@ -65,20 +65,24 @@ const AuthenticatePage = () => {
       setAuthStore(AuthenticateFormStateEnum.OTP);
     },
     onError: (error) => {
-      if (!error.response?.data?.has_account) {
+      if (error.response?.data?.has_account === false) {
         setAuthStore(AuthenticateFormStateEnum.REGISTER_STEP1);
-      } else toast.error("خطا در ورود");
+      } else if (!error.response?.data.is_verified) {
+        setAuthStore(AuthenticateFormStateEnum.PEND_APPROVAL);
+      } else {
+        toast.error("خطا در ورود");
+      }
     },
   });
 
   const loginOtpMutatePost = usePostAccountAuthOtpLoginApi({
     onSuccess: (res) => {
-      setToken(res.token);
-      router.replace("/");
+      if (res.is_verified) {
+        setToken(res.token);
+        router.replace("/");
+      } else setAuthStore(AuthenticateFormStateEnum.PEND_APPROVAL);
     },
-    onError: (error) => {
-      if (!error?.response?.data.is_verified)
-        router.replace("/auth/pend-approval");
+    onError: () => {
       toast.error("خطا در ورود");
     },
   });
@@ -86,8 +90,7 @@ const AuthenticatePage = () => {
   const registerMutate = usePostAccountAuthRegister({
     onSuccess: (res) => {
       if (res.success) {
-        setAuthStore(AuthenticateFormStateEnum.OTP);
-        loginOtpMutateGet.mutate({ phone_number: formFields.phoneNumber });
+        setAuthStore(AuthenticateFormStateEnum.PEND_APPROVAL);
       }
     },
     onError: (error) => {
@@ -119,13 +122,14 @@ const AuthenticatePage = () => {
       nationalCodeValid = formFields.nationalCode.length === 10;
     switch (authenticateFormState) {
       default:
-        valid = !phoneNumberValid;
+        valid = !phoneNumberValid || loginOtpMutateGet.isPending;
         break;
       case AuthenticateFormStateEnum.OTP:
-        valid = formFields.otpCode.length !== 4;
+        valid = formFields.otpCode.length !== 4 || loginOtpMutatePost.isPending;
         break;
       case AuthenticateFormStateEnum.REGISTER_STEP1:
-        valid = !phoneNumberValid && !nationalCodeValid;
+        valid =
+          (!phoneNumberValid && !nationalCodeValid) || registerMutate.isPending;
         break;
       case AuthenticateFormStateEnum.REGISTER_STEP2:
         valid =
@@ -330,6 +334,29 @@ const AuthenticatePage = () => {
               <span className="underline"> شرایط و قوانین </span>
               پلتفرم تمباکو است
             </p>
+          </div>
+        </div>
+      </BottomSheet>
+      <BottomSheet
+        isOpen={
+          authenticateFormState === AuthenticateFormStateEnum.PEND_APPROVAL
+        }
+        onClose={() => {}}
+        hasBackdrop={false}
+        hasBlur={false}
+        isClosable={false}
+      >
+        <div
+          dir="rtl"
+          className="flex justify-center items-center p-10 flex-col gap-2"
+        >
+          <IconProgressCheck size={73} className="text-green-500" />
+          <div className="flex flex-col items-center gap-3">
+            <Typography variant={"heading/xs"}>ثبت نام موفق شد</Typography>
+            <Typography variant={"label/sm"} className="text-center">
+              اطلاعات شما در حال بررسی است <br />
+              <br /> در اسرع وقت به شما اطلاع رسانی خواهد شد
+            </Typography>
           </div>
         </div>
       </BottomSheet>
