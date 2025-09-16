@@ -1,6 +1,5 @@
 import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
-import { coreApi } from "@/utils/service/instance";
-import path from "path";
+import axios from "axios";
 
 export interface BlogPostsDetailApiResponse {
   id: number;
@@ -16,10 +15,43 @@ export interface BlogPostsDetailApiResponse {
 }
 
 const getBlogPostsDetailApi = async (
-  slug: string,
+  id: string,
 ): Promise<BlogPostsDetailApiResponse> => {
-  const response = await coreApi.get(path.join(`/blog/posts/${slug}`));
-  return response.data;
+  // Use only ID-based endpoints with trailing slash
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "http://admin.tanbaku.com";
+  const possibleUrls = [
+    `${baseUrl}/blog/posts/${id}/`,
+    `http://admin.tanbaku.com/blog/posts/${id}/`,
+    `https://admin.tanbaku.com/blog/posts/${id}/`,
+  ];
+
+  console.log("Trying to fetch blog post with ID:", id);
+  console.log("Base URL:", baseUrl);
+
+  for (const url of possibleUrls) {
+    try {
+      console.log("Trying URL:", url);
+      const response = await axios.get(url);
+      console.log("Success with URL:", url);
+      console.log("Response data:", response.data);
+      return response.data;
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      console.log("Failed with URL:", url, "Error:", errorMessage);
+      if (error && typeof error === "object" && "response" in error) {
+        const axiosError = error as {
+          response?: { status?: number; data?: unknown };
+        };
+        console.log("Error status:", axiosError.response?.status);
+        console.log("Error data:", axiosError.response?.data);
+      }
+      continue;
+    }
+  }
+
+  throw new Error(`Could not fetch blog post with ID: ${id}`);
 };
 
 export const useGetBlogPostsDetail = (

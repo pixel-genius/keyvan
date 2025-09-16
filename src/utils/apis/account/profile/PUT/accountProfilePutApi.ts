@@ -4,11 +4,15 @@ import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
 export interface AccountProfilePutApiPayload {
-  title: string;
-  text: string;
-  latitude: string;
-  longitude: string;
-  is_default: boolean;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone_number?: string;
+  national_code?: string;
+  username?: string;
+  date_of_birth?: string;
+  address?: string;
+  bio?: string;
 }
 
 export type AccountProfilePutApiResponse = AccountProfileGetApiResponse;

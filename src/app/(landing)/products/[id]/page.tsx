@@ -1,13 +1,18 @@
 "use client";
 import { useGetShopProductDetailPriceHistory } from "@/utils/apis/shop/products/[id]/priceHistory/GET/shopProductDetailPriceHistoryApi";
+import { ShopProductDetailApiResponse } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
 import { useGetShopProductDetail } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
+import { usePostShopCartAddApi } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
+import AddToCartBottomSheet from "@/app/_components/AddToCartBottomSheet";
+import { IconChevronLeft, IconShoppingCart } from "@tabler/icons-react";
 import CustomAreaChartCard from "./_components/CustomAreaChartCard";
 import Typography from "@/components/components/atoms/typography";
 import { ChartConfig } from "@/components/components/atoms/chart";
+import { useAuthStore } from "@/utils/store/authenticate.store";
+import { Button } from "@/components/components/atoms/button";
 import { Badge } from "@/components/components/atoms/badge";
 import { useParams, useRouter } from "next/navigation";
-import { IconChevronLeft } from "@tabler/icons-react";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import Image from "next/image";
 
 const chartConfig = {
@@ -17,15 +22,52 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+type SelectedProduct = ShopProductDetailApiResponse & {
+  count?: number;
+};
+
 function ProductDetailFn() {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
+  const { setUserInfo } = useAuthStore();
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] =
+    useState<SelectedProduct | null>(null);
 
   const shopProductDetail = useGetShopProductDetail({ slug: id });
 
   const shopProductDetailPriceHistory = useGetShopProductDetailPriceHistory({
     slug: id,
   });
+
+  const addToCartMutation = usePostShopCartAddApi({
+    onSuccess: (data) => {
+      setUserInfo({ shopCart: data });
+      setIsAddingToCart(false);
+      setIsBottomSheetOpen(false);
+    },
+    onError: () => {
+      setIsAddingToCart(false);
+    },
+  });
+
+  const handleAddToCartClick = () => {
+    if (shopProductDetail.data) {
+      setSelectedProduct({ ...shopProductDetail.data, count: 25 });
+      setIsBottomSheetOpen(true);
+    }
+  };
+
+  const handleAddToCart = () => {
+    if (selectedProduct?.id && selectedProduct.count) {
+      setIsAddingToCart(true);
+      addToCartMutation.mutate({
+        product_id: selectedProduct.id,
+        quantity: selectedProduct.count,
+      });
+    }
+  };
 
   if (shopProductDetail.isFetching) {
     return (
@@ -101,6 +143,16 @@ function ProductDetailFn() {
               ? `${shopProductDetail.data.latest_price.toLocaleString("fa-IR")} تومان`
               : null}
           </Typography>
+          <div className="mt-4">
+            <Button
+              onClick={handleAddToCartClick}
+              disabled={!shopProductDetail.data?.id}
+              iconLeft={<IconShoppingCart size={20} />}
+              className="w-full"
+            >
+              افزودن به سبد خرید
+            </Button>
+          </div>
         </div>
         <div className="flex flex-col gap-2 text-right">
           <Typography variant="paragraph/md" weight="normal">
@@ -125,6 +177,15 @@ function ProductDetailFn() {
           </div>
         ) : null}
       </div>
+
+      <AddToCartBottomSheet
+        isOpen={isBottomSheetOpen}
+        onClose={() => setIsBottomSheetOpen(false)}
+        selectedProduct={selectedProduct}
+        setSelectedProduct={setSelectedProduct}
+        disabled={isAddingToCart}
+        onAddToCart={handleAddToCart}
+      />
     </div>
   );
 }

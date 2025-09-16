@@ -1,8 +1,17 @@
 "use client";
 
+import {
+  IconShoppingCart,
+  IconMenu2,
+  IconX,
+  IconInfoCircle,
+  IconPhone,
+  IconHeadset,
+  IconScale,
+  IconBook,
+} from "@tabler/icons-react";
 import { useDeleteShopCartItemsRemoveApi } from "@/utils/apis/shop/cart/items/[id]/remove/DELETE/shopCartItemsRemoveDeleteApi";
 import Typography from "@/components/components/atoms/typography";
-import { IconShoppingCart, IconMenu2 } from "@tabler/icons-react";
 import { useAuthStore } from "@/utils/store/authenticate.store";
 import { Button } from "@/components/components/atoms/button";
 import OrderConfirmation from "./OrderConfirmation";
@@ -28,6 +37,7 @@ const Navbar = () => {
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isOrderConfirmationOpen, setIsOrderConfirmationOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const shopDeleteCartItemMutate = useDeleteShopCartItemsRemoveApi({
     onSuccess: (res) => {
       setUserInfo({ shopCart: res });
@@ -102,6 +112,60 @@ const Navbar = () => {
     router.push("/"); // Navigate to home page
   };
 
+  // Menu items for sidebar
+  const menuItems = [
+    {
+      id: "about",
+      title: "درباره ما",
+      icon: IconInfoCircle,
+      onClick: () => {
+        setIsSidebarOpen(false);
+        // TODO: Navigate to about page
+        console.log("Navigate to about page");
+      },
+    },
+    {
+      id: "contact",
+      title: "تماس با ما",
+      icon: IconPhone,
+      onClick: () => {
+        setIsSidebarOpen(false);
+        // TODO: Navigate to contact page
+        console.log("Navigate to contact page");
+      },
+    },
+    {
+      id: "support",
+      title: "پشتیبانی",
+      icon: IconHeadset,
+      onClick: () => {
+        setIsSidebarOpen(false);
+        // TODO: Navigate to support page
+        console.log("Navigate to support page");
+      },
+    },
+    {
+      id: "terms",
+      title: "قانون و مقررات",
+      icon: IconScale,
+      onClick: () => {
+        setIsSidebarOpen(false);
+        // TODO: Navigate to terms page
+        console.log("Navigate to terms page");
+      },
+    },
+    {
+      id: "education",
+      title: "آموزش",
+      icon: IconBook,
+      onClick: () => {
+        setIsSidebarOpen(false);
+        // TODO: Navigate to education page
+        console.log("Navigate to education page");
+      },
+    },
+  ];
+
   return (
     <>
       <nav className="bg-maincard flex justify-center z-50 fixed top-0 w-full items-center px-4 py-4">
@@ -112,7 +176,7 @@ const Navbar = () => {
             size={28}
             color="white"
             className="cursor-pointer"
-            onClick={() => router.push("/menu")}
+            onClick={() => setIsSidebarOpen(true)}
           />
           {/* Center Logo */}
           <Image src="img/logo-main.svg" alt="logo" width={50} height={50} />
@@ -195,6 +259,78 @@ const Navbar = () => {
           onTrackOrder={handleTrackOrder}
         />
       </BottomSheet>
+
+      {/* Sidebar */}
+      <div
+        className={`fixed inset-0 z-50 transition-opacity duration-300 ${isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+      >
+        {/* Backdrop */}
+        <div
+          className="fixed inset-0  bg-opacity-60 backdrop-blur-sm"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+
+        {/* Sidebar */}
+        <div
+          className={`fixed right-0 top-0 h-full w-80 bg-maincard z-50 shadow-2xl transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "translate-x-full"}`}
+        >
+          <div className="p-6">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-8">
+              <Typography
+                variant="heading/lg"
+                weight="bold"
+                className="text-white"
+              >
+                منو
+              </Typography>
+
+              <div
+                onClick={() => setIsSidebarOpen(false)}
+                className="p-2 cursor-pointer hover:bg-white/10 transition-all duration-200 rounded-lg"
+              >
+                <IconX size={24} className="text-white" />
+              </div>
+            </div>
+
+            {/* Menu Items */}
+            <div className="space-y-3">
+              {menuItems.map((item) => {
+                const IconComponent = item.icon;
+                return (
+                  <div
+                    key={item.id}
+                    onClick={item.onClick}
+                    className="w-full h-16 flex items-center justify-end cursor-pointer hover:bg-white/10 transition-all duration-200 rounded-xl backdrop-blur-sm"
+                  >
+                    <Typography
+                      variant="label/lg"
+                      weight="medium"
+                      className="text-white text-right"
+                    >
+                      {item.title}
+                    </Typography>
+                    <div className="flex items-center justify-center w-12 h-12 backdrop-blur-sm">
+                      <IconComponent size={24} className="text-white" />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Footer */}
+            <div className="mt-12 text-center">
+              <Typography
+                variant="label/sm"
+                weight="normal"
+                className="text-white/70"
+              >
+                نسخه 1.0.0
+              </Typography>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 };
