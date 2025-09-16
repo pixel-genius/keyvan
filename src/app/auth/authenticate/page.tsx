@@ -3,6 +3,7 @@
 import { usePostAccountAuthOtpLoginApi } from "@/utils/apis/account/auth/otp_login/POST/accountAuthOtpLoginPostApi";
 import { useGetAccountAuthOtpLoginApi } from "@/utils/apis/account/auth/otp_login/GET/accountAuthOtpLoginGetApi";
 import { usePostAccountAuthRegister } from "@/utils/apis/account/auth/register/POST/accountAuthRegisterPostApi";
+import { useAccountFilesUploadPost } from "@/utils/apis/account/files/upload/POST/accountFilesUploadPostApi";
 import {
   InputOTP,
   InputOTPGroup,
@@ -30,6 +31,8 @@ interface FormFieldsState {
   firstName: string;
   lastName: string;
   otpCode: string;
+  certificate_file: number | undefined;
+  license_file: number | undefined;
 }
 
 const AuthenticatePage = () => {
@@ -47,6 +50,8 @@ const AuthenticatePage = () => {
     firstName: "",
     lastName: "",
     otpCode: "",
+    license_file: undefined,
+    certificate_file: undefined,
   });
   useEffect(() => {
     return () => {
@@ -57,9 +62,26 @@ const AuthenticatePage = () => {
         firstName: "",
         lastName: "",
         otpCode: "",
+        license_file: undefined,
+        certificate_file: undefined,
       });
     };
   }, []);
+
+  const accountFileUploadMutate = useAccountFilesUploadPost({
+    onSuccess: (res) => {
+      toast.success("فایل با موفقیت آپلود شد");
+      if (res.category === "business_license") {
+        setFormFields((prev) => ({ ...prev, license_file: res.id }));
+      } else {
+        setFormFields((prev) => ({ ...prev, certificate_file: res.id }));
+      }
+    },
+    onError: () => {
+      toast.error("خطا در آپلود فایل");
+    },
+  });
+
   const loginOtpMutateGet = useGetAccountAuthOtpLoginApi({
     onSuccess: () => {
       setAuthStore(AuthenticateFormStateEnum.OTP);
@@ -306,12 +328,22 @@ const AuthenticatePage = () => {
                       <div className="flex flex-col gap-2">
                         <FileUpload
                           label="مجوز توزیع استانی یا کشوری (اختیاری)"
-                          onChange={() => {}}
+                          onChange={(file) => {
+                            accountFileUploadMutate.mutate({
+                              category: "business_license",
+                              file: file as File,
+                            });
+                          }}
                         />
 
                         <FileUpload
                           label="جواز کسب (اختیاری)"
-                          onChange={() => {}}
+                          onChange={(file) => {
+                            accountFileUploadMutate.mutate({
+                              category: "certification",
+                              file: file as File,
+                            });
+                          }}
                         />
                       </div>
                     </>

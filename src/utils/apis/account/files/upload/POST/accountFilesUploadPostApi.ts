@@ -10,15 +10,12 @@ interface AccountFilesUploadPostApiRequest {
 
 interface AccountFilesUploadPostApiResponse {
   id: number;
-  author: number;
-  author_name: string;
-  title: string | null;
-  slug: string | null;
-  content: string | null;
-  image: URL | string | null;
-  is_published: boolean;
-  created_at: Date | string;
-  updated_at: Date | string;
+  file: string;
+  original_filename: string;
+  extension: string;
+  size: number;
+  created_at: string;
+  category: string;
 }
 
 const accountFilesUploadPostApi = async (
@@ -40,22 +37,19 @@ const accountFilesUploadPostApi = async (
 };
 
 export const useAccountFilesUploadPost = (
-  props?: { body: AccountFilesUploadPostApiRequest } & Partial<
-    UseMutationOptions<
-      AccountFilesUploadPostApiResponse,
-      unknown,
-      AccountFilesUploadPostApiRequest,
-      unknown
-    >
+  options?: UseMutationOptions<
+    AccountFilesUploadPostApiResponse,
+    unknown,
+    AccountFilesUploadPostApiRequest
   >,
 ) => {
-  const { body, ...restProps } = props || {};
-  const query = useMutation({
-    mutationKey: ["accountFilesUploadPost", body],
-    mutationFn: () =>
-      accountFilesUploadPostApi(body as AccountFilesUploadPostApiRequest),
-    ...restProps,
+  return useMutation<
+    AccountFilesUploadPostApiResponse,
+    unknown,
+    AccountFilesUploadPostApiRequest
+  >({
+    mutationKey: ["accountFilesUploadPost"],
+    mutationFn: accountFilesUploadPostApi,
+    ...options,
   });
-
-  return query;
 };
