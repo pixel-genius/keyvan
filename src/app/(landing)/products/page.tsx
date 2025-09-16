@@ -1,11 +1,12 @@
 "use client";
 
-import { ShopProductDetailApiResponse } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
+import AddToCartBottomSheet, {
+  SelectedItemAddCartBottomSheet,
+} from "@/app/_components/AddToCartBottomSheet";
 import { useGetShopProductsListInfiniteApi } from "@/utils/apis/shop/products/GET/shopProductsListApi";
 import { useGetCategoryLookupListApi } from "@/utils/apis/shop/category/GET/categoryLookupListApi";
 import { usePostShopCartAddApi } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
 import { useGetBrandLookupListApi } from "@/utils/apis/shop/brand/GET/brandLookupListApi";
-import AddToCartBottomSheet from "@/app/_components/AddToCartBottomSheet";
 import { useInfiniteScroll } from "@/utils/hooks/useInfiniteScroll";
 import Typography from "@/components/components/atoms/typography";
 import { Skeleton } from "@/components/components/atoms/skeleton";
@@ -28,17 +29,13 @@ interface Params {
   limit?: number;
 }
 
-interface SelectedProduct extends ShopProductDetailApiResponse {
-  count?: number;
-}
-
 function ProductsContent() {
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] =
-    useState<SelectedProduct | null>(null);
+    useState<SelectedItemAddCartBottomSheet | null>(null);
   const { setUserInfo } = useAuthStore();
   const [params, setParams] = useState<Params>({
     category: undefined,
@@ -128,10 +125,18 @@ function ProductsContent() {
   };
 
   const onAddProductToCart = (id: number) => {
-    setSelectedProduct(
-      shopProductListQuery.data?.find((item) => item.id === id) || null,
-    );
     setIsBottomSheetOpen(true);
+    const item =
+      shopProductListQuery.data?.find((item) => item.id === id) || null;
+    setSelectedProduct(
+      item
+        ? {
+            id: item.id,
+            name: item.name,
+            price: item.latest_price,
+          }
+        : null,
+    );
   };
   // The API does not provide a category field. If needed, extract categories from another source.
 
