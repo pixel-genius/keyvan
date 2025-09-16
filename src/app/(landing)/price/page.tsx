@@ -1,20 +1,9 @@
 "use client";
 import {
-<<<<<<< HEAD
   ShopProductsListApiParams,
   useGetShopProductsListInfiniteApi,
 } from "@/utils/apis/shop/products/GET/shopProductsListApi";
 import { ShopProductDetailApiResponse } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
-=======
-  ShopPricesListApiParams,
-  ShopPricesListApiResponse,
-  useGetShopPricesList,
-} from "@/utils/apis/shop/prices/GET/shopPricesListApi";
-import {
-  ShopProductDetailApiResponse,
-  useGetShopProductDetail,
-} from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
->>>>>>> 2015056 (Fix linting errors and build issues)
 import { usePostShopCartAddApi } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
 import {
   IconChevronLeft,
@@ -25,10 +14,7 @@ import CustomAreaChartCard from "../products/[id]/_components/CustomAreaChartCar
 import CategoryChipsFilter from "@/app/_components/lookups/chips/CategoryChips";
 import BrandChipsFilter from "@/app/_components/lookups/chips/BrandChips";
 import AddToCartBottomSheet from "@/app/_components/AddToCartBottomSheet";
-<<<<<<< HEAD
 import { useInfiniteScroll } from "@/utils/hooks/useInfiniteScroll";
-=======
->>>>>>> 2015056 (Fix linting errors and build issues)
 import Typography from "@/components/components/atoms/typography";
 import { Skeleton } from "@/components/components/atoms/skeleton";
 import { Input } from "@/components/components/molecules/input";
@@ -98,16 +84,11 @@ const Pricepage = () => {
     search: "",
   });
 
-<<<<<<< HEAD
   const [brandFilter, setBrandFilter] = useState<number | undefined>(undefined);
 
   const shopProductListQuery = useGetShopProductsListInfiniteApi({
     params: { ...filterParams, limit: 10, search: debouncedSearchQuery },
     enabled: !showFilterBottomSheet,
-=======
-  const shopPricesListQuery = useGetShopPricesList({
-    params: filterParams,
->>>>>>> 2015056 (Fix linting errors and build issues)
   });
 
   const { observerRef } = useInfiniteScroll(shopProductListQuery);
@@ -158,35 +139,6 @@ const Pricepage = () => {
     setSelectedProduct(
       shopProductListQuery.data?.find((item) => item.id === id) || null,
     );
-  };
-
-  const handlePurchase = (item: ShopPricesListApiResponse) => {
-    setSelectedProduct({
-      id: 0,
-      name: item.product,
-      description: null,
-      image: "",
-      created_at: "",
-      is_active: true,
-      latest_price: item.price,
-      brand: {
-        id: 0,
-        name: "",
-        description: "",
-        created_at: "",
-        is_active: true,
-      },
-      category: {
-        id: 0,
-        name: "",
-        description: "",
-        created_at: "",
-        is_active: true,
-      },
-      price_history: [],
-      is_increamental: false,
-    });
-    setShowPurchaseBottomSheet(true);
   };
 
   const handleClosePurchaseBottomSheet = () => {
@@ -276,7 +228,7 @@ const Pricepage = () => {
           onChange={(value) => {
             setFilterParams((prev) => ({
               ...prev,
-              category: value.id as number,
+              category: value ? Number(value.id) : undefined,
             }));
           }}
         />
@@ -379,7 +331,7 @@ const Pricepage = () => {
               <BrandChipsFilter
                 value={filterParams.brand}
                 onChange={(value) => {
-                  setBrandFilter(Number(value.id));
+                  setBrandFilter(value ? Number(value.id) : undefined);
                 }}
               />
             </div>
@@ -412,48 +364,6 @@ const Pricepage = () => {
         selectedProduct={selectedProduct}
         setSelectedProduct={setSelectedProduct}
       />
-<<<<<<< HEAD
-=======
-      <BottomSheet
-        isOpen={showPurchaseBottomSheet}
-        onClose={handleClosePurchaseBottomSheet}
-      >
-        {selectedProduct && (
-          <div className="pb-15">
-            <hr className="w-1/2 mx-auto border-2 rounded-full mb-4" />
-            <Typography
-              variant="label/lg"
-              weight="semi-bold"
-              className="mb-4 text-center"
-            >
-              افزودن محصول به سبد
-            </Typography>
-            <Typography
-              variant="label/sm"
-              weight="bold"
-              className="mb-4 text-center"
-            >
-              {selectedProduct.name}
-            </Typography>
-            <div className="flex items-center justify-center gap-1 mb-4">
-              <Typography variant="label/sm" weight="bold">
-                {formatPrice(selectedProduct.latest_price)}
-              </Typography>
-              <Tomanicon size={18} />
-            </div>
-            <Counter />
-            <Textarea placeholder="توضیحات (اختیاری)" className="mb-4" />
-            <Button
-              className="w-full"
-              variant="primary"
-              onClick={handleClosePurchaseBottomSheet}
-            >
-              افزودن به سبد خرید
-            </Button>
-          </div>
-        )}
-      </BottomSheet>
->>>>>>> 2015056 (Fix linting errors and build issues)
     </div>
   );
 };

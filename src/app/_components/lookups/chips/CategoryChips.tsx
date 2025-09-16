@@ -8,7 +8,7 @@ import { Lookup } from "@/lib/types";
 
 type CategoryChipsFilterProps = {
   value?: number;
-  onChange: (value: Lookup) => void;
+  onChange: (value: Lookup | null) => void;
 };
 
 const CategoryChipsFilter: React.FC<CategoryChipsFilterProps> = ({
@@ -35,8 +35,9 @@ const CategoryChipsFilter: React.FC<CategoryChipsFilterProps> = ({
           }
           size="sm"
           onClick={() => {
-            setSelectedCategory(item);
-            onChange(item);
+            const chipValue = selectedCategory?.id === item.id ? null : item;
+            setSelectedCategory(chipValue);
+            onChange(chipValue);
           }}
           className="cursor-pointer"
         >
