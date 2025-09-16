@@ -1,20 +1,18 @@
 "use client";
-import {
-  ShopPricesListApiParams,
-  ShopPricesListApiResponse,
-  useGetShopPricesList,
-} from "@/utils/apis/shop/prices/GET/shopPricesListApi";
 import { ShopProductDetailApiResponse } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
+import { useGetShopProductsListInfiniteApi } from "@/utils/apis/shop/products/GET/shopProductsListApi";
 import { usePostShopCartAddApi } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
 import {
   IconChevronLeft,
   IconChevronRight,
   IconFilter,
 } from "@tabler/icons-react";
+import { ShopPricesListApiParams } from "@/utils/apis/shop/prices/GET/shopPricesListApi";
 import CustomAreaChartCard from "../products/[id]/_components/CustomAreaChartCard";
 import CategoryChipsFilter from "@/app/_components/lookups/chips/CategoryChips";
 import BrandChipsFilter from "@/app/_components/lookups/chips/BrandChips";
 import AddToCartBottomSheet from "@/app/_components/AddToCartBottomSheet";
+import { useInfiniteScroll } from "@/utils/hooks/useInfiniteScroll";
 import Typography from "@/components/components/atoms/typography";
 import { Skeleton } from "@/components/components/atoms/skeleton";
 import { Input } from "@/components/components/molecules/input";
@@ -67,7 +65,7 @@ const Pricepage = () => {
   const [showChart, setShowChart] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedItem, setSelectedItem] =
-    useState<ShopPricesListApiResponse | null>(null);
+    useState<ShopProductDetailApiResponse | null>(null);
   const [showPurchaseBottomSheet, setShowPurchaseBottomSheet] = useState(false);
   const [selectedProduct, setSelectedProduct] =
     useState<SelectedProduct | null>(null);
@@ -83,9 +81,11 @@ const Pricepage = () => {
     search: "",
   });
 
-  const shopPricesListQuery = useGetShopPricesList({
-    params: filterParams,
+  const shopProductListQuery = useGetShopProductsListInfiniteApi({
+    params: { ...filterParams, limit: 10 },
   });
+
+  const { observerRef } = useInfiniteScroll(shopProductListQuery);
 
   const shopAddCartMutate = usePostShopCartAddApi({
     onSuccess: (res) => {
@@ -114,7 +114,7 @@ const Pricepage = () => {
     }
   };
 
-  const handleItemClick = (item: ShopPricesListApiResponse) => {
+  const handleItemClick = (item: ShopProductDetailApiResponse) => {
     setSelectedItem(item);
     setShowChart(true);
   };
@@ -131,8 +131,7 @@ const Pricepage = () => {
   const onAddProductToCart = (id: number) => {
     setShowPurchaseBottomSheet(true);
     setSelectedProduct(
-      shopPricesListQuery.data?.find((item) => item.product.id === id)
-        ?.product || null,
+      shopProductListQuery.data?.find((item) => item.id === id) || null,
     );
   };
 
@@ -219,7 +218,7 @@ const Pricepage = () => {
       </div>
 
       {/* Results count */}
-      {shopPricesListQuery.isFetching &&
+      {shopProductListQuery.isFetching &&
         [...Array(6)].map((_, index) => (
           <div
             key={index}
@@ -238,7 +237,7 @@ const Pricepage = () => {
             </div>
           </div>
         ))}
-      {shopPricesListQuery?.data?.length === 0 ? (
+      {shopProductListQuery?.data?.length === 0 ? (
         <div className="text-center py-8">
           <Typography
             variant="label/md"
@@ -250,21 +249,22 @@ const Pricepage = () => {
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          {shopPricesListQuery?.data?.map((item, index) => (
+          {shopProductListQuery?.data?.map((item, index) => (
             <div key={index}>
               <PriceItemCard
-                title={item.product.name}
-                price={item.price}
+                title={item.name}
+                price={item.latest_price}
                 trend={item.is_increamental ? "up" : "down"}
                 onChart={() => handleItemClick(item)}
                 onBuy={() => {
-                  onAddProductToCart(item.product.id);
+                  onAddProductToCart(item.id);
                 }}
               />
             </div>
           ))}
         </div>
       )}
+      <div ref={observerRef} style={{ height: 10 }} />
 
       {/* Chart Bottom Sheet */}
       <BottomSheet isOpen={showChart} onClose={closeChart}>
@@ -274,14 +274,14 @@ const Pricepage = () => {
             weight="bold"
             className="mb-4 text-center"
           >
-            نمودار {selectedItem?.product.name || null}
+            نمودار {selectedItem?.name || null}
           </Typography>
 
           {/* Chart using CustomAreaChartCard */}
           <div className="mt-4 mb-8">
             <CustomAreaChartCard
               chartConfig={chartConfig}
-              chartData={selectedItem?.product.price_history || []}
+              chartData={selectedItem?.price_history || []}
             />
 
             {/* Date indicator */}

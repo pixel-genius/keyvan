@@ -10,6 +10,7 @@ import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
 export interface ShopProductsListApiParams {
+  price_date?: string;
   category?: number;
   brand?: number;
   search?: string;

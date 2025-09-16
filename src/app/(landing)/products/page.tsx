@@ -6,17 +6,18 @@ import { useGetCategoryLookupListApi } from "@/utils/apis/shop/category/GET/cate
 import { usePostShopCartAddApi } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
 import { useGetBrandLookupListApi } from "@/utils/apis/shop/brand/GET/brandLookupListApi";
 import AddToCartBottomSheet from "@/app/_components/AddToCartBottomSheet";
+import { useInfiniteScroll } from "@/utils/hooks/useInfiniteScroll";
 import Typography from "@/components/components/atoms/typography";
 import { Skeleton } from "@/components/components/atoms/skeleton";
 import { Input } from "@/components/components/molecules/input";
 import { useAuthStore } from "@/utils/store/authenticate.store";
 import { Button } from "@/components/components/atoms/button";
-import { Suspense, useEffect, useRef, useState } from "react";
 import { Chip } from "@/components/components/atoms/chip";
 import ProductCard from "@/app/_components/ProductCard";
 // Import the API fetch function and type
 import BottomSheet from "@/app/_components/BottomSheet";
 import { useDebounce } from "@/utils/hooks/useDebounce";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { IconFilter } from "@tabler/icons-react";
 import Header from "@/app/_components/Header";
@@ -76,31 +77,7 @@ function ProductsContent() {
     window.history.back();
   };
 
-  const observerRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (!observerRef.current) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (
-          entries[0].isIntersecting &&
-          shopProductListQuery.hasNextPage &&
-          !shopProductListQuery.isFetchingNextPage
-        ) {
-          shopProductListQuery.fetchNextPage();
-        }
-      },
-      { threshold: 1 },
-    );
-
-    observer.observe(observerRef.current);
-    return () => observer.disconnect();
-  }, [
-    shopProductListQuery.fetchNextPage,
-    shopProductListQuery.hasNextPage,
-    shopProductListQuery.isFetchingNextPage,
-  ]);
+  const { observerRef } = useInfiniteScroll(shopProductListQuery);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
