@@ -282,8 +282,8 @@ function ProductsContent() {
         isOpen={isBottomSheetOpen}
         onClose={handleCloseBottomSheet}
         onAddToCart={onAddToCart}
-        selectedProduct={selectedProduct}
-        setSelectedProduct={setSelectedProduct}
+        selectedItem={selectedProduct}
+        setSelectedItem={setSelectedProduct}
       />
     </div>
   );

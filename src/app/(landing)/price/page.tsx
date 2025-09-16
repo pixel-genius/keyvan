@@ -1,5 +1,5 @@
 "use client";
-import { ShopProductDetailPriceHistoryApiResponse } from "@/utils/apis/shop/products/[id]/priceHistory/GET/shopProductDetailPriceHistoryApi";
+import { useGetShopProductDetailPriceHistory } from "@/utils/apis/shop/products/[id]/priceHistory/GET/shopProductDetailPriceHistoryApi";
 import {
   ShopPricesListApiParams,
   useGetShopPricesList,
@@ -39,10 +39,6 @@ interface DayData {
   time: string;
 }
 
-interface SelectedPriceItem extends ShopPricesDetailApiResponse {
-  price_history?: ShopProductDetailPriceHistoryApiResponse[];
-}
-
 // Chart configuration
 const chartConfig = {
   price: {
@@ -71,9 +67,6 @@ const Pricepage = () => {
   const [showChart, setShowChart] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
-  const [selectedItem, setSelectedItem] = useState<SelectedPriceItem | null>(
-    null,
-  );
   const [showPurchaseBottomSheet, setShowPurchaseBottomSheet] = useState(false);
   const [selectedProduct, setSelectedProduct] =
     useState<SelectedItemAddCartBottomSheet | null>(null);
@@ -96,6 +89,11 @@ const Pricepage = () => {
       page: filterParams.page as number,
       search: debouncedSearchQuery,
     },
+  });
+
+  const shopPriceHistoryQuery = useGetShopProductDetailPriceHistory({
+    enabled: !!selectedProduct?.id,
+    slug: String(selectedProduct?.id),
   });
 
   const shopAddCartMutate = usePostShopCartAddApi({
@@ -126,12 +124,12 @@ const Pricepage = () => {
   };
 
   const handleItemClick = (item: ShopPricesDetailApiResponse) => {
-    setSelectedItem(item);
+    setSelectedProduct(item);
     setShowChart(true);
   };
 
   const closeChart = () => {
-    setSelectedItem(null);
+    setSelectedProduct(null);
     setShowChart(false);
   };
 
@@ -302,14 +300,14 @@ const Pricepage = () => {
             weight="bold"
             className="mb-4 text-center"
           >
-            نمودار {selectedItem?.name || null}
+            نمودار {selectedProduct?.name || null}
           </Typography>
 
           {/* Chart using CustomAreaChartCard */}
           <div className="mt-4 mb-8">
             <CustomAreaChartCard
               chartConfig={chartConfig}
-              chartData={selectedItem?.price_history || []}
+              chartData={shopPriceHistoryQuery.data || []}
             />
 
             {/* Date indicator */}
