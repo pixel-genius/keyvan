@@ -1,13 +1,15 @@
 "use client";
+import {
+  ShopProductsListApiParams,
+  useGetShopProductsListInfiniteApi,
+} from "@/utils/apis/shop/products/GET/shopProductsListApi";
 import { ShopProductDetailApiResponse } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
-import { useGetShopProductsListInfiniteApi } from "@/utils/apis/shop/products/GET/shopProductsListApi";
 import { usePostShopCartAddApi } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
 import {
   IconChevronLeft,
   IconChevronRight,
   IconFilter,
 } from "@tabler/icons-react";
-import { ShopPricesListApiParams } from "@/utils/apis/shop/prices/GET/shopPricesListApi";
 import CustomAreaChartCard from "../products/[id]/_components/CustomAreaChartCard";
 import CategoryChipsFilter from "@/app/_components/lookups/chips/CategoryChips";
 import BrandChipsFilter from "@/app/_components/lookups/chips/BrandChips";
@@ -71,13 +73,12 @@ const Pricepage = () => {
     useState<SelectedProduct | null>(null);
   const [showFilterBottomSheet, setShowFilterBottomSheet] = useState(false);
   const { setUserInfo } = useAuthStore();
-  const [filterParams, setFilterParams] = useState<ShopPricesListApiParams>({
-    date: daysData[currentDayIndex].date,
+  const [filterParams, setFilterParams] = useState<ShopProductsListApiParams>({
+    price_date: daysData[currentDayIndex].date,
     brand: undefined,
     category: undefined,
     // limit: 10,
     page: 1,
-    ordering: "",
     search: "",
   });
 
