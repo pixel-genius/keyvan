@@ -73,14 +73,12 @@ const AuthenticatePage = () => {
 
   const loginOtpMutatePost = usePostAccountAuthOtpLoginApi({
     onSuccess: (res) => {
-      // if (res.is_verified) {
-      //   setToken(res.token);
-      //   router.replace("/");
-      // } else router.replace("/auth/pend-approval");
       setToken(res.token);
       router.replace("/");
     },
-    onError: () => {
+    onError: (error) => {
+      if (!error?.response?.data.is_verified)
+        router.replace("/auth/pend-approval");
       toast.error("خطا در ورود");
     },
   });
