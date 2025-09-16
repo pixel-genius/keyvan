@@ -48,7 +48,18 @@ const AuthenticatePage = () => {
     lastName: "",
     otpCode: "",
   });
-
+  useEffect(() => {
+    return () => {
+      setAuthStore(AuthenticateFormStateEnum.LOGIN);
+      setFormFields({
+        phoneNumber: "",
+        nationalCode: "",
+        firstName: "",
+        lastName: "",
+        otpCode: "",
+      });
+    };
+  }, []);
   const loginOtpMutateGet = useGetAccountAuthOtpLoginApi({
     onSuccess: () => {
       setAuthStore(AuthenticateFormStateEnum.OTP);
@@ -207,10 +218,10 @@ const AuthenticatePage = () => {
                     }
                   >
                     <InputOTPGroup className="">
-                      <InputOTPSlot index={0} />
-                      <InputOTPSlot index={1} />
-                      <InputOTPSlot index={2} />
                       <InputOTPSlot index={3} />
+                      <InputOTPSlot index={2} />
+                      <InputOTPSlot index={1} />
+                      <InputOTPSlot index={0} />
                     </InputOTPGroup>
                   </InputOTP>
                   {countdownDate ? (
