@@ -141,7 +141,13 @@ const AuthenticatePage = () => {
     }
 
     return valid;
-  }, [authenticateFormState, formFields]);
+  }, [
+    authenticateFormState,
+    formFields,
+    registerMutate.isPending,
+    loginOtpMutateGet.isPending,
+    loginOtpMutatePost.isPending,
+  ]);
 
   const bottomSheetTitle = () => {
     switch (authenticateFormState) {
@@ -300,12 +306,12 @@ const AuthenticatePage = () => {
                       <div className="flex flex-col gap-2">
                         <FileUpload
                           label="مجوز توزیع استانی یا کشوری (اختیاری)"
-                          // onChange={setProvincialLicense}
+                          onChange={() => {}}
                         />
 
                         <FileUpload
                           label="جواز کسب (اختیاری)"
-                          // onChange={setBusinessLicense}
+                          onChange={() => {}}
                         />
                       </div>
                     </>
