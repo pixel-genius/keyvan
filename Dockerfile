@@ -26,9 +26,6 @@ COPY src/ ./src/
 # کپی کردن فایل‌های عمومی
 COPY public/ ./public/
 
-# کپی کردن فایل‌های ریشه
-COPY next-env.d.ts ./
-
 # ساخت پروژه Next.js
 RUN bun run build
 
