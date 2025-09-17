@@ -3,15 +3,17 @@ import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
 export type AccountProfileGetApiResponse = {
-  firstName?: string | null;
-  lastName?: string | null;
+  first_name?: string | null;
+  last_name?: string | null;
   username?: string | null;
+  user_id?: number;
   email?: string | null;
   date_of_birth?: string | null;
   phone_number?: string | null;
   national_code?: string | null;
   address?: string;
   bio?: string;
+  created_at?: string;
   certificate?: {
     id: number;
     file: string;

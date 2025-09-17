@@ -1,39 +1,45 @@
 "use client";
 
 import {
-  IconFile,
+  IconCheck,
+  IconChevronRight,
+  IconClock,
   IconDownload,
   IconEye,
-  IconUpload,
-  IconCheck,
-  IconClock,
-  IconChevronRight,
+  IconFile,
   IconTrash,
+  IconUpload,
 } from "@tabler/icons-react";
+import { useAccountFilesUploadPost } from "@/utils/apis/account/files/upload/POST/accountFilesUploadPostApi";
 import Typography from "@/components/components/atoms/typography";
+import { useAuthStore } from "@/utils/store/authenticate.store";
 import BottomSheet from "@/app/_components/BottomSheet";
+import { UploadFileApiCategory } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
+
+type DocumentState = {
+  id: number;
+  name: string;
+  type: string;
+  status: string;
+  key: UploadFileApiCategory;
+  uploadDate: string | null;
+  fileSize: string | null;
+  required: boolean;
+}[];
 
 const DocumentsPage = () => {
   const router = useRouter();
-
-  const [documents, setDocuments] = useState<
-    {
-      id: number;
-      name: string;
-      type: string;
-      status: string;
-      uploadDate: string | null;
-      fileSize: string | null;
-      required: boolean;
-    }[]
-  >([
+  const { userProfileInfo } = useAuthStore();
+  const [documents, setDocuments] = useState<DocumentState>([
     {
       id: 1,
       name: "کارت ملی",
       type: "تصویر",
       status: "آپلود نشده",
+      key: "national_card",
       uploadDate: null,
       fileSize: null,
       required: true,
@@ -43,6 +49,7 @@ const DocumentsPage = () => {
       name: "مجوز توزیع استانی یا کشوری",
       type: "تصویر",
       status: "آپلود نشده",
+      key: "business_license",
       uploadDate: null,
       fileSize: null,
       required: true,
@@ -52,6 +59,7 @@ const DocumentsPage = () => {
       name: "جواز کسب",
       type: "تصویر",
       status: "آپلود نشده",
+      key: "certification",
       uploadDate: null,
       fileSize: null,
       required: true,
@@ -66,6 +74,12 @@ const DocumentsPage = () => {
   const [uploadingDocument, setUploadingDocument] = useState<number | null>(
     null,
   );
+
+  const accountFileUploadMutate = useAccountFilesUploadPost({
+    onError: () => {
+      toast.error("خطا در آپلود فایل");
+    },
+  });
 
   const handleDeleteDocument = (documentId: number) => {
     const doc = documents.find((doc) => doc.id === documentId);
@@ -99,10 +113,15 @@ const DocumentsPage = () => {
     setDocumentToDelete(null);
   };
 
-  const handleFileUpload = (
-    documentId: number,
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleFileUpload = ({
+    documentId,
+    event,
+    key,
+  }: {
+    documentId: number;
+    event: React.ChangeEvent<HTMLInputElement>;
+    key: UploadFileApiCategory;
+  }) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -114,39 +133,44 @@ const DocumentsPage = () => {
       "application/pdf",
     ];
     if (!allowedTypes.includes(file.type)) {
-      alert("فرمت فایل مجاز نیست. لطفاً فایل JPG، PNG یا PDF آپلود کنید.");
+      toast.error(
+        "فرمت فایل مجاز نیست. لطفاً فایل JPG، PNG یا PDF آپلود کنید.",
+      );
       return;
     }
 
     // Validate file size (5MB)
     if (file.size > 5 * 1024 * 1024) {
-      alert("حجم فایل نباید بیشتر از 5 مگابایت باشد.");
+      toast.error("حجم فایل نباید بیشتر از 5 مگابایت باشد.");
       return;
     }
 
     setUploadingDocument(documentId);
-
-    // Simulate upload process
-    setTimeout(() => {
-      const today = new Date().toLocaleDateString("fa-IR");
-      const fileSize = (file.size / (1024 * 1024)).toFixed(1) + " MB";
-
-      setDocuments((prevDocuments) =>
-        prevDocuments.map((doc) =>
-          doc.id === documentId
-            ? {
-                ...doc,
-                status: "در انتظار تایید",
-                uploadDate: today,
-                fileSize: fileSize,
-              }
-            : doc,
-        ),
-      );
-
-      setUploadingDocument(null);
-      event.target.value = ""; // Clear input
-    }, 2000);
+    accountFileUploadMutate
+      .mutateAsync({
+        user_id: userProfileInfo?.user_id,
+        category: key,
+        file,
+      })
+      .then((res) => {
+        setDocuments((prevDocuments) =>
+          prevDocuments.map((doc) =>
+            doc.id === documentId
+              ? {
+                  ...doc,
+                  status: "در انتظار تایید",
+                  uploadDate: res.file.created_at,
+                  fileSize: (res.file.size / (1024 * 1024)).toFixed(1) + " MB",
+                }
+              : doc,
+          ),
+        );
+      })
+      .finally(() => {
+        setUploadingDocument(null);
+        event.target.value = "";
+        event.target.files = null;
+      });
   };
 
   return (
@@ -267,7 +291,13 @@ const DocumentsPage = () => {
                     <input
                       type="file"
                       accept=".jpg,.jpeg,.png,.pdf"
-                      onChange={(e) => handleFileUpload(doc.id, e)}
+                      onChange={(e) =>
+                        handleFileUpload({
+                          documentId: doc.id,
+                          event: e,
+                          key: doc.key,
+                        })
+                      }
                       className="hidden"
                       disabled={uploadingDocument === doc.id}
                     />

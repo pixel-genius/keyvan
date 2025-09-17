@@ -1,5 +1,6 @@
 import Typography from "@/components/components/atoms/typography";
 import { IconTrash } from "@tabler/icons-react";
+import { toPersianNumbers } from "@/lib/utils";
 import Image from "next/image";
 
 type CartItemCardProps = {
@@ -35,14 +36,14 @@ const CartItemCard = ({
             weight="normal"
             className="text-right mb-1"
           >
-            {name} x {quantity}
+            {name} x {toPersianNumbers(quantity)}
           </Typography>
           <Typography
             variant="label/xs"
             weight="normal"
             className="text-right text-gray-500"
           >
-            مبلغ : ۳۲۵,۰۰۰ تومان
+            مبلغ : {toPersianNumbers("130000")} تومان
           </Typography>
         </div>
         <div className="h-[54px] w-[54px] rounded-lg overflow-hidden">

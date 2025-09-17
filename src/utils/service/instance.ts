@@ -24,7 +24,7 @@ coreApi.interceptors.request.use((config) => {
 coreApi.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response.status === 401) {
+    if (error?.response?.status === 401) {
       removeToken();
       window.location.pathname = "/auth/authenticate";
     }

@@ -5,7 +5,7 @@ import path from "path";
 
 export interface ShopCartAddPostApiPayload {
   product_id: number;
-  quantity: number;
+  quantity: number | undefined;
 }
 
 // POST API function

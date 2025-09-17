@@ -32,8 +32,8 @@ import { toast } from "sonner";
 interface FormFieldsState {
   phoneNumber: string;
   nationalCode: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   otpCode: string;
   certificate_file: AccountFilesUploadPostApiResponse["file"] | undefined;
   license_file: AccountFilesUploadPostApiResponse["file"] | undefined;
@@ -59,8 +59,8 @@ const AuthenticatePage = () => {
   const [formFields, setFormFields] = useState<FormFieldsState>({
     phoneNumber: "",
     nationalCode: "",
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     otpCode: "",
     license_file: undefined,
     certificate_file: undefined,
@@ -72,8 +72,8 @@ const AuthenticatePage = () => {
       setFormFields({
         phoneNumber: "",
         nationalCode: "",
-        firstName: "",
-        lastName: "",
+        first_name: "",
+        last_name: "",
         otpCode: "",
         license_file: undefined,
         certificate_file: undefined,
@@ -173,8 +173,8 @@ const AuthenticatePage = () => {
     if (authenticateFormState === AuthenticateFormStateEnum.REGISTER_STEP2) {
       registerPutMutate.mutate({
         user_id: userId as number,
-        first_name: formFields.firstName,
-        last_name: formFields.lastName,
+        first_name: formFields.first_name,
+        last_name: formFields.last_name,
       });
     }
   };
@@ -200,8 +200,8 @@ const AuthenticatePage = () => {
         valid =
           !phoneNumberValid &&
           !nationalCodeValid &&
-          !formFields.lastName &&
-          !formFields.firstName &&
+          !formFields.last_name &&
+          !formFields.first_name &&
           formFields.certificate_file === undefined &&
           formFields.license_file === undefined &&
           registerPutMutate.isPending;
@@ -363,14 +363,14 @@ const AuthenticatePage = () => {
                       <div className="w-full flex gap-2">
                         <Input
                           placeholder="نام"
-                          name="firstName"
-                          value={formFields.firstName}
+                          name="first_name"
+                          value={formFields.first_name}
                           onChange={handleChange}
                         />
                         <Input
                           placeholder="نام خانوادگی"
-                          name="lastName"
-                          value={formFields.lastName}
+                          name="last_name"
+                          value={formFields.last_name}
                           onChange={handleChange}
                         />
                       </div>
