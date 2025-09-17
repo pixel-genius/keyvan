@@ -19,11 +19,10 @@ export const toEnglishDigits = (num: string | number) =>
 // Format price with Persian digits and proper decimal handling
 export function formatPrice(price: number | string): string {
   const num = typeof price === "string" ? parseFloat(price) : price;
-
+  if (!num) return "_";
   if (isNaN(num)) {
     return "۰";
   }
-
   // Handle decimals - if it's a whole number, don't show decimal part
   const isWholeNumber = Number.isInteger(num);
   const formattedNumber = isWholeNumber

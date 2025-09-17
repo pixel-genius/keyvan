@@ -47,11 +47,6 @@ const Navbar = () => {
   // Sample cart items - in a real app, this would come from a state management solution
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-  // Function to remove an item from the cart
-  const handleRemoveItem = (id: string) => {
-    shopDeleteCartItemMutate.mutate(+id);
-  };
-
   // Function to increase quantity of an item
   const handleIncreaseQuantity = (id: string) => {
     setCartItems(
@@ -170,11 +165,9 @@ const Navbar = () => {
               className="cursor-pointer"
               onClick={() => setIsCartOpen(true)}
             />
-            {Number(shopCart?.total_items) > 0 && (
+            {shopCart?.items && shopCart?.items?.length > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                {shopCart?.total_items
-                  ? toPersianNumbers(shopCart?.total_items)
-                  : null}
+                {toPersianNumbers(shopCart?.items?.length)}
               </span>
             )}
           </div>
@@ -215,7 +208,7 @@ const Navbar = () => {
                     name={item.product.name}
                     image={item.product.image}
                     quantity={item.quantity}
-                    onRemove={handleRemoveItem}
+                    removeMutate={shopDeleteCartItemMutate}
                     onIncreaseQuantity={handleIncreaseQuantity}
                     onDecreaseQuantity={handleDecreaseQuantity}
                   />

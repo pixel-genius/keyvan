@@ -1,13 +1,14 @@
 "use client";
 
 import { Card, CardContent } from "@/components/components/atoms/card";
-import { IconEye, IconShoppingCartPlus } from "@tabler/icons-react";
 import Typography from "@/components/components/atoms/typography";
-import { useRouter } from "next/navigation";
+import { Button } from "@/components/components/atoms/button";
+import { IconShoppingCartPlus } from "@tabler/icons-react";
 import { formatPrice } from "@/lib/utils";
 import Tomanicon from "@/icons/toman";
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface ProductCardProps {
   id?: string;
@@ -27,12 +28,7 @@ export default function ProductCard({
   category = "سیگار",
   onAddToCart,
 }: ProductCardProps) {
-  const router = useRouter();
   const [imageError, setImageError] = useState(false);
-
-  const handleViewProduct = () => {
-    router.push(`/products/${id}`);
-  };
 
   const handleImageError = () => {
     setImageError(true);
@@ -43,36 +39,38 @@ export default function ProductCard({
 
   return (
     <Card dir="rtl" className="bg-black text-white rounded-2xl">
-      <CardContent className="p-4 flex items-center space-x-4">
-        <div className="w-16 h-16 relative rounded-lg overflow-hidden bg-gray-700 flex items-center justify-center">
-          {isValidImageUrl ? (
-            <Image
-              src={imageUrl}
-              alt={title}
-              fill
-              className="object-cover"
-              onError={handleImageError}
-              unoptimized
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-400">
-              <span className="text-xs">تصویر</span>
-            </div>
-          )}
-        </div>
-
-        <div className="flex-1">
-          <Typography variant="paragraph/sm" weight="bold" className="pb-2">
-            {title}
-          </Typography>
-
-          <div className="flex items-center mt-2">
-            {/* Category  */}
-            <span className="bg-primary text-white text-xs px-2 py-1 rounded-lg">
-              {category}
-            </span>
+      <CardContent className="p-4 flex items-center space-x-4 justify-between">
+        <Link className="flex gap-3 items-center" href={`/products/${id}`}>
+          <div className="w-16 h-16 relative rounded-lg overflow-hidden bg-gray-700 flex items-center justify-center">
+            {isValidImageUrl ? (
+              <Image
+                src={imageUrl || "/img/sigar.png"}
+                alt={title}
+                fill
+                className="object-cover"
+                onError={handleImageError}
+                unoptimized
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-gray-400">
+                <span className="text-xs">تصویر</span>
+              </div>
+            )}
           </div>
-        </div>
+
+          <div className="flex-1">
+            <Typography variant="paragraph/sm" weight="bold" className="pb-2">
+              {title}
+            </Typography>
+
+            <div className="flex items-center mt-2">
+              {/* Category  */}
+              <span className="bg-primary text-white text-xs px-2 py-1 rounded-lg">
+                {category}
+              </span>
+            </div>
+          </div>
+        </Link>
         <div className="flex flex-col items-end">
           <div className="flex items-center gap-1">
             <Typography variant="label/sm" weight="bold">
@@ -82,18 +80,15 @@ export default function ProductCard({
           </div>
 
           <div className="flex space-x-2 mt-2">
-            <button
-              className="p-2 bg-gray-700 rounded-full hover:bg-gray-600"
-              onClick={handleViewProduct}
-            >
-              <IconEye stroke={2} className="w-5 h-5" />
-            </button>
-            <button
-              className="p-2 bg-primary rounded-full"
+            <Button
+              variant="primary"
+              size="sm"
+              className="bg-primary rounded-sm d-inline-flex"
               onClick={onAddToCart}
+              iconLeft={<IconShoppingCartPlus className="w-5 h-5" stroke={2} />}
             >
-              <IconShoppingCartPlus className="w-5 h-5" stroke={2} />
-            </button>
+              افزودن به سبد خرید
+            </Button>
           </div>
         </div>
       </CardContent>

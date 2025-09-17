@@ -57,7 +57,7 @@ function BlogDetailFn() {
 
       {post.image ? (
         <Image
-          src={post.image}
+          src={post.image || "/img/sigar.png"}
           alt={post.title || ""}
           width={800}
           height={400}

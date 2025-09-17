@@ -22,14 +22,14 @@ const CardItem = ({
 }: CardItemProps) => {
   const sizeClasses = {
     sm: "w-8 h-8",
-    md: "w-12 h-12", 
-    lg: "w-16 h-16"
+    md: "w-12 h-12",
+    lg: "w-16 h-16",
   };
 
   const defaultImageSize = {
     sm: 32,
     md: 48,
-    lg: 64
+    lg: 64,
   };
 
   const finalImageSize = imageSize || defaultImageSize[size];
@@ -37,10 +37,12 @@ const CardItem = ({
   return (
     <Link href={link || ""}>
       <div className="flex flex-col items-center">
-        <div className={`bg-card p-4 rounded-xl shadow-lg flex items-center justify-center ${sizeClasses[size]}`}>
+        <div
+          className={`bg-card p-4 rounded-xl shadow-lg flex items-center justify-center ${sizeClasses[size]}`}
+        >
           {image ? (
             <Image
-              src={image}
+              src={image || "/img/sigar.png"}
               alt={label}
               width={finalImageSize}
               height={finalImageSize}
