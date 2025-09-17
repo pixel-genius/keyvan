@@ -273,7 +273,7 @@ const Pricepage = () => {
             weight="medium"
             className="text-gray-400"
           >
-            هیچ محصولی یافت نشد
+            محصولی یافت نشد
           </Typography>
         </div>
       ) : (
