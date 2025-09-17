@@ -20,6 +20,7 @@ type CartItemCardProps = {
   name: string;
   image: string;
   quantity: number;
+  disabled: boolean;
   removeMutate: UseMutationResult<
     ShopCartApiResponse,
     unknown,
@@ -35,6 +36,7 @@ const CartItemCard = ({
   name,
   quantity,
   image,
+  disabled,
   removeMutate,
 }: CartItemCardProps) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -42,6 +44,7 @@ const CartItemCard = ({
     <>
       <div className="flex items-center justify-between gap-2 bg-card w-full rounded-lg p-2 mb-4">
         <button
+          disabled={disabled}
           onClick={() => setOpen(true)}
           className="p-1 rounded-full hover:bg-gray-100 transition-colors"
         >

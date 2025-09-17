@@ -1,16 +1,17 @@
 "use client";
 
 import {
-  IconShoppingCart,
-  IconMenu2,
-  IconX,
-  IconInfoCircle,
-  IconPhone,
-  IconHeadset,
-  IconScale,
   IconBook,
+  IconHeadset,
+  IconInfoCircle,
+  IconMenu2,
+  IconPhone,
+  IconScale,
+  IconShoppingCart,
+  IconX,
 } from "@tabler/icons-react";
 import { useDeleteShopCartItemsRemoveApi } from "@/utils/apis/shop/cart/items/[id]/remove/DELETE/shopCartItemsRemoveDeleteApi";
+import { usePostShopOrderCreateApi } from "@/utils/apis/shop/orders/create/POST/shopOrderCreatePostApi";
 import Typography from "@/components/components/atoms/typography";
 import { useAuthStore } from "@/utils/store/authenticate.store";
 import { toEnglishDigits, toPersianNumbers } from "@/lib/utils";
@@ -22,6 +23,7 @@ import BottomSheet from "./BottomSheet";
 import EmptyCart from "./EmptyCart";
 import { useState } from "react";
 import Image from "next/image";
+import { toast } from "sonner";
 
 // Define a type for cart items
 type CartItem = {
@@ -39,9 +41,20 @@ const Navbar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isOrderConfirmationOpen, setIsOrderConfirmationOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [note, setNote] = useState<string>("");
   const shopDeleteCartItemMutate = useDeleteShopCartItemsRemoveApi({
     onSuccess: (res) => {
       setUserInfo({ shopCart: res });
+    },
+  });
+  const shopOrderMutate = usePostShopOrderCreateApi({
+    onSuccess: () => {
+      toast.success("ثبت سفارش با موفقیت انجام شد");
+      setIsCartOpen(false);
+      router.push("/orders");
+    },
+    onError: () => {
+      toast.error("سفارش انجام نشد");
     },
   });
   // Sample cart items - in a real app, this would come from a state management solution
@@ -71,9 +84,7 @@ const Navbar = () => {
 
   // Function to handle order submission
   const handleOrderSubmit = () => {
-    // In a real app, you would make an API call to submit the order
-    setIsOrderConfirmationOpen(true);
-    setIsCartOpen(false); // Close cart bottom sheet
+    shopOrderMutate.mutate({ notes: note });
   };
 
   // Handle tracking order
@@ -207,6 +218,7 @@ const Navbar = () => {
                     id={String(item.id)}
                     name={item.product.name}
                     image={item.product.image}
+                    disabled={shopOrderMutate.isPending}
                     quantity={item.quantity}
                     removeMutate={shopDeleteCartItemMutate}
                     onIncreaseQuantity={handleIncreaseQuantity}
@@ -214,10 +226,19 @@ const Navbar = () => {
                   />
                 ))}
               </div>
-
+              <textarea
+                value={note}
+                onChange={(e) => {
+                  setNote(e.currentTarget.value);
+                }}
+                placeholder="...یادداشت خود را بنویسید"
+                className="w-full text-right mb-1 p-4 border border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-background text-foreground min-h-[100px] resize-none"
+              />
               <Button
                 variant="primary"
                 size="md"
+                isLoading={shopOrderMutate.isPending}
+                disabled={shopOrderMutate.isPending}
                 onClick={handleOrderSubmit}
                 className="w-full"
               >
