@@ -47,11 +47,6 @@ const Navbar = () => {
   // Sample cart items - in a real app, this would come from a state management solution
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-  // Function to remove an item from the cart
-  const handleRemoveItem = (id: string) => {
-    shopDeleteCartItemMutate.mutate(+id);
-  };
-
   // Function to increase quantity of an item
   const handleIncreaseQuantity = (id: string) => {
     setCartItems(
@@ -213,7 +208,7 @@ const Navbar = () => {
                     name={item.product.name}
                     image={item.product.image}
                     quantity={item.quantity}
-                    onRemove={handleRemoveItem}
+                    removeMutate={shopDeleteCartItemMutate}
                     onIncreaseQuantity={handleIncreaseQuantity}
                     onDecreaseQuantity={handleDecreaseQuantity}
                   />

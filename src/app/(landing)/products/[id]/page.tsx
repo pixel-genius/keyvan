@@ -112,13 +112,14 @@ function ProductDetailFn() {
 
   return (
     <div className="px-4 pt-28 ">
-      <div className="flex  gap-0.5 items-center pb-3.5">
-        <IconChevronLeft
-          size={24}
-          className="cursor-pointer"
+      <div className="flex gap-0.5 items-center pb-3.5">
+        <span
+          className="inline-flex items-center gap-2 cursor-pointer p-2"
           onClick={() => router.back()}
-        />
-        <Typography variant={"paragraph/md"}>بازگشت</Typography>
+        >
+          <IconChevronLeft size={24} className="cursor-pointer" />
+          <Typography variant={"paragraph/md"}>بازگشت</Typography>
+        </span>
       </div>
       <div>
         <div className="flex justify-center items-center bg-white rounded-lg mb-4">

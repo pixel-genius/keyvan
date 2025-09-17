@@ -1,9 +1,9 @@
-import * as React from "react";
-import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
+import { Slot } from "@radix-ui/react-slot";
+import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import OrbitingDotsLoading from "./orbitingDotsLoading";
+import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
   "inline-flex   items-center justify-center min-w-[64px] transition-all focus-visible:outline-none  duration-300  gap-2 whitespace-nowrap text-sm  px-3 py-4 focus:ring focus:ring-primary relative disabled:cursor-not-allowed",
@@ -15,7 +15,7 @@ const buttonVariants = cva(
         secondary:
           "bg-secondary border border-zinc-700 rounded-lg text-secondary-foreground hover:bg-zinc-900 disabled:text-gray-400 disabled:bg-secondary  ",
         tertiary:
-          "bg-transparent text-white rounded-lg disabled:text-gray-700 ",
+          "bg-transparent active:border-none focus:border-none text-white rounded-lg disabled:text-gray-700 ",
       },
       size: {
         sm: "h-9 text-sm",
@@ -79,7 +79,7 @@ const buttonVariants = cva(
       variant: "primary",
       size: "md",
     },
-  }
+  },
 );
 
 export type ButtonState = "success" | "warning" | "error";
@@ -108,14 +108,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       state,
       ...props
     },
-    ref
+    ref,
   ) => {
     const Comp = asChild ? Slot : "button";
 
     return (
       <Comp
         className={cn(
-          buttonVariants({ variant, size, isLoading, state, className })
+          buttonVariants({ variant, size, isLoading, state, className }),
         )}
         ref={ref}
         {...props}
@@ -136,7 +136,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         )}
       </Comp>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";
