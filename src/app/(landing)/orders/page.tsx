@@ -25,7 +25,8 @@ interface OrderStatusObj {
     colorClass: ChipProps["variant"];
   };
 }
-export const orderStatusObj: OrderStatusObj = {
+
+const orderStatusObj: OrderStatusObj = {
   pending: {
     text: "در انتظار تایید",
     colorClass: "warning",
