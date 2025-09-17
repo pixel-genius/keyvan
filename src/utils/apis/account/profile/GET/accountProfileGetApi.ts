@@ -6,6 +6,7 @@ export type AccountProfileGetApiResponse = {
   first_name?: string | null;
   last_name?: string | null;
   username?: string | null;
+  user_id?: number;
   email?: string | null;
   date_of_birth?: string | null;
   phone_number?: string | null;
