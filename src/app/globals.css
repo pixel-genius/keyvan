@@ -249,3 +249,8 @@ button:not(:disabled),
 a:not(:disabled) {
   cursor: pointer;
 }
+
+.product-list-scroll-container {
+  max-height: calc(100vh - 300px);
+  overflow-y: auto;
+}

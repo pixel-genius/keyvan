@@ -23,7 +23,7 @@ const ProductCard = ({
     <div className="bg-maincard p-4 rounded-xl pb-1.5">
       <div className="flex justify-center items-center mb-2 min-h-[150px] relative">
         <Image
-          src={product?.image}
+          src={product?.image || "img/sigar.png"}
           alt={product?.name || ""}
           fill
           className="w-full object-cover rounded"

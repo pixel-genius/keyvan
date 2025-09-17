@@ -6,7 +6,6 @@ import path from "path";
 export interface AccountProfilePutApiPayload {
   first_name?: string;
   last_name?: string;
-  email?: string;
   phone_number?: string;
   national_code?: string;
   username?: string;

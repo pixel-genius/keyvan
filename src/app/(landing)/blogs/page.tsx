@@ -80,7 +80,7 @@ function BlogListFn() {
             >
               {post.image ? (
                 <Image
-                  src={post.image}
+                  src={post.image || "/img/sigar.png"}
                   alt={post.title || ""}
                   width={96}
                   height={96}

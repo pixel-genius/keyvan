@@ -1,6 +1,7 @@
 import { ShopOrderDetailApiResponse } from "../../[id]/GET/shopOrderDetailGetApi";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { coreApi } from "@/utils/service/instance";
+import { AxiosError } from "axios";
 import path from "path";
 
 export interface ShopOrderCreatePostApiPayload {
@@ -12,7 +13,7 @@ const postShopOrderCreateApi = async (
   payload: ShopOrderCreatePostApiPayload,
 ): Promise<ShopOrderDetailApiResponse> => {
   const response = await coreApi.post(
-    path.join("/account/addresses/"),
+    path.join("/shop/orders/create/"),
     payload, // POST body
   );
   return response.data;
@@ -22,13 +23,13 @@ const postShopOrderCreateApi = async (
 export const usePostShopOrderCreateApi = (
   options?: UseMutationOptions<
     ShopOrderDetailApiResponse,
-    unknown,
+    AxiosError,
     ShopOrderCreatePostApiPayload
   >,
 ) => {
   return useMutation<
     ShopOrderDetailApiResponse,
-    unknown,
+    AxiosError,
     ShopOrderCreatePostApiPayload
   >({
     mutationFn: postShopOrderCreateApi,

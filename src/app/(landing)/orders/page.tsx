@@ -10,12 +10,48 @@ import {
 import { useGetShopOrdersListApi } from "@/utils/apis/shop/orders/GET/shopOrdersGetApi";
 import { Separator } from "@/components/components/atoms/separator";
 import Typography from "@/components/components/atoms/typography";
+import { ChipProps } from "@/components/components/atoms/chip";
 import { Button } from "@/components/components/atoms/button";
 import { Chip } from "@/components/components/atoms/chip";
 import { Card } from "@/components/components/atoms/card";
 import { toPersianNumbers } from "@/lib/utils";
 import Header from "@/app/_components/Header";
+import { format } from "date-fns-jalali";
 import { useState } from "react";
+
+interface OrderStatusObj {
+  [key: string]: {
+    text: string;
+    colorClass: ChipProps["variant"];
+  };
+}
+
+const orderStatusObj: OrderStatusObj = {
+  pending: {
+    text: "در انتظار تایید",
+    colorClass: "warning",
+  },
+  confirmed: {
+    text: "تایید شده",
+    colorClass: "success",
+  },
+  processing: {
+    text: "در حال پردازش",
+    colorClass: "secendery",
+  },
+  shipped: {
+    text: "ارسال شده",
+    colorClass: "info",
+  },
+  delivered: {
+    text: "تحویل شده",
+    colorClass: "info",
+  },
+  cancelled: {
+    text: "لغو شده",
+    colorClass: "danger",
+  },
+};
 
 const OrdersPage = () => {
   const [orderDetailsOpen, setOrderDetailsOpen] = useState(false);
@@ -28,7 +64,7 @@ const OrdersPage = () => {
   return (
     <>
       <Header title="سفارشات" />
-      <div dir="rtl" className="flex px-4 pt-28  flex-col gap-4 ">
+      <div className="flex px-4 pt-28  flex-col gap-4 ">
         {/* Use the new Header component */}
 
         {shopOrderListQuery.data?.length ? (
@@ -38,13 +74,19 @@ const OrdersPage = () => {
               <Card className="bg-maincard rounded-lg p-4">
                 {/* Order Header */}
                 <div className="flex justify-between items-center mb-2">
-                  <div className="text-gray-400 text-sm">
-                    <Chip variant="secendery" size="sm" className="ml-2">
-                      {order.status}
+                  <div className="flex gap-2 items-center text-gray-400 text-sm">
+                    <Chip
+                      variant={orderStatusObj[order.status].colorClass}
+                      size="sm"
+                      className="ml-2"
+                    >
+                      {orderStatusObj[order.status].text}
                     </Chip>
-                    {order.created_at}
+                    {toPersianNumbers(format(order.created_at, "yyyy/MM/dd"))}
                   </div>
-                  <div className="font-medium">سفارش #{order.id}</div>
+                  <div className="font-medium">
+                    سفارش #{toPersianNumbers(order.id)}
+                  </div>
                 </div>
 
                 {/* Order Price */}
@@ -56,12 +98,12 @@ const OrdersPage = () => {
 
                 {/* Order Status Buttons */}
                 {!!order.items.length && (
-                  <div className="grid grid-cols-4 gap-1 mb-3">
+                  <div dir="rtl" className="grid grid-cols-4 gap-1 mb-3">
                     {order.items?.map((item) => (
                       <Button
                         variant="secondary"
                         size="sm"
-                        className="rounded-md py-1 text-xs"
+                        className="rounded-md py-1 text-xs w-fit"
                         key={item.id + item.product.name}
                       >
                         {item.product.name} × {item.quantity}
