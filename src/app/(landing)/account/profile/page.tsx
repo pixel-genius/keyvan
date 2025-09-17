@@ -15,12 +15,12 @@ import { Input } from "@/components/components/molecules/input";
 import { useAuthStore } from "@/utils/store/authenticate.store";
 import { toEnglishDigits, toPersianNumbers } from "@/lib/utils";
 import { Button } from "@/components/components/atoms/button";
-import useQueryParams from "@/utils/hooks/useQueryParams";
 import { ChangeEvent, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { format } from "date-fns-jalali";
 
 const ProfilePage = () => {
-  const { router } = useQueryParams();
+  const router = useRouter();
   const { userProfileInfo } = useAuthStore();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [formData, setFormData] = useState({
