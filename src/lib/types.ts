@@ -1,4 +1,4 @@
-export type Lookup = { name: string; id: string | number };
+export type Lookup = { name: string; id: string | number; count?: number };
 
 export type UploadFileApiCategory =
   | "certification"
