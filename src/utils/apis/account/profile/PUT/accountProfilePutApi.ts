@@ -4,8 +4,8 @@ import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
 export interface AccountProfilePutApiPayload {
-  firstName?: string;
-  lastName?: string;
+  first_name?: string;
+  last_name?: string;
   email?: string;
   phone_number?: string;
   national_code?: string;

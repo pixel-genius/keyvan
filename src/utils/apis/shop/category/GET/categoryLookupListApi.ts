@@ -5,11 +5,12 @@ import path from "path";
 
 export interface CategoryLookupListApiResponseObj extends Lookup {
   description: string;
+  image?: string;
   created_at: string;
   is_active: boolean;
 }
 
-type CategoryLookupListApiResponse = CategoryLookupListApiResponseObj[];
+export type CategoryLookupListApiResponse = CategoryLookupListApiResponseObj[];
 
 const getCategoryLookupListApi =
   async (): Promise<CategoryLookupListApiResponse> => {

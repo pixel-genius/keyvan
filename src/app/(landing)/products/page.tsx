@@ -22,6 +22,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { IconFilter } from "@tabler/icons-react";
 import Header from "@/app/_components/Header";
+import { toEnglishDigits } from "@/lib/utils";
 
 interface Params {
   category?: number;
@@ -119,7 +120,9 @@ function ProductsContent() {
     if (selectedProduct?.id && selectedProduct?.count) {
       shopAddCartMutate.mutate({
         product_id: selectedProduct?.id,
-        quantity: selectedProduct?.count,
+        quantity: selectedProduct?.count
+          ? Number(toEnglishDigits(selectedProduct?.count))
+          : undefined,
       });
     }
   };

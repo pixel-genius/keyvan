@@ -21,13 +21,13 @@ import Typography from "@/components/components/atoms/typography";
 import { Skeleton } from "@/components/components/atoms/skeleton";
 import { Input } from "@/components/components/molecules/input";
 import { useAuthStore } from "@/utils/store/authenticate.store";
+import { toEnglishDigits, toPersianNumbers } from "@/lib/utils";
 import { Button } from "@/components/components/atoms/button";
 import { PriceItemCard } from "./_components/priceItemCard";
 import BottomSheet from "@/app/_components/BottomSheet";
 import { useDebounce } from "@/utils/hooks/useDebounce";
 import { DayBadge } from "./_components/dayBadge";
 import { format, subDays } from "date-fns-jalali";
-import { toPersianNumbers } from "@/lib/utils";
 import { faIR } from "date-fns-jalali/locale";
 import { useMemo, useState } from "react";
 import { clsx } from "clsx";
@@ -171,7 +171,9 @@ const Pricepage = () => {
     if (selectedProduct?.id && selectedProduct?.count) {
       shopAddCartMutate.mutate({
         product_id: selectedProduct?.id,
-        quantity: selectedProduct?.count,
+        quantity: selectedProduct?.count
+          ? Number(toEnglishDigits(selectedProduct.count))
+          : undefined,
       });
     }
   };
@@ -271,7 +273,7 @@ const Pricepage = () => {
             weight="medium"
             className="text-gray-400"
           >
-            هیچ محصولی یافت نشد
+            محصولی یافت نشد
           </Typography>
         </div>
       ) : (
