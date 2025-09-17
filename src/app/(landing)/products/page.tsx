@@ -233,8 +233,30 @@ function ProductsContent() {
         </div>
       </BottomSheet>
 
-      <div className="flex flex-col gap-2 mt-4">
-        {shopProductListQuery.isFetching ? (
+      <div className="flex flex-col gap-2 mt-4 product-list-scroll-container">
+        {shopProductListQuery?.data && shopProductListQuery.data?.length > 0
+          ? shopProductListQuery.data?.map((product) => (
+              <ProductCard
+                key={product.id}
+                id={product.id.toString()}
+                imageUrl={product.image as string}
+                title={product.name}
+                subtitle={product.description as string}
+                price={product?.latest_price?.toString() || ""}
+                category={product.category?.name as string} // Not available from API
+                onAddToCart={() => {
+                  onAddProductToCart(product.id);
+                }}
+              />
+            ))
+          : !shopProductListQuery.isPending && (
+              <div className="text-center py-8">
+                <Typography variant="label/md" weight="normal">
+                  محصولی یافت نشد
+                </Typography>
+              </div>
+            )}
+        {shopProductListQuery.isFetching && (
           <>
             {[...Array(6)].map((_, index) => (
               <div key={index} className="bg-black rounded-2xl p-4" dir="rtl">
@@ -260,28 +282,6 @@ function ProductsContent() {
               </div>
             ))}
           </>
-        ) : shopProductListQuery?.data &&
-          shopProductListQuery.data?.length > 0 ? (
-          shopProductListQuery.data?.map((product) => (
-            <ProductCard
-              key={product.id}
-              id={product.id.toString()}
-              imageUrl={product.image as string}
-              title={product.name}
-              subtitle={product.description as string}
-              price={product.latest_price.toString()}
-              category={product.category?.name as string} // Not available from API
-              onAddToCart={() => {
-                onAddProductToCart(product.id);
-              }}
-            />
-          ))
-        ) : (
-          <div className="text-center py-8">
-            <Typography variant="label/md" weight="normal">
-              محصولی یافت نشد
-            </Typography>
-          </div>
         )}
         <div ref={observerRef} style={{ height: 10 }} />
       </div>

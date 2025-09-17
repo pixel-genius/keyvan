@@ -48,7 +48,7 @@ const CartItemCard = ({
         </div>
         <div className="h-[54px] w-[54px] rounded-lg overflow-hidden">
           <Image
-            src={image}
+            src={image || "/img/sigar.png"}
             alt={name}
             width={54}
             height={54}

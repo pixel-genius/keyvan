@@ -47,7 +47,7 @@ export default function ProductCard({
         <div className="w-16 h-16 relative rounded-lg overflow-hidden bg-gray-700 flex items-center justify-center">
           {isValidImageUrl ? (
             <Image
-              src={imageUrl}
+              src={imageUrl || "/img/sigar.png"}
               alt={title}
               fill
               className="object-cover"
