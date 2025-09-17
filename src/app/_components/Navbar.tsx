@@ -170,11 +170,9 @@ const Navbar = () => {
               className="cursor-pointer"
               onClick={() => setIsCartOpen(true)}
             />
-            {Number(shopCart?.total_items) > 0 && (
+            {shopCart?.items && shopCart?.items?.length > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                {shopCart?.total_items
-                  ? toPersianNumbers(shopCart?.total_items)
-                  : null}
+                {toPersianNumbers(shopCart?.items?.length)}
               </span>
             )}
           </div>
