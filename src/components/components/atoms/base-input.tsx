@@ -10,7 +10,7 @@ export interface BaseInputProps
 }
 
 export const baseInputVariants = cva(
-  "flex h-10 w-full bg-card rounded-md border border-border ring-offset-background file:border-0 file:bg-transparent  transition-shadow duration-500 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 text-sm file:text-sm placeholder:text-muted-foreground font-normal file:font-medium focus:ring-2 focus:ring-primary focus:ring-offset-2",
+  "flex h-10 w-full text-right bg-card rounded-md border border-border ring-offset-background file:border-0 file:bg-transparent  transition-shadow duration-500 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 text-sm file:text-sm placeholder:text-muted-foreground font-normal file:font-medium focus:ring-2 focus:ring-primary focus:ring-offset-2",
   {
     variants: {
       size: {

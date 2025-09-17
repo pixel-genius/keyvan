@@ -3,8 +3,8 @@ import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
 export type AccountProfileGetApiResponse = {
-  firstName?: string | null;
-  lastName?: string | null;
+  first_name?: string | null;
+  last_name?: string | null;
   username?: string | null;
   email?: string | null;
   date_of_birth?: string | null;
@@ -12,6 +12,7 @@ export type AccountProfileGetApiResponse = {
   national_code?: string | null;
   address?: string;
   bio?: string;
+  created_at?: string;
   certificate?: {
     id: number;
     file: string;

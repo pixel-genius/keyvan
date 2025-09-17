@@ -2,62 +2,75 @@
 
 import {
   IconCalendar,
+  IconCheck,
   IconChevronLeft,
   IconEdit,
   IconShield,
   IconUser,
   IconX,
-  IconCheck,
 } from "@tabler/icons-react";
 import { usePutAccountProfileApi } from "@/utils/apis/account/profile/PUT/accountProfilePutApi";
 import Typography from "@/components/components/atoms/typography";
 import { Input } from "@/components/components/molecules/input";
 import { useAuthStore } from "@/utils/store/authenticate.store";
+import { toEnglishDigits, toPersianNumbers } from "@/lib/utils";
 import { Button } from "@/components/components/atoms/button";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import useQueryParams from "@/utils/hooks/useQueryParams";
+import { ChangeEvent, useEffect, useState } from "react";
+import { format } from "date-fns-jalali";
 
 const ProfilePage = () => {
-  const router = useRouter();
+  const { router } = useQueryParams();
   const { userProfileInfo } = useAuthStore();
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const [formData, setFormData] = useState({
-    firstName: userProfileInfo?.firstName || "",
-    lastName: userProfileInfo?.lastName || "",
-    email: userProfileInfo?.email || "",
-    phone_number: userProfileInfo?.phone_number || "",
-    national_code: userProfileInfo?.national_code || "",
-    username: userProfileInfo?.username || "",
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone_number: "",
+    username: "",
   });
+
+  useEffect(() => {
+    setFormData({
+      first_name: userProfileInfo?.first_name || "",
+      last_name: userProfileInfo?.last_name || "",
+      email: userProfileInfo?.email || "",
+      phone_number: userProfileInfo?.phone_number || "",
+      username: userProfileInfo?.username || "",
+    });
+  }, [userProfileInfo]);
 
   const updateProfileMutation = usePutAccountProfileApi({
     onSuccess: () => {
       setIsEditing(false);
-      // TODO: Update the store with new data or refetch profile
     },
     onError: (error) => {
       console.error("Failed to update profile:", error);
     },
   });
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const target = e.currentTarget as HTMLInputElement;
     setFormData((prev) => ({
       ...prev,
-      [field]: value,
+      [target.name]: Number(target.value)
+        ? toEnglishDigits(target.value)
+        : target.value,
     }));
   };
 
   const handleSave = () => {
-    updateProfileMutation.mutate(formData);
+    if (formData.phone_number.length === 11)
+      updateProfileMutation.mutate(formData);
   };
 
   const handleCancel = () => {
     setFormData({
-      firstName: userProfileInfo?.firstName || "",
-      lastName: userProfileInfo?.lastName || "",
+      first_name: userProfileInfo?.first_name || "",
+      last_name: userProfileInfo?.last_name || "",
       email: userProfileInfo?.email || "",
       phone_number: userProfileInfo?.phone_number || "",
-      national_code: userProfileInfo?.national_code || "",
       username: userProfileInfo?.username || "",
     });
     setIsEditing(false);
@@ -98,10 +111,10 @@ const ProfilePage = () => {
                 variant={"paragraph/lg"}
                 className="text-primary-foreground"
               >
-                {userProfileInfo?.firstName && userProfileInfo?.lastName
-                  ? `${userProfileInfo.firstName} ${userProfileInfo.lastName}`
-                  : userProfileInfo?.firstName || userProfileInfo?.lastName
-                    ? `${userProfileInfo?.firstName || ""} ${userProfileInfo?.lastName || ""}`.trim()
+                {userProfileInfo?.first_name && userProfileInfo?.last_name
+                  ? `${userProfileInfo.first_name} ${userProfileInfo.last_name}`
+                  : userProfileInfo?.first_name || userProfileInfo?.last_name
+                    ? `${userProfileInfo?.first_name || ""} ${userProfileInfo?.last_name || ""}`.trim()
                     : "کاربر گرامی"}
               </Typography>
               <Typography
@@ -136,45 +149,64 @@ const ProfilePage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input
                     label="نام"
-                    value={formData.firstName}
-                    onChange={(e) =>
-                      handleInputChange("firstName", e.target.value)
-                    }
+                    name="first_name"
+                    value={formData.first_name}
+                    onChange={handleInputChange}
                     placeholder="نام خود را وارد کنید"
                   />
                   <Input
                     label="نام خانوادگی"
-                    value={formData.lastName}
-                    onChange={(e) =>
-                      handleInputChange("lastName", e.target.value)
-                    }
+                    name="last_name"
+                    value={formData.last_name}
+                    onChange={handleInputChange}
                     placeholder="نام خانوادگی خود را وارد کنید"
                   />
                 </div>
                 <Input
                   label="شماره موبایل"
-                  value={formData.phone_number}
-                  onChange={(e) =>
-                    handleInputChange("phone_number", e.target.value)
+                  name="phone_number"
+                  value={
+                    formData.phone_number
+                      ? toPersianNumbers(formData.phone_number)
+                      : ""
                   }
+                  onChange={handleInputChange}
                   placeholder="شماره موبایل خود را وارد کنید"
                   type="tel"
                 />
                 <Input
-                  label="ایمیل"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange("email", e.target.value)}
-                  placeholder="ایمیل خود را وارد کنید"
+                  label="نام کاربری"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  placeholder="نام کاربری خود را وارد کنید"
                   type="email"
                 />
                 <Input
-                  label="کد ملی"
-                  value={formData.national_code}
-                  onChange={(e) =>
-                    handleInputChange("national_code", e.target.value)
-                  }
-                  placeholder="کد ملی خود را وارد کنید"
+                  label="ایمیل"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="ایمیل خود را وارد کنید"
+                  type="email"
                 />
+                <div className="flex justify-between items-center p-4 bg-muted rounded-xl">
+                  <Typography
+                    variant={"paragraph/sm"}
+                    className="text-muted-foreground"
+                  >
+                    کد ملی:
+                  </Typography>
+                  <Typography
+                    variant={"paragraph/sm"}
+                    weight="bold"
+                    className="text-foreground"
+                  >
+                    {userProfileInfo?.national_code
+                      ? toPersianNumbers(userProfileInfo.national_code)
+                      : "___"}
+                  </Typography>
+                </div>
                 <div className="flex gap-3 pt-4">
                   <Button
                     onClick={handleSave}
@@ -211,11 +243,11 @@ const ProfilePage = () => {
                     weight="bold"
                     className="text-foreground"
                   >
-                    {userProfileInfo?.firstName || null}{" "}
-                    {userProfileInfo?.lastName || null}
-                    {!userProfileInfo?.firstName &&
-                      !userProfileInfo?.lastName &&
-                      "___"}
+                    {userProfileInfo?.first_name || null}
+                    {userProfileInfo?.last_name || null}
+                    {!userProfileInfo?.first_name &&
+                      !userProfileInfo?.last_name &&
+                      "_"}
                   </Typography>
                 </div>
                 <div className="flex justify-between items-center p-4 bg-muted rounded-xl">
@@ -230,7 +262,9 @@ const ProfilePage = () => {
                     weight="bold"
                     className="text-foreground"
                   >
-                    {userProfileInfo?.phone_number || "___"}
+                    {userProfileInfo?.phone_number
+                      ? toPersianNumbers(userProfileInfo.phone_number)
+                      : "_"}
                   </Typography>
                 </div>
                 <div className="flex justify-between items-center p-4 bg-muted rounded-xl">
@@ -245,7 +279,7 @@ const ProfilePage = () => {
                     weight="bold"
                     className="text-foreground"
                   >
-                    {userProfileInfo?.email || "___"}
+                    {userProfileInfo?.email || "_"}
                   </Typography>
                 </div>
                 <div className="flex justify-between items-center p-4 bg-muted rounded-xl">
@@ -260,7 +294,9 @@ const ProfilePage = () => {
                     weight="bold"
                     className="text-foreground"
                   >
-                    {userProfileInfo?.national_code || "___"}
+                    {userProfileInfo?.national_code
+                      ? toPersianNumbers(userProfileInfo.national_code)
+                      : "_"}
                   </Typography>
                 </div>
               </>
@@ -296,7 +332,7 @@ const ProfilePage = () => {
                 weight="bold"
                 className="text-foreground"
               >
-                {userProfileInfo?.username || "___"}
+                {userProfileInfo?.username || "_"}
               </Typography>
             </div>
             <div className="flex justify-between items-center p-4 bg-muted rounded-xl">
@@ -314,7 +350,11 @@ const ProfilePage = () => {
                 weight="bold"
                 className="text-foreground"
               >
-                1402/01/15
+                {userProfileInfo?.created_at
+                  ? toPersianNumbers(
+                      format(userProfileInfo?.created_at, "yyyy/MM/dd"),
+                    )
+                  : "_"}
               </Typography>
             </div>
             <div className="flex justify-between items-center p-4 bg-primary/10 rounded-xl">
@@ -341,7 +381,9 @@ const ProfilePage = () => {
         {/* Edit Button */}
         {!isEditing && (
           <button
-            onClick={() => setIsEditing(true)}
+            onClick={() => {
+              setIsEditing(true);
+            }}
             className="w-full bg-primary text-primary-foreground py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3"
           >
             <IconEdit size={20} />
