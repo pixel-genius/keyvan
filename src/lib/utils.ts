@@ -13,8 +13,8 @@ export function toPersianNumbers(num: number | string): string {
   return numStr.replace(/[0-9]/g, (digit) => persianDigits[parseInt(digit)]);
 }
 
-export const toEnglishDigits = (num: string) =>
-  num.replace(/[۰-۹]/g, (d) => String(persianDigits.indexOf(d)));
+export const toEnglishDigits = (num: string | number) =>
+  String(num).replace(/[۰-۹]/g, (d) => String(persianDigits.indexOf(d)));
 
 // Format price with Persian digits and proper decimal handling
 export function formatPrice(price: number | string): string {

@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/components/atoms/button";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
+import { toPersianNumbers } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
 interface CounterProps {
@@ -29,8 +30,8 @@ export default function Counter({ onChange }: CounterProps) {
         <IconMinus stroke={2} />
       </Button>
 
-      <span className="text-lg w-full font-semibold  text-center">
-        {count} باکس
+      <span className="text-lg w-full font-semibold text-center">
+        {toPersianNumbers(count)} باکس
       </span>
       <Button
         variant="primary"

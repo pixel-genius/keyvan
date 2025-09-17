@@ -13,6 +13,7 @@ import { useAuthStore } from "@/utils/store/authenticate.store";
 import { Button } from "@/components/components/atoms/button";
 import { Badge } from "@/components/components/atoms/badge";
 import { useParams, useRouter } from "next/navigation";
+import { toEnglishDigits } from "@/lib/utils";
 import { Suspense, useState } from "react";
 import Image from "next/image";
 
@@ -66,7 +67,7 @@ function ProductDetailFn() {
       setIsAddingToCart(true);
       addToCartMutation.mutate({
         product_id: selectedProduct.id,
-        quantity: selectedProduct.count,
+        quantity: +toEnglishDigits(selectedProduct.count),
       });
     }
   };

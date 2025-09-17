@@ -13,6 +13,7 @@ import {
 import { useDeleteShopCartItemsRemoveApi } from "@/utils/apis/shop/cart/items/[id]/remove/DELETE/shopCartItemsRemoveDeleteApi";
 import Typography from "@/components/components/atoms/typography";
 import { useAuthStore } from "@/utils/store/authenticate.store";
+import { toEnglishDigits, toPersianNumbers } from "@/lib/utils";
 import { Button } from "@/components/components/atoms/button";
 import OrderConfirmation from "./OrderConfirmation";
 import { useRouter } from "next/navigation";
@@ -44,29 +45,7 @@ const Navbar = () => {
     },
   });
   // Sample cart items - in a real app, this would come from a state management solution
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: "1",
-      name: "وینستون",
-      image: "/img/winston.png",
-      quantity: 2,
-      price: 325000,
-    },
-    {
-      id: "2",
-      name: "وینستون",
-      image: "/img/winston.png",
-      quantity: 2,
-      price: 325000,
-    },
-    {
-      id: "3",
-      name: "وینستون",
-      image: "/img/winston.png",
-      quantity: 2,
-      price: 325000,
-    },
-  ]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   // Function to remove an item from the cart
   const handleRemoveItem = (id: string) => {
@@ -77,7 +56,9 @@ const Navbar = () => {
   const handleIncreaseQuantity = (id: string) => {
     setCartItems(
       cartItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item,
+        item.id === id
+          ? { ...item, quantity: +toEnglishDigits(item.quantity) + 1 }
+          : item,
       ),
     );
   };
@@ -87,7 +68,7 @@ const Navbar = () => {
     setCartItems(
       cartItems.map((item) =>
         item.id === id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
+          ? { ...item, quantity: +toEnglishDigits(item.quantity) - 1 }
           : item,
       ),
     );
@@ -191,7 +172,9 @@ const Navbar = () => {
             />
             {Number(shopCart?.total_items) > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                {shopCart?.total_items}
+                {shopCart?.total_items
+                  ? toPersianNumbers(shopCart?.total_items)
+                  : null}
               </span>
             )}
           </div>
@@ -216,7 +199,12 @@ const Navbar = () => {
                 weight="normal"
                 className="mb-4 text-center"
               >
-                تعداد اقلام : <span>{shopCart?.total_items}</span>
+                تعداد اقلام :{" "}
+                <span>
+                  {shopCart?.total_items
+                    ? toPersianNumbers(shopCart?.total_items)
+                    : null}
+                </span>
               </Typography>
 
               <div className="mb-4">
