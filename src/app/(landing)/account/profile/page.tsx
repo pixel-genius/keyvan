@@ -26,7 +26,6 @@ const ProfilePage = () => {
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
-    email: "",
     phone_number: "",
     username: "",
   });
@@ -35,7 +34,6 @@ const ProfilePage = () => {
     setFormData({
       first_name: userProfileInfo?.first_name || "",
       last_name: userProfileInfo?.last_name || "",
-      email: userProfileInfo?.email || "",
       phone_number: userProfileInfo?.phone_number || "",
       username: userProfileInfo?.username || "",
     });
@@ -69,7 +67,6 @@ const ProfilePage = () => {
     setFormData({
       first_name: userProfileInfo?.first_name || "",
       last_name: userProfileInfo?.last_name || "",
-      email: userProfileInfo?.email || "",
       phone_number: userProfileInfo?.phone_number || "",
       username: userProfileInfo?.username || "",
     });
@@ -180,15 +177,7 @@ const ProfilePage = () => {
                   value={formData.username}
                   onChange={handleInputChange}
                   placeholder="نام کاربری خود را وارد کنید"
-                  type="email"
-                />
-                <Input
-                  label="ایمیل"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="ایمیل خود را وارد کنید"
-                  type="email"
+                  type="text"
                 />
                 <div className="flex justify-between items-center p-4 bg-muted rounded-xl">
                   <Typography
@@ -265,21 +254,6 @@ const ProfilePage = () => {
                     {userProfileInfo?.phone_number
                       ? toPersianNumbers(userProfileInfo.phone_number)
                       : "_"}
-                  </Typography>
-                </div>
-                <div className="flex justify-between items-center p-4 bg-muted rounded-xl">
-                  <Typography
-                    variant={"paragraph/sm"}
-                    className="text-muted-foreground"
-                  >
-                    ایمیل:
-                  </Typography>
-                  <Typography
-                    variant={"paragraph/sm"}
-                    weight="bold"
-                    className="text-foreground"
-                  >
-                    {userProfileInfo?.email || "_"}
                   </Typography>
                 </div>
                 <div className="flex justify-between items-center p-4 bg-muted rounded-xl">
