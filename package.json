@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build:stage": "NODE_ENV=staging next build",
-    "build": "NODE_ENV=production next build",
-    "start": "next start",
+    "dev": "env-cmd -f .env/.env.stage next dev --turbopack",
+    "build:stage": "env-cmd -f .env/.env.stage next build",
+    "build": "env-cmd -f .env/.env next build",
+    "start": "node .next/standalone/server.js",
     "lint": "next lint",
     "prepare": "husky"
   },
