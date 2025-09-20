@@ -20,6 +20,9 @@ RUN bun install
 # کپی کردن بقیه فایل‌های پروژه
 COPY . .
 
+# ایجاد فایل محیطی مورد نیاز برای ساخت
+RUN mkdir -p .env && echo "NEXT_PUBLIC_BASE_URL=https://admin.tanbaku.com" > .env/.env
+
 # ساخت پروژه تایپ‌اسکریپت
 RUN bun run build
 
