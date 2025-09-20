@@ -1,7 +1,8 @@
 # انتخاب تصویر پایه برای Next.js 15 و React 19
 FROM node:20-alpine AS base
 
-# نصب Bun
+# نصب ابزارهای مورد نیاز و Bun
+RUN apk add --no-cache curl bash
 RUN curl -fsSL https://bun.sh/install | bash
 ENV PATH="/root/.bun/bin:${PATH}"
 
