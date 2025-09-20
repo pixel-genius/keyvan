@@ -6,6 +6,7 @@ import path from "path";
 export interface BrandLookupListApiResponseObj extends Lookup {
   description: string;
   created_at: string;
+  image?: string;
   is_active: boolean;
 }
 
