@@ -1,10 +1,15 @@
 "use client";
 
 import {
-  AccountAddressesPostApiPayload,
-  usePostAccountAddress,
-} from "@/utils/apis/account/addresses/POST/accountAddressesPostApi";
+  AlertDialog,
+  AlertDialogFooter,
+  AlertDialogDescription,
+  AlertDialogTitle,
+  AlertDialogHeader,
+  AlertDialogContent,
+} from "@/components/components/atoms/alertDialog";
 import {
+  IconAlertSquareRounded,
   IconChevronLeft,
   IconEdit,
   IconLocation,
@@ -13,7 +18,16 @@ import {
   IconStar,
   IconTrash,
 } from "@tabler/icons-react";
-import { useGetAccountAddressList } from "@/utils/apis/account/addresses/GET/accountAddressesListGetApi";
+import {
+  AccountAddressesPostApiPayload,
+  usePostAccountAddress,
+} from "@/utils/apis/account/addresses/POST/accountAddressesPostApi";
+import {
+  AccountAddressesList,
+  useGetAccountAddressList,
+} from "@/utils/apis/account/addresses/GET/accountAddressesListGetApi";
+import { useDeleteAccountAddress } from "@/utils/apis/account/addresses/DELETE/accountAddressesDeleteApi";
+import { usePutAccountAddress } from "@/utils/apis/account/addresses/PUT/accountAddressesPutApi";
 import { BaseInput } from "@/components/components/atoms/base-input";
 import Typography from "@/components/components/atoms/typography";
 import { Skeleton } from "@/components/components/atoms/skeleton";
@@ -24,6 +38,7 @@ import OpenLayersMap from "@neshan-maps-platform/ol/Map";
 import BottomSheet from "@/app/_components/BottomSheet";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import { toast } from "sonner";
 
 // Dynamically import the map component to avoid SSR issues
 const NeshanMap = dynamic(
@@ -40,6 +55,7 @@ const NeshanMap = dynamic(
 );
 
 interface FormFields {
+  id?: number;
   title: string | null;
   text: string | null;
   longitude: number | null;
@@ -53,7 +69,7 @@ const AddressesPage = () => {
   const mapRef = useRef<any>(null);
 
   const [isAddAddressOpen, setIsAddAddressOpen] = useState(false);
-
+  const [open, setOpen] = useState<boolean>(false);
   const [formFields, setFormFields] = useState<FormFields>({
     title: null,
     text: null,
@@ -64,23 +80,41 @@ const AddressesPage = () => {
   const [errorAddress, setErrorAddress] = useState<string | null>(null);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [isClient, setIsClient] = useState(false);
-
+  const resetForm = () => {
+    setFormFields({
+      title: null,
+      text: null,
+      longitude: null,
+      latitude: null,
+      is_default: false,
+    });
+  };
   const accountAddressListQuery = useGetAccountAddressList();
   const accountAddressPostMutate = usePostAccountAddress({
     onSuccess: () => {
       setIsAddAddressOpen(false);
       setErrorAddress(null);
-      setFormFields({
-        title: null,
-        text: null,
-        longitude: null,
-        latitude: null,
-        is_default: false,
-      });
+      resetForm();
       accountAddressListQuery.refetch();
     },
   });
 
+  const accountAddressPutMutate = usePutAccountAddress({
+    onSuccess: () => {
+      resetForm();
+      setIsAddAddressOpen(false);
+      setErrorAddress(null);
+      accountAddressListQuery.refetch();
+    },
+  });
+
+  const accountAddressDeleteMutate = useDeleteAccountAddress({
+    onSuccess: () => {
+      toast.success("آدرس با موفقیت پاک شد");
+      accountAddressListQuery.refetch();
+      setOpen(false);
+    },
+  });
   // Ensure we're on the client side
   useEffect(() => {
     setIsClient(true);
@@ -108,8 +142,8 @@ const AddressesPage = () => {
 
     try {
       // Convert Web Mercator coordinates to WGS84 if needed
-      let finalLat = lat;
-      let finalLng = lng;
+      let finalLat = limit4DigitsBeforeDecimal(lat) as number;
+      let finalLng = limit4DigitsBeforeDecimal(lng) as number;
 
       // Check if coordinates are in Web Mercator format (large numbers)
       if (Math.abs(lat) > 90 || Math.abs(lng) > 180) {
@@ -211,6 +245,14 @@ const AddressesPage = () => {
     }
   }, []);
 
+  const handleDeleteAddress = (id: number) => {
+    setOpen(true);
+    setFormFields((prev) => ({
+      ...prev,
+      id,
+    }));
+  };
+
   const getCurrentLocation = useCallback(() => {
     setIsGettingLocation(true);
 
@@ -228,8 +270,8 @@ const AddressesPage = () => {
         // Set selected location
         setFormFields((prev) => ({
           ...prev,
-          latitude: latitude,
-          longitude: longitude,
+          latitude: limit4DigitsBeforeDecimal(latitude),
+          longitude: limit4DigitsBeforeDecimal(longitude),
         }));
 
         // Move map to current location
@@ -278,17 +320,41 @@ const AddressesPage = () => {
     );
   }, [handleMapClick]);
 
+  const handleEditAddress = (addressObj: AccountAddressesList[number]) => {
+    setFormFields({
+      id: addressObj.id as number,
+      title: addressObj.title,
+      text: addressObj.text,
+      is_default: addressObj.is_default,
+      latitude: Number(addressObj.latitude),
+      longitude: Number(addressObj.longitude),
+    });
+    setIsAddAddressOpen(true);
+  };
   const handleSaveAddress = () => {
     if (
       formFields.text !== null &&
       formFields.longitude !== null &&
       formFields.latitude !== null
     ) {
-      accountAddressPostMutate.mutate({
-        ...formFields,
-        longitude: formFields.longitude.toString(),
-        latitude: formFields.latitude.toString(),
-      } as AccountAddressesPostApiPayload);
+      const mutate = formFields?.id
+        ? accountAddressPutMutate
+        : accountAddressPostMutate;
+      mutate
+        .mutateAsync({
+          ...formFields,
+          longitude: formFields.longitude
+            ? limit4DigitsBeforeDecimal(formFields.longitude)?.toString()
+            : "",
+          latitude: formFields.latitude
+            ? limit4DigitsBeforeDecimal(formFields.latitude)?.toString()
+            : "",
+        } as AccountAddressesPostApiPayload)
+        .then(() => {
+          if (mutate === accountAddressPutMutate) {
+            toast.success("آدرس با موفقیت به ویرایش شد");
+          }
+        });
 
       console.log("Saving address:", {
         address: formFields,
@@ -312,268 +378,346 @@ const AddressesPage = () => {
   // Clean up when closing bottom sheet
   useEffect(() => {
     if (!isAddAddressOpen) {
-      setFormFields({
-        title: null,
-        text: null,
-        longitude: null,
-        latitude: null,
-        is_default: false,
-      });
+      resetForm();
       setErrorAddress("");
     }
   }, [isAddAddressOpen]);
 
   return (
-    <div
-      className="px-4 pt-28 flex flex-col gap-6 min-h-screen bg-background"
-      dir="rtl"
-    >
-      {/* Header */}
-      <div className="flex justify-between items-start">
-        <Typography
-          variant={"paragraph/md"}
-          className="self-center"
-          weight="bold"
-        >
-          آدرس ها
-        </Typography>
-        <div
-          className="cursor-pointer p-2 rounded-full hover:bg-muted transition-colors"
-          onClick={() => router.back()}
-        >
-          <IconChevronLeft size={24} className="text-muted-foreground" />
-        </div>
-      </div>
-
-      <div className="space-y-6">
-        {/* Add New Address Button */}
-        <button
-          onClick={() => setIsAddAddressOpen(true)}
-          disabled={accountAddressListQuery.isFetching}
-          className="w-full bg-primary disabled:bg-muted disabled:text-white text-primary-foreground py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3"
-        >
-          <IconPlus size={20} />
-          <Typography variant={"paragraph/md"} weight="bold">
-            افزودن آدرس جدید
-          </Typography>
-        </button>
-
-        {/* Addresses List */}
-        <div className="space-y-4">
-          {accountAddressListQuery.isFetching ? (
-            [...Array(4)].map((_, index) => (
-              <Skeleton key={index} className="w-full h-20 bg-card" />
-            ))
-          ) : accountAddressListQuery?.data?.data.length ? (
-            accountAddressListQuery.data.data.map((address) => (
-              <div
-                key={address.id}
-                className="bg-card rounded-2xl p-5 shadow-sm border border-border hover:shadow-md transition-all duration-300"
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                        address.is_default ? "bg-primary/10" : "bg-muted"
-                      }`}
-                    >
-                      <IconMapPin
-                        size={24}
-                        className={
-                          address.is_default
-                            ? "text-primary"
-                            : "text-muted-foreground"
-                        }
-                      />
-                    </div>
-                    <div>
-                      <Typography
-                        variant={"paragraph/sm"}
-                        weight="bold"
-                        className="text-foreground"
-                      >
-                        {address.title}
-                      </Typography>
-                      <Typography
-                        variant={"paragraph/xs"}
-                        className="text-muted-foreground"
-                      >
-                        {address.address}
-                      </Typography>
-                    </div>
-                  </div>
-                  {address.is_default && (
-                    <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold">
-                      <IconStar size={12} />
-                      پیش‌فرض
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex gap-2">
-                  <button className="flex-1 bg-primary/10 text-primary py-2 rounded-xl text-xs font-bold hover:bg-primary/20 transition-colors flex items-center justify-center gap-1">
-                    <IconEdit size={14} />
-                    ویرایش
-                  </button>
-                  <button className="flex-1 bg-muted text-muted-foreground py-2 rounded-xl text-xs font-bold hover:bg-muted/80 transition-colors flex items-center justify-center gap-1">
-                    <IconStar size={14} />
-                    پیش‌فرض
-                  </button>
-                  <button className="p-2 text-destructive hover:bg-destructive/10 rounded-xl transition-colors">
-                    <IconTrash size={16} />
-                  </button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="text-center py-8">
-              <Typography variant="label/md" weight="normal">
-                آدرسی یافت نشد
-              </Typography>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Add Address BottomSheet */}
-      <BottomSheet
-        isOpen={isAddAddressOpen}
-        onClose={() => setIsAddAddressOpen(false)}
+    <>
+      <div
+        className="px-4 pt-28 flex flex-col gap-6 min-h-screen bg-background"
+        dir="rtl"
       >
-        <div className="p-6 space-y-6" dir="rtl">
-          <div className="text-center">
-            <Typography
-              variant={"paragraph/md"}
-              weight="bold"
-              className="text-foreground"
-            >
+        {/* Header */}
+        <div className="flex justify-between items-start">
+          <Typography
+            variant={"paragraph/md"}
+            className="self-center"
+            weight="bold"
+          >
+            آدرس ها
+          </Typography>
+          <div
+            className="cursor-pointer p-2 rounded-full hover:bg-muted transition-colors"
+            onClick={() => router.back()}
+          >
+            <IconChevronLeft size={24} className="text-muted-foreground" />
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          {/* Add New Address Button */}
+          <button
+            onClick={() => setIsAddAddressOpen(true)}
+            disabled={accountAddressListQuery.isFetching}
+            className="w-full bg-primary disabled:bg-muted disabled:text-white text-primary-foreground py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3"
+          >
+            <IconPlus size={20} />
+            <Typography variant={"paragraph/md"} weight="bold">
               افزودن آدرس جدید
             </Typography>
-          </div>
+          </button>
 
-          {/* Neshan Map */}
-          <div>
+          {/* Addresses List */}
+          <div
+            className="space-y-4"
+            style={{ height: "calc(100vh - 270px)", overflowY: "auto" }}
+          >
+            {accountAddressListQuery.isFetching ? (
+              [...Array(4)].map((_, index) => (
+                <Skeleton key={index} className="w-full h-20 bg-card" />
+              ))
+            ) : accountAddressListQuery?.data?.data.length ? (
+              accountAddressListQuery.data.data.map((address) => (
+                <div
+                  key={address.id}
+                  className="bg-card rounded-2xl p-5 shadow-sm border border-border hover:shadow-md transition-all duration-300"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="flex items-center gap-4">
+                      <div
+                        className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                          address.is_default ? "bg-primary/10" : "bg-muted"
+                        }`}
+                      >
+                        <IconMapPin
+                          size={24}
+                          className={
+                            address.is_default
+                              ? "text-primary"
+                              : "text-muted-foreground"
+                          }
+                        />
+                      </div>
+                      <div>
+                        <Typography
+                          variant={"paragraph/sm"}
+                          weight="bold"
+                          className="text-foreground"
+                        >
+                          {address.title}
+                        </Typography>
+                        <Typography
+                          variant={"paragraph/xs"}
+                          className="text-muted-foreground"
+                        >
+                          {address.address}
+                        </Typography>
+                      </div>
+                    </div>
+                    {address.is_default && (
+                      <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold">
+                        <IconStar size={12} />
+                        پیش‌فرض
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        handleEditAddress(address);
+                      }}
+                      className="flex-1 bg-primary/10 text-primary py-2 rounded-xl text-xs font-bold hover:bg-primary/20 transition-colors flex items-center justify-center gap-1"
+                    >
+                      <IconEdit size={14} />
+                      ویرایش
+                    </button>
+                    <button
+                      disabled={address.is_default}
+                      onClick={() => {
+                        if (!address.is_default)
+                          accountAddressPutMutate
+                            .mutateAsync({
+                              id: address.id,
+                              is_default: true,
+                            })
+                            .then(() => {
+                              toast.success("آدرس پیش فرض تنظیم شد");
+                            });
+                      }}
+                      className="flex-1 bg-muted text-muted-foreground py-2 disabled:bg-transparent rounded-xl text-xs font-bold hover:bg-muted/80 transition-colors flex items-center justify-center gap-1"
+                    >
+                      <IconStar size={14} />
+                      پیش‌فرض
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleDeleteAddress(address.id);
+                      }}
+                      className="p-2 text-destructive hover:bg-destructive/10 rounded-xl transition-colors"
+                    >
+                      <IconTrash size={16} />
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-8">
+                <Typography variant="label/md" weight="normal">
+                  آدرسی یافت نشد
+                </Typography>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Add Address BottomSheet */}
+        <BottomSheet
+          isOpen={isAddAddressOpen}
+          onClose={() => setIsAddAddressOpen(false)}
+        >
+          <div className="p-6 space-y-6" dir="rtl">
+            <div className="text-center">
+              <Typography
+                variant={"paragraph/md"}
+                weight="bold"
+                className="text-foreground"
+              >
+                افزودن آدرس جدید
+              </Typography>
+            </div>
+
+            {/* Neshan Map */}
+            <div>
+              <Typography
+                variant={"paragraph/sm"}
+                weight="bold"
+                className="mb-3 text-foreground"
+              >
+                انتخاب موقعیت روی نقشه
+              </Typography>
+              <div className="h-64 rounded-2xl overflow-hidden border border-border relative">
+                {isClient && (
+                  <>
+                    <NeshanMap
+                      ref={mapRef}
+                      mapKey={process.env.NEXT_PUBLIC_MAP_KEY as string}
+                      defaultType="neshan"
+                      center={{ latitude: 35.6892, longitude: 51.389 }}
+                      zoom={13}
+                      style={{ height: "100%", width: "100%" }}
+                      onInit={onMapInit}
+                      traffic={false}
+                      poi={false}
+                    />
+                  </>
+                )}
+
+                {/* My Location Button */}
+                <button
+                  onClick={getCurrentLocation}
+                  disabled={isGettingLocation}
+                  className="absolute top-4 left-4 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors disabled:opacity-50"
+                  title="موقعیت من"
+                >
+                  {isGettingLocation ? (
+                    <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <IconLocation size={20} className="text-primary" />
+                  )}
+                </button>
+              </div>
+              <div className="mt-2">
+                <Typography
+                  variant={"paragraph/xs"}
+                  className="text-muted-foreground text-center"
+                >
+                  برای انتخاب آدرس، روی نقشه کلیک کنید
+                </Typography>
+              </div>
+            </div>
+
+            {/* Address Details */}
+
+            {/* Manual Address Input */}
+            <BaseInput
+              dir="rtl"
+              className="text-right mb-4 !bg-transparent"
+              placeholder="عنوان آدرس"
+              type="text"
+              name="title"
+              value={formFields.title || ""}
+              maxLength={11}
+              onChange={(e) => {
+                setFormFields((prev) => ({
+                  ...prev,
+                  title: e.target.value,
+                }));
+              }}
+            />
             <Typography
               variant={"paragraph/sm"}
               weight="bold"
               className="mb-3 text-foreground"
             >
-              انتخاب موقعیت روی نقشه
+              یا آدرس را دستی وارد کنید
             </Typography>
-            <div className="h-64 rounded-2xl overflow-hidden border border-border relative">
-              {isClient && (
-                <>
-                  <NeshanMap
-                    ref={mapRef}
-                    mapKey={process.env.NEXT_PUBLIC_MAP_KEY as string}
-                    defaultType="neshan"
-                    center={{ latitude: 35.6892, longitude: 51.389 }}
-                    zoom={13}
-                    style={{ height: "100%", width: "100%" }}
-                    onInit={onMapInit}
-                    traffic={false}
-                    poi={false}
-                  />
-                </>
-              )}
-
-              {/* My Location Button */}
-              <button
-                onClick={getCurrentLocation}
-                disabled={isGettingLocation}
-                className="absolute top-4 left-4 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors disabled:opacity-50"
-                title="موقعیت من"
-              >
-                {isGettingLocation ? (
-                  <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                ) : (
-                  <IconLocation size={20} className="text-primary" />
-                )}
-              </button>
-            </div>
-            <div className="mt-2">
-              <Typography
-                variant={"paragraph/xs"}
-                className="text-muted-foreground text-center"
-              >
-                برای انتخاب آدرس، روی نقشه کلیک کنید
-              </Typography>
-            </div>
-          </div>
-
-          {/* Address Details */}
-
-          {/* Manual Address Input */}
-          <BaseInput
-            dir="rtl"
-            className="text-right mb-4 !bg-transparent"
-            placeholder="عنوان آدرس"
-            type="text"
-            name="title"
-            value={formFields.title || undefined}
-            maxLength={11}
-            onChange={(e) => {
-              setFormFields((prev) => ({
-                ...prev,
-                title: e.currentTarget.value,
-              }));
-            }}
-          />
-          <Typography
-            variant={"paragraph/sm"}
-            weight="bold"
-            className="mb-3 text-foreground"
-          >
-            یا آدرس را دستی وارد کنید
-          </Typography>
-          <textarea
-            value={errorAddress || formFields.text?.toString()}
-            onChange={(e) => {
-              setFormFields((prev) => ({
-                ...prev,
-                text: e.currentTarget.value,
-              }));
-            }}
-            placeholder="آدرس کامل خود را اینجا وارد کنید..."
-            className="w-full mb-1 p-4 border border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-background text-foreground min-h-[100px] resize-none"
-          />
-          <div className="flex items-center gap-2 flex-row">
-            <Typography
-              variant={"paragraph/sm"}
-              weight="bold"
-              className="text-foreground"
-            >
-              آدرس پیش فرض
-            </Typography>
-            <Switch
-              dir="ltr"
+            <textarea
+              value={errorAddress || formFields.text?.toString()}
               onChange={(e) => {
                 setFormFields((prev) => ({
                   ...prev,
-                  is_default: e.currentTarget.ariaChecked === "true",
+                  text: e.currentTarget.value,
                 }));
               }}
+              placeholder="آدرس کامل خود را اینجا وارد کنید..."
+              className="w-full mb-1 p-4 border border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-background text-foreground min-h-[100px] resize-none"
             />
+            <div className="flex items-center gap-2 flex-row">
+              <Typography
+                variant={"paragraph/sm"}
+                weight="bold"
+                className="text-foreground"
+              >
+                آدرس پیش فرض
+              </Typography>
+              <Switch
+                dir="ltr"
+                onChange={(e) => {
+                  setFormFields((prev) => ({
+                    ...prev,
+                    is_default: e.currentTarget.ariaChecked === "true",
+                  }));
+                }}
+              />
+            </div>
+            {/* Save Button */}
+            <Button
+              onClick={handleSaveAddress}
+              disabled={
+                !formFields.latitude ||
+                !formFields.longitude ||
+                !formFields.text ||
+                accountAddressPostMutate.isPending
+              }
+              className="w-full bg-primary text-primary-foreground py-4 rounded-2xl font-bold disabled:bg-muted disabled:cursor-not-allowed hover:shadow-lg transition-all duration-300"
+            >
+              <Typography variant={"paragraph/md"} weight="bold">
+                ذخیره آدرس
+              </Typography>
+            </Button>
           </div>
-          {/* Save Button */}
-          <Button
-            onClick={handleSaveAddress}
-            disabled={
-              !formFields.latitude ||
-              !formFields.longitude ||
-              !formFields.text ||
-              accountAddressPostMutate.isPending
-            }
-            className="w-full bg-primary text-primary-foreground py-4 rounded-2xl font-bold disabled:bg-muted disabled:cursor-not-allowed hover:shadow-lg transition-all duration-300"
-          >
-            <Typography variant={"paragraph/md"} weight="bold">
-              ذخیره آدرس
-            </Typography>
-          </Button>
-        </div>
-      </BottomSheet>
-    </div>
+        </BottomSheet>
+      </div>
+      <AlertDialog open={open}>
+        <AlertDialogContent dir="rtl">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex justify-center gap-2">
+              <IconAlertSquareRounded size={50} className="text-red-500" />
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-lg text-right">
+              آیا از حذف آدرس مطمئنید ؟
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setOpen(false);
+              }}
+              disabled={accountAddressDeleteMutate.isPending}
+              className="w-full"
+            >
+              لغو
+            </Button>
+            <Button
+              onClick={() => {
+                if (formFields.id)
+                  accountAddressDeleteMutate.mutateAsync({ id: formFields.id });
+              }}
+              isLoading={accountAddressDeleteMutate.isPending}
+              disabled={accountAddressDeleteMutate.isPending}
+              className="w-full"
+            >
+              تایید
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };
 
 export default AddressesPage;
+
+function limit4DigitsBeforeDecimal(value: number) {
+  // Make sure it's a number
+  const num = +Number(value).toFixed(4);
+  if (isNaN(num)) return null; // return null for invalid inputs
+
+  // eslint-disable-next-line prefer-const
+  let [integerPart, decimalPart = ""] = Math.abs(num).toString().split(".");
+
+  // Trim integer part if it's more than 4 digits
+  if (integerPart.length > 3) {
+    integerPart = integerPart.slice(0, 3);
+  }
+
+  let result = decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
+  // Restore sign if negative
+  if (num < 0) result = `-${result}`;
+
+  return Number(result);
+}
