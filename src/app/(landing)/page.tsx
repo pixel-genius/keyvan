@@ -66,7 +66,7 @@ const LandingPage = () => {
           image="/img/logo-cig.png"
           imageSize={64}
           label="برند ها"
-          link="/products"
+          link="/brand"
         />
         <CardItem
           icon={<IconCategory2 size={34} className="text-primary" />}

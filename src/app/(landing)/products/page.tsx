@@ -67,6 +67,9 @@ function ProductsContent() {
       category: searchParams?.get("category")
         ? Number(searchParams.get("category"))
         : undefined,
+      brand: searchParams?.get("brand")
+        ? Number(searchParams.get("brand"))
+        : undefined,
     }));
   }, [searchParams]);
 

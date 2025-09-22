@@ -2,11 +2,12 @@ import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
-type AccountAddressesList = {
+export type AccountAddressesList = {
   id: number;
   title: string;
-  lat: string;
-  long: string;
+  text: string;
+  latitude: string;
+  longitude: string;
   address: string;
   is_default: boolean;
 }[];

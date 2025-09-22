@@ -2,7 +2,7 @@ import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
-export interface AccountAddressPatchApiPayload {
+export interface AccountAddressPutApiPayload {
   id: number;
   text: string;
   title: string;
@@ -11,7 +11,7 @@ export interface AccountAddressPatchApiPayload {
   is_default: boolean;
 }
 
-export type AccountAddressPatchApiResponse = {
+export type AccountAddressPutApiResponse = {
   id: number;
   title: string;
   latitude: string;
@@ -20,33 +20,32 @@ export type AccountAddressPatchApiResponse = {
   is_default: boolean;
 }[];
 
-// PATCH API function
-const patchAccountAddressApi = async (
-  payload: Partial<AccountAddressPatchApiPayload>,
-): Promise<AccountAddressPatchApiResponse> => {
+// PUT API function
+const putAccountAddressApi = async (
+  payload: Partial<AccountAddressPutApiPayload>,
+): Promise<AccountAddressPutApiResponse> => {
   const { id, ...restPayload } = payload;
-
-  const response = await coreApi.patch(
+  const response = await coreApi.put(
     path.join(`/account/addresses/${id}/`),
-    restPayload, // PATCH body
+    restPayload, // PUT body
   );
   return response.data;
 };
 
 // useMutation Hook with proper types
-export const usePatchAccountAddress = (
+export const usePutAccountAddress = (
   options?: UseMutationOptions<
-    AccountAddressPatchApiResponse,
+    AccountAddressPutApiResponse,
     unknown,
-    Partial<AccountAddressPatchApiPayload>
+    Partial<AccountAddressPutApiPayload>
   >,
 ) => {
   return useMutation<
-    AccountAddressPatchApiResponse,
+    AccountAddressPutApiResponse,
     unknown,
-    Partial<AccountAddressPatchApiPayload>
+    Partial<AccountAddressPutApiPayload>
   >({
-    mutationFn: patchAccountAddressApi,
+    mutationFn: putAccountAddressApi,
     mutationKey: ["putAccountAddressApi"],
     ...options,
   });
