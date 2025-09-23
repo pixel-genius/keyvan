@@ -23,7 +23,6 @@ import Typography from "@/components/components/atoms/typography";
 import CardItem from "../_components/CardItem";
 import BlogCard from "../_components/BlogCard";
 import ProductCard from "../_components/card";
-import LogoIcon from "@/icons/logo";
 import Link from "next/link";
 
 const LandingPage = () => {
@@ -56,7 +55,7 @@ const LandingPage = () => {
               className="rounded-4xl "
             />
           </SwiperSlide>
-          <LogoIcon />
+
           {/* Custom Pagination */}
           <div className="swiper-pagination !bottom-2"></div>
         </Swiper>
