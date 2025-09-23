@@ -9,7 +9,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       <div className="w-full max-w-md bg-card shadow-lg">
         <div className="h-screen flex flex-col">
           <div className="flex text-center px-2 pt-28 flex-col items-center justify-center gap-2.5">
-            <LogoIcon size={48} />
+            <LogoIcon />
 
             <p className="text-white font-bold text-center">
               قیمت روز تنباکو، سریع و بدون واسطه!
