@@ -10,8 +10,19 @@ import {
   IconShoppingCart,
   IconX,
 } from "@tabler/icons-react";
+import {
+  ShopOrderCreatePostApiPayload,
+  usePostShopOrderCreateApi,
+} from "@/utils/apis/shop/orders/create/POST/shopOrderCreatePostApi";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/components/atoms/select";
 import { useDeleteShopCartItemsRemoveApi } from "@/utils/apis/shop/cart/items/[id]/remove/DELETE/shopCartItemsRemoveDeleteApi";
-import { usePostShopOrderCreateApi } from "@/utils/apis/shop/orders/create/POST/shopOrderCreatePostApi";
+import { useGetAccountAddressList } from "@/utils/apis/account/addresses/GET/accountAddressesListGetApi";
 import Typography from "@/components/components/atoms/typography";
 import { useAuthStore } from "@/utils/store/authenticate.store";
 import { toEnglishDigits, toPersianNumbers } from "@/lib/utils";
@@ -41,7 +52,16 @@ const Navbar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isOrderConfirmationOpen, setIsOrderConfirmationOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [note, setNote] = useState<string>("");
+  const [formFields, setFormFields] = useState<{
+    notes: string;
+    address_id: number | null;
+  }>({
+    notes: "",
+    address_id: null,
+  });
+
+  const accountAddressListQuery = useGetAccountAddressList();
+
   const shopDeleteCartItemMutate = useDeleteShopCartItemsRemoveApi({
     onSuccess: (res) => {
       setUserInfo({ shopCart: res });
@@ -84,7 +104,7 @@ const Navbar = () => {
 
   // Function to handle order submission
   const handleOrderSubmit = () => {
-    shopOrderMutate.mutate({ notes: note });
+    shopOrderMutate.mutate(formFields as ShopOrderCreatePostApiPayload);
   };
 
   // Handle tracking order
@@ -211,25 +231,54 @@ const Navbar = () => {
                 </span>
               </Typography>
 
-              <div className="mb-4">
-                {shopCart?.items?.map((item) => (
-                  <CartItemCard
-                    key={item.id}
-                    id={String(item.id)}
-                    name={item.product.name}
-                    image={item.product.image}
-                    disabled={shopOrderMutate.isPending}
-                    quantity={item.quantity}
-                    removeMutate={shopDeleteCartItemMutate}
-                    onIncreaseQuantity={handleIncreaseQuantity}
-                    onDecreaseQuantity={handleDecreaseQuantity}
-                  />
-                ))}
+              {shopCart?.items?.map((item) => (
+                <CartItemCard
+                  key={item.id}
+                  id={String(item.id)}
+                  name={item.product.name}
+                  image={item.product.image}
+                  disabled={shopOrderMutate.isPending}
+                  quantity={item.quantity}
+                  removeMutate={shopDeleteCartItemMutate}
+                  onIncreaseQuantity={handleIncreaseQuantity}
+                  onDecreaseQuantity={handleDecreaseQuantity}
+                />
+              ))}
+              <div className="mb-2">
+                <Select
+                  onValueChange={(value) => {
+                    setFormFields((prev) => ({
+                      ...prev,
+                      address_id: +value,
+                    }));
+                  }}
+                >
+                  <SelectTrigger
+                    className="bg-transparent w-full "
+                    style={{ boxShadow: "unset !important" }}
+                    dir="rtl"
+                  >
+                    <SelectValue placeholder="آدرس مورد نظر را انتخاب کنید" />
+                  </SelectTrigger>
+                  <SelectContent dir="rtl">
+                    {accountAddressListQuery.data?.data.map((item) => (
+                      <SelectItem
+                        key={item.id + item.title}
+                        value={item.id.toString()}
+                      >
+                        {item.title} {item.is_default ? "(پیش فرض)" : null}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <textarea
-                value={note}
+                value={formFields.notes}
                 onChange={(e) => {
-                  setNote(e.currentTarget.value);
+                  setFormFields((prev) => ({
+                    ...prev,
+                    notes: e.target.value,
+                  }));
                 }}
                 placeholder="...یادداشت خود را بنویسید"
                 className="w-full text-right mb-1 p-4 border border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-background text-foreground min-h-[100px] resize-none"

@@ -11,6 +11,7 @@ export type AccountAddressesList = {
   address: string;
   is_default: boolean;
 }[];
+
 interface AccountAddressesListApiResponse {
   count: number;
   data: AccountAddressesList;

@@ -3,6 +3,7 @@ import Typography from "@/components/components/atoms/typography";
 import { Badge } from "@/components/components/atoms/badge";
 import Tomanicon from "../../icons/toman";
 import Image from "next/image";
+import Link from "next/link";
 
 const ProductCard = ({
   product,
@@ -54,7 +55,9 @@ const ProductCard = ({
           </Typography>
           <Tomanicon color2="white" />
         </div>
-        <div className="text-xs font-bold">مشاهده</div>
+        <Link className="text-xs font-bold" href={`/products/${product.id}`}>
+          مشاهده
+        </Link>
       </div>
     </div>
   );
