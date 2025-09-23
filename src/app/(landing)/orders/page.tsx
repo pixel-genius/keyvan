@@ -8,16 +8,15 @@ import {
   IconUser,
 } from "@tabler/icons-react";
 import { useGetShopOrdersListApi } from "@/utils/apis/shop/orders/GET/shopOrdersGetApi";
+import { Chip, ChipProps } from "@/components/components/atoms/chip";
 import { Separator } from "@/components/components/atoms/separator";
 import Typography from "@/components/components/atoms/typography";
-import { ChipProps } from "@/components/components/atoms/chip";
 import { Button } from "@/components/components/atoms/button";
-import { Chip } from "@/components/components/atoms/chip";
 import { Card } from "@/components/components/atoms/card";
 import { toPersianNumbers } from "@/lib/utils";
 import Header from "@/app/_components/Header";
+import { useEffect, useState } from "react";
 import { format } from "date-fns-jalali";
-import { useState } from "react";
 
 interface OrderStatusObj {
   [key: string]: {
@@ -53,13 +52,28 @@ const orderStatusObj: OrderStatusObj = {
   },
 };
 
-const OrdersPage = () => {
-  const [orderDetailsOpen, setOrderDetailsOpen] = useState(false);
+interface OrderDetailsState {
+  id: number;
+  open: boolean;
+}
 
-  const toggleOrderDetails = () => {
-    setOrderDetailsOpen(!orderDetailsOpen);
-  };
+const OrdersPage = () => {
   const shopOrderListQuery = useGetShopOrdersListApi();
+  const [orderDetailsOpen, setOrderDetailsOpen] = useState<OrderDetailsState[]>(
+    [],
+  );
+
+  useEffect(() => {
+    if (shopOrderListQuery.data?.length) {
+      setOrderDetailsOpen((prev) => [
+        ...prev,
+        ...shopOrderListQuery.data.map((order) => ({
+          id: order.id,
+          open: false,
+        })),
+      ]);
+    }
+  }, [shopOrderListQuery.data]);
 
   return (
     <>
@@ -73,7 +87,7 @@ const OrdersPage = () => {
               {/* Order Card */}
               <Card className="bg-maincard rounded-lg p-4">
                 {/* Order Header */}
-                <div className="flex justify-between items-center mb-2">
+                <div className="flex justify-between items-center">
                   <div className="flex gap-2 items-center text-gray-400 text-sm">
                     <Chip
                       variant={orderStatusObj[order.status].colorClass}
@@ -90,15 +104,22 @@ const OrdersPage = () => {
                 </div>
 
                 {/* Order Price */}
-                <div className="text-right mb-3">
+                <div className="text-right">
                   <Typography variant="label/md" weight="bold">
                     {toPersianNumbers(order.total_amount)} تومان
                   </Typography>
                 </div>
-
+                {order.address && (
+                  <div dir="rtl">
+                    <Typography variant="label/sm">آدرس :</Typography>
+                    <Typography variant="paragraph/sm">
+                      {order.address.text}
+                    </Typography>
+                  </div>
+                )}
                 {/* Order Status Buttons */}
                 {!!order.items.length && (
-                  <div dir="rtl" className="grid grid-cols-4 gap-1 mb-3">
+                  <div dir="rtl" className="grid grid-cols-4 gap-1">
                     {order.items?.map((item) => (
                       <Button
                         variant="secondary"
@@ -113,41 +134,53 @@ const OrdersPage = () => {
                 )}
 
                 {/* Order Details */}
-                {orderDetailsOpen && !!order.items.length && (
-                  <>
-                    <Separator className="my-2 bg-gray-700" />
-                    <div className="pt-2">
-                      <div className="grid grid-cols-1 gap-2">
-                        {order.items.map((item) => (
-                          <div
-                            className="flex justify-between"
-                            key={item.id + item.product.name}
-                          >
-                            <Typography variant="paragraph/sm">
-                              {item.product.name} × {item.quantity}
-                            </Typography>
-                            <Typography
-                              variant="paragraph/sm"
-                              className="text-gray-300"
+                {orderDetailsOpen.find((item) => item.id === order.id)?.open &&
+                  !!order.items.length && (
+                    <>
+                      <Separator className="my-2 bg-gray-700" />
+                      <div className="pt-2">
+                        <div className="grid grid-cols-1 gap-2">
+                          {order.items.map((item) => (
+                            <div
+                              className="flex justify-between"
+                              key={item.id + item.product.name}
                             >
-                              {toPersianNumbers(item.total_price)} تومان
-                            </Typography>
-                          </div>
-                        ))}
+                              <Typography variant="paragraph/sm">
+                                {item.product.name} × {item.quantity}
+                              </Typography>
+                              <Typography
+                                variant="paragraph/sm"
+                                className="text-gray-300"
+                              >
+                                {toPersianNumbers(item.total_price)} تومان
+                              </Typography>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  </>
-                )}
+                    </>
+                  )}
 
                 {/* Order Details Toggle */}
                 <div
                   className="flex justify-center items-center gap-1 mt-1 cursor-pointer text-gray-400"
-                  onClick={toggleOrderDetails}
+                  onClick={() => {
+                    setOrderDetailsOpen((prev) => [
+                      ...prev.map((item) =>
+                        item.id === order.id
+                          ? { id: item.id, open: !item.open }
+                          : item,
+                      ),
+                    ]);
+                  }}
                 >
                   <IconChevronDown
                     size={18}
                     className={`transition-transform ${
-                      orderDetailsOpen ? "rotate-180" : ""
+                      orderDetailsOpen.find((item) => item.id === order.id)
+                        ?.open
+                        ? "rotate-180"
+                        : ""
                     }`}
                   />
                   <Typography variant="paragraph/xs" className="text-gray-400">

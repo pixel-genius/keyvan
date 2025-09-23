@@ -23,7 +23,7 @@ import {
   usePostAccountAddress,
 } from "@/utils/apis/account/addresses/POST/accountAddressesPostApi";
 import {
-  AccountAddressesList,
+  AccountAddressesObj,
   useGetAccountAddressList,
 } from "@/utils/apis/account/addresses/GET/accountAddressesListGetApi";
 import { useDeleteAccountAddress } from "@/utils/apis/account/addresses/DELETE/accountAddressesDeleteApi";
@@ -320,7 +320,7 @@ const AddressesPage = () => {
     );
   }, [handleMapClick]);
 
-  const handleEditAddress = (addressObj: AccountAddressesList[number]) => {
+  const handleEditAddress = (addressObj: AccountAddressesObj) => {
     setFormFields({
       id: addressObj.id as number,
       title: addressObj.title,
