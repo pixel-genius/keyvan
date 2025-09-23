@@ -13,11 +13,14 @@ export default function PWAStatus() {
 
   useEffect(() => {
     setIsClient(true);
-    
+
     // Check if app is running in standalone mode (installed)
-    const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
-    const isIOSStandalone = (window.navigator as NavigatorWithStandalone).standalone;
-    
+    const isStandalone = window.matchMedia(
+      "(display-mode: standalone)",
+    ).matches;
+    const isIOSStandalone = (window.navigator as NavigatorWithStandalone)
+      .standalone;
+
     if (isStandalone || isIOSStandalone) {
       setIsPWAInstalled(true);
       // Only show status for a few seconds when first detected
@@ -28,7 +31,7 @@ export default function PWAStatus() {
     }
   }, []);
 
-  // Don't render anything on server-side
+  // Don't render anything on server-side to prevent hydration mismatch
   if (!isClient) return null;
 
   if (!isPWAInstalled || !showStatus) return null;

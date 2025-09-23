@@ -52,8 +52,11 @@ const AuthenticatePage = () => {
     certification: false,
   });
   useEffect(() => {
-    if (authenticateFormState === AuthenticateFormStateEnum.OTP)
-      setCountdownDate(Date.now() + 120000);
+    if (authenticateFormState === AuthenticateFormStateEnum.OTP) {
+      // Use a consistent timestamp to avoid hydration mismatch
+      const now = typeof window !== "undefined" ? Date.now() : 0;
+      setCountdownDate(now + 120000);
+    }
   }, [authenticateFormState]);
 
   const [formFields, setFormFields] = useState<FormFieldsState>({
@@ -317,7 +320,10 @@ const AuthenticatePage = () => {
                       variant="secondary"
                       size={"sm"}
                       onClick={() => {
-                        setCountdownDate(Date.now() + 120000);
+                        // Use a consistent timestamp to avoid hydration mismatch
+                        const now =
+                          typeof window !== "undefined" ? Date.now() : 0;
+                        setCountdownDate(now + 120000);
                         loginOtpMutateGet.mutate({
                           phone_number: formFields.phoneNumber,
                         });

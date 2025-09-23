@@ -12,7 +12,7 @@ export default function PWAInstaller() {
 
   useEffect(() => {
     setIsClient(true);
-    
+
     // Check if it's iOS
     const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent);
     setIsIOS(isIOSDevice);
@@ -27,7 +27,7 @@ export default function PWAInstaller() {
     const checkInstallable = () => {
       const canInstall = pwaManager.isInstallPromptAvailable();
       setIsInstallable(canInstall);
-      
+
       // For iOS, show instructions if not in standalone mode
       if (isIOSDevice && !pwaManager.isStandalone()) {
         setShowIOSInstructions(true);
@@ -64,7 +64,7 @@ export default function PWAInstaller() {
     setShowIOSInstructions(false);
   };
 
-  // Don't render anything on server-side
+  // Don't render anything on server-side to prevent hydration mismatch
   if (!isClient) return null;
 
   // Don't show anything if app is already installed
