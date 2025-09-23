@@ -60,7 +60,9 @@ const Navbar = () => {
     address_id: null,
   });
 
-  const accountAddressListQuery = useGetAccountAddressList();
+  const accountAddressListQuery = useGetAccountAddressList({
+    enabled: Number(shopCart?.total_items) > 0,
+  });
 
   const shopDeleteCartItemMutate = useDeleteShopCartItemsRemoveApi({
     onSuccess: (res) => {
