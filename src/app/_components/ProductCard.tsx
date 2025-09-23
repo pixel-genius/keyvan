@@ -87,7 +87,7 @@ export default function ProductCard({
               onClick={onAddToCart}
               iconLeft={<IconShoppingCartPlus className="w-5 h-5" stroke={2} />}
             >
-              افزودن به سبد خرید
+              افزودن
             </Button>
           </div>
         </div>

@@ -19,14 +19,11 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import {
-  AccountAddressesPostApiPayload,
-  usePostAccountAddress,
-} from "@/utils/apis/account/addresses/POST/accountAddressesPostApi";
-import {
   AccountAddressesList,
   useGetAccountAddressList,
 } from "@/utils/apis/account/addresses/GET/accountAddressesListGetApi";
 import { useDeleteAccountAddress } from "@/utils/apis/account/addresses/DELETE/accountAddressesDeleteApi";
+import { usePostAccountAddress } from "@/utils/apis/account/addresses/POST/accountAddressesPostApi";
 import { usePutAccountAddress } from "@/utils/apis/account/addresses/PUT/accountAddressesPutApi";
 import { BaseInput } from "@/components/components/atoms/base-input";
 import Typography from "@/components/components/atoms/typography";
@@ -58,6 +55,7 @@ interface FormFields {
   id?: number;
   title: string | null;
   text: string | null;
+  address_details: string | null;
   longitude: number | null;
   latitude: number | null;
   is_default: boolean;
@@ -73,6 +71,7 @@ const AddressesPage = () => {
   const [formFields, setFormFields] = useState<FormFields>({
     title: null,
     text: null,
+    address_details: null,
     longitude: null,
     latitude: null,
     is_default: false,
@@ -84,6 +83,7 @@ const AddressesPage = () => {
     setFormFields({
       title: null,
       text: null,
+      address_details: null,
       longitude: null,
       latitude: null,
       is_default: false,
@@ -325,6 +325,7 @@ const AddressesPage = () => {
       id: addressObj.id as number,
       title: addressObj.title,
       text: addressObj.text,
+      address_details: addressObj.address_details || null,
       is_default: addressObj.is_default,
       latitude: Number(addressObj.latitude),
       longitude: Number(addressObj.longitude),
@@ -333,33 +334,50 @@ const AddressesPage = () => {
   };
   const handleSaveAddress = () => {
     if (
-      formFields.text !== null &&
+      formFields.text &&
       formFields.longitude !== null &&
       formFields.latitude !== null
     ) {
-      const mutate = formFields?.id
+      const isEdit = !!formFields.id;
+      const mutate = isEdit
         ? accountAddressPutMutate
         : accountAddressPostMutate;
+
+      const payload = {
+        ...(isEdit && { id: formFields.id }),
+        title: formFields.title || "",
+        text: formFields.text,
+        address_details: formFields.address_details || "",
+        longitude: formFields.longitude
+          ? limit4DigitsBeforeDecimal(formFields.longitude)?.toString()
+          : "",
+        latitude: formFields.latitude
+          ? limit4DigitsBeforeDecimal(formFields.latitude)?.toString()
+          : "",
+        is_default: formFields.is_default,
+      };
+
       mutate
-        .mutateAsync({
-          ...formFields,
-          longitude: formFields.longitude
-            ? limit4DigitsBeforeDecimal(formFields.longitude)?.toString()
-            : "",
-          latitude: formFields.latitude
-            ? limit4DigitsBeforeDecimal(formFields.latitude)?.toString()
-            : "",
-        } as AccountAddressesPostApiPayload)
+        .mutateAsync(payload)
         .then(() => {
-          if (mutate === accountAddressPutMutate) {
-            toast.success("آدرس با موفقیت به ویرایش شد");
+          if (isEdit) {
+            toast.success("آدرس با موفقیت ویرایش شد");
+          } else {
+            toast.success("آدرس با موفقیت اضافه شد");
           }
+        })
+        .catch((error) => {
+          console.error("Error saving address:", error);
+          toast.error("خطا در ذخیره آدرس");
         });
 
       console.log("Saving address:", {
-        address: formFields,
+        isEdit,
+        payload,
         location: formFields.longitude + " , " + formFields.latitude,
       });
+    } else {
+      toast.error("لطفاً تمام فیلدهای ضروری را پر کنید");
     }
   };
 
@@ -462,7 +480,12 @@ const AddressesPage = () => {
                           variant={"paragraph/xs"}
                           className="text-muted-foreground"
                         >
-                          {address.address}
+                          {address.text}
+                          {address.address_details && (
+                            <span className="block mt-1">
+                              {address.address_details}
+                            </span>
+                          )}
                         </Typography>
                       </div>
                     </div>
@@ -491,10 +514,22 @@ const AddressesPage = () => {
                           accountAddressPutMutate
                             .mutateAsync({
                               id: address.id,
+                              text: address.text,
+                              title: address.title,
+                              address_details: address.address_details,
+                              latitude: address.latitude,
+                              longitude: address.longitude,
                               is_default: true,
                             })
                             .then(() => {
                               toast.success("آدرس پیش فرض تنظیم شد");
+                            })
+                            .catch((error) => {
+                              console.error(
+                                "Error setting default address:",
+                                error,
+                              );
+                              toast.error("خطا در تنظیم آدرس پیش فرض");
                             });
                       }}
                       className="flex-1 bg-muted text-muted-foreground py-2 disabled:bg-transparent rounded-xl text-xs font-bold hover:bg-muted/80 transition-colors flex items-center justify-center gap-1"
@@ -625,6 +660,22 @@ const AddressesPage = () => {
               placeholder="آدرس کامل خود را اینجا وارد کنید..."
               className="w-full mb-1 p-4 border border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-background text-foreground min-h-[100px] resize-none"
             />
+
+            {/* Address Details Field */}
+            <BaseInput
+              dir="rtl"
+              className="text-right mb-4 !bg-transparent"
+              placeholder="جزئیات آدرس (پلاک، واحد، طبقه و ...)"
+              type="text"
+              name="address_details"
+              value={formFields.address_details || ""}
+              onChange={(e) => {
+                setFormFields((prev) => ({
+                  ...prev,
+                  address_details: e.target.value,
+                }));
+              }}
+            />
             <div className="flex items-center gap-2 flex-row">
               <Typography
                 variant={"paragraph/sm"}
@@ -650,7 +701,8 @@ const AddressesPage = () => {
                 !formFields.latitude ||
                 !formFields.longitude ||
                 !formFields.text ||
-                accountAddressPostMutate.isPending
+                accountAddressPostMutate.isPending ||
+                accountAddressPutMutate.isPending
               }
               className="w-full bg-primary text-primary-foreground py-4 rounded-2xl font-bold disabled:bg-muted disabled:cursor-not-allowed hover:shadow-lg transition-all duration-300"
             >

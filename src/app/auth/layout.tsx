@@ -1,6 +1,6 @@
 import PWAInstaller from "@/components/PWAInstaller";
+import LogoIcon from "@/icons/logo";
 import { ReactNode } from "react";
-import Image from "next/image";
 import "../globals.css";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
@@ -9,8 +9,8 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       <div className="w-full max-w-md bg-card shadow-lg">
         <div className="h-screen flex flex-col">
           <div className="flex text-center px-2 pt-28 flex-col items-center justify-center gap-2.5">
-            {/* <LogoIcon size={48} /> */}
-            <Image src="/img/logo-main.svg" alt="logo" width={50} height={50} />
+            <LogoIcon size={48} />
+
             <p className="text-white font-bold text-center">
               قیمت روز تنباکو، سریع و بدون واسطه!
             </p>

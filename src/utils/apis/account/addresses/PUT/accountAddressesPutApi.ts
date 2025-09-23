@@ -3,12 +3,13 @@ import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
 export interface AccountAddressPutApiPayload {
-  id: number;
-  text: string;
-  title: string;
-  latitude: string;
-  longitude: string;
-  is_default: boolean;
+  id?: number;
+  text?: string;
+  title?: string;
+  address_details?: string;
+  latitude?: string;
+  longitude?: string;
+  is_default?: boolean;
 }
 
 export type AccountAddressPutApiResponse = {

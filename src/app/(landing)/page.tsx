@@ -23,6 +23,7 @@ import Typography from "@/components/components/atoms/typography";
 import CardItem from "../_components/CardItem";
 import BlogCard from "../_components/BlogCard";
 import ProductCard from "../_components/card";
+import LogoIcon from "@/icons/logo";
 import Link from "next/link";
 
 const LandingPage = () => {
@@ -30,7 +31,7 @@ const LandingPage = () => {
   const shopProductsQuery = useGetShopProductsListApi();
 
   return (
-    <div className="px-4 pt-28">
+    <div className="px-4 pt-28 pb-48">
       <div className="flex flex-col items-center justify-center ">
         <Swiper
           spaceBetween={30}
@@ -55,7 +56,7 @@ const LandingPage = () => {
               className="rounded-4xl "
             />
           </SwiperSlide>
-
+          <LogoIcon size={48} />
           {/* Custom Pagination */}
           <div className="swiper-pagination !bottom-2"></div>
         </Swiper>

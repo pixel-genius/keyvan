@@ -61,11 +61,14 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/img/logo-PWA.png" />
       </head>
       <body
+        suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} ${yekanBakh.variable} antialiased`}
       >
         <ApiProvider>
           <LayoutClientWrapper>
-            <main className="max-w-lg w-full mx-auto">{children}</main>
+            <main className="max-w-lg w-full mx-auto min-h-screen overflow-x-hidden">
+              {children}
+            </main>
             <PWAStatus />
             <Toaster richColors />
           </LayoutClientWrapper>

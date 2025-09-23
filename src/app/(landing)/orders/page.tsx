@@ -29,47 +29,49 @@ interface OrderStatusObj {
 const orderStatusObj: OrderStatusObj = {
   pending: {
     text: "در انتظار تایید",
-    colorClass: "warning",
+    colorClass: "warning", // نارنجی/زرد برای انتظار
   },
   confirmed: {
     text: "تایید شده",
-    colorClass: "success",
+    colorClass: "primary", // زرد برای تایید
   },
   processing: {
     text: "در حال پردازش",
-    colorClass: "secendery",
+    colorClass: "info", // آبی برای پردازش
   },
   shipped: {
     text: "ارسال شده",
-    colorClass: "info",
+    colorClass: "secendery", // خاکستری تیره برای ارسال
   },
   delivered: {
     text: "تحویل شده",
-    colorClass: "info",
+    colorClass: "success", // سبز برای تحویل موفق
   },
   cancelled: {
     text: "لغو شده",
-    colorClass: "danger",
+    colorClass: "danger", // قرمز برای لغو
   },
 };
 
 const OrdersPage = () => {
-  const [orderDetailsOpen, setOrderDetailsOpen] = useState(false);
+  const [openOrderDetails, setOpenOrderDetails] = useState<string | null>(null);
 
-  const toggleOrderDetails = () => {
-    setOrderDetailsOpen(!orderDetailsOpen);
+  const toggleOrderDetails = (orderId: number, orderCreatedAt: string) => {
+    const uniqueKey = `${orderId}-${orderCreatedAt}`;
+    setOpenOrderDetails(openOrderDetails === uniqueKey ? null : uniqueKey);
   };
   const shopOrderListQuery = useGetShopOrdersListApi();
 
   return (
     <>
-      <Header title="سفارشات" />
-      <div className="flex px-4 pt-28  flex-col gap-4 ">
+      <div className="flex px-4 pt-28  flex-col gap-4 page-container page-with-bottom-nav">
+        <Header title="سفارشات من" />
+
         {/* Use the new Header component */}
 
         {shopOrderListQuery.data?.length ? (
           shopOrderListQuery.data?.map((order) => (
-            <div key={order.id + order.items.toString()}>
+            <div key={`order-${order.id}-${order.created_at}`}>
               {/* Order Card */}
               <Card className="bg-maincard rounded-lg p-4">
                 {/* Order Header */}
@@ -90,9 +92,10 @@ const OrdersPage = () => {
                 </div>
 
                 {/* Order Price */}
-                <div className="text-right mb-3">
+                <div className="text-right mb-3 " dir="rtl">
                   <Typography variant="label/md" weight="bold">
-                    {toPersianNumbers(order.total_amount)} تومان
+                    {toPersianNumbers(order.total_amount)}
+                    <span className="text-gray-400 px-2">تومان</span>
                   </Typography>
                 </div>
 
@@ -113,41 +116,44 @@ const OrdersPage = () => {
                 )}
 
                 {/* Order Details */}
-                {orderDetailsOpen && !!order.items.length && (
-                  <>
-                    <Separator className="my-2 bg-gray-700" />
-                    <div className="pt-2">
-                      <div className="grid grid-cols-1 gap-2">
-                        {order.items.map((item) => (
-                          <div
-                            className="flex justify-between"
-                            key={item.id + item.product.name}
-                          >
-                            <Typography variant="paragraph/sm">
-                              {item.product.name} × {item.quantity}
-                            </Typography>
-                            <Typography
-                              variant="paragraph/sm"
-                              className="text-gray-300"
+                {openOrderDetails === `${order.id}-${order.created_at}` &&
+                  !!order.items.length && (
+                    <>
+                      <Separator className="my-2 bg-gray-700" />
+                      <div className="pt-2">
+                        <div className="grid grid-cols-1 gap-2">
+                          {order.items.map((item) => (
+                            <div
+                              className="flex justify-between"
+                              key={item.id + item.product.name}
                             >
-                              {toPersianNumbers(item.total_price)} تومان
-                            </Typography>
-                          </div>
-                        ))}
+                              <Typography variant="paragraph/sm">
+                                {item.product.name} × {item.quantity}
+                              </Typography>
+                              <Typography
+                                variant="paragraph/sm"
+                                className="text-gray-300"
+                              >
+                                {toPersianNumbers(item.total_price)} تومان
+                              </Typography>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  </>
-                )}
+                    </>
+                  )}
 
                 {/* Order Details Toggle */}
                 <div
                   className="flex justify-center items-center gap-1 mt-1 cursor-pointer text-gray-400"
-                  onClick={toggleOrderDetails}
+                  onClick={() => toggleOrderDetails(order.id, order.created_at)}
                 >
                   <IconChevronDown
                     size={18}
                     className={`transition-transform ${
-                      orderDetailsOpen ? "rotate-180" : ""
+                      openOrderDetails === `${order.id}-${order.created_at}`
+                        ? "rotate-180"
+                        : ""
                     }`}
                   />
                   <Typography variant="paragraph/xs" className="text-gray-400">

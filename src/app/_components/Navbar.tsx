@@ -167,6 +167,7 @@ const Navbar = () => {
           />
           {/* Center Logo */}
           <Image src="img/logo-main.svg" alt="logo" width={50} height={50} />
+          {/* <LogoIcon size={48} /> */}
 
           {/* Right Icon with Badge */}
           <div className="relative">

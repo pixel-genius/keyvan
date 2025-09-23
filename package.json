@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "env-cmd -f .env/.env.stage next dev --turbopack",
+    "dev": "env-cmd -f .env/.env.stage next dev",
     "build:stage": "env-cmd -f .env/.env.stage next build",
     "build": "env-cmd -f .env/.env next build",
     "start": "node .next/standalone/server.js",

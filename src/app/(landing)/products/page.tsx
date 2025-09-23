@@ -147,7 +147,7 @@ function ProductsContent() {
   // The API does not provide a category field. If needed, extract categories from another source.
 
   return (
-    <div className="mx-auto px-4 pt-28  min-h-full">
+    <div className="mx-auto px-4 pt-28 min-h-full page-container">
       <Header
         title={
           categories.data?.find((item) => item.id === params.category)?.name ||

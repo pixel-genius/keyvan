@@ -6,10 +6,13 @@ export type AccountAddressesList = {
   id: number;
   title: string;
   text: string;
+  address_details?: string;
   latitude: string;
   longitude: string;
   address: string;
   is_default: boolean;
+  created_at: string;
+  updated_at: string;
 }[];
 interface AccountAddressesListApiResponse {
   count: number;

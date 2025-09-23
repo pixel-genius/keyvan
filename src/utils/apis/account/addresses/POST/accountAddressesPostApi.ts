@@ -4,10 +4,11 @@ import path from "path";
 
 export interface AccountAddressesPostApiPayload {
   title?: string;
-  text: string;
-  latitude: string;
-  longitude: string;
-  is_default: boolean;
+  text?: string;
+  address_details?: string;
+  latitude?: string;
+  longitude?: string;
+  is_default?: boolean;
 }
 
 export type AccountAddressesPostApiResponse = {

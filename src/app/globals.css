@@ -166,9 +166,15 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-yekan-bakh, var(--font-sans));
+    overflow-x: hidden;
+    min-height: 100vh;
   }
 }
 
@@ -253,4 +259,97 @@ a:not(:disabled) {
 .product-list-scroll-container {
   max-height: calc(100vh - 300px);
   overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Page container styles for proper scrolling */
+.page-container {
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Fix for pages with fixed bottom navigation */
+.page-with-bottom-nav {
+  padding-bottom: 80px;
+}
+
+/* Custom Scrollbar Styles */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+/* WebKit Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+::-webkit-scrollbar-corner {
+  background: #f1f5f9;
+}
+
+/* Dark mode scrollbar styles */
+.dark * {
+  scrollbar-color: #475569 #1e293b;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.dark ::-webkit-scrollbar-corner {
+  background: #1e293b;
+}
+
+/* Force scrollbar styles on all elements */
+html,
+body,
+div,
+section,
+article,
+aside,
+nav,
+main,
+header,
+footer {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.dark html,
+.dark body,
+.dark div,
+.dark section,
+.dark article,
+.dark aside,
+.dark nav,
+.dark main,
+.dark header,
+.dark footer {
+  scrollbar-color: #475569 #1e293b;
 }
