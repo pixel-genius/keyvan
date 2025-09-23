@@ -56,7 +56,7 @@ const LandingPage = () => {
               className="rounded-4xl "
             />
           </SwiperSlide>
-          <LogoIcon size={48} />
+          <LogoIcon />
           {/* Custom Pagination */}
           <div className="swiper-pagination !bottom-2"></div>
         </Swiper>
