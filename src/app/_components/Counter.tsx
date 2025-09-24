@@ -14,7 +14,7 @@ export default function Counter({ onChange }: CounterProps) {
 
   useEffect(() => {
     onChange?.(count);
-  }, [count]);
+  }, [count, onChange]);
 
   return (
     <div

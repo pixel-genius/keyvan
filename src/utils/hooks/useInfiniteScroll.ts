@@ -24,11 +24,7 @@ const useInfiniteScroll = <TData>(
 
     observer.observe(observerRef.current);
     return () => observer.disconnect();
-  }, [
-    listQuery.fetchNextPage,
-    listQuery.hasNextPage,
-    listQuery.isFetchingNextPage,
-  ]);
+  }, [listQuery]);
   return { observerRef };
 };
 

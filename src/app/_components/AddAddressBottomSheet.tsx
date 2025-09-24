@@ -1,15 +1,9 @@
 import { usePostAccountAddress } from "@/utils/apis/account/addresses/POST/accountAddressesPostApi";
 import { usePutAccountAddress } from "@/utils/apis/account/addresses/PUT/accountAddressesPutApi";
-import {
-  IconLocation,
-  IconMapPin,
-  IconZoomIn,
-  IconZoomOut,
-} from "@tabler/icons-react";
+import { IconLocation, IconZoomIn, IconZoomOut } from "@tabler/icons-react";
 import { BaseInput } from "@/components/components/atoms/base-input";
 import Typography from "@/components/components/atoms/typography";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Switch } from "@/components/components/atoms/switch";
 import { Button } from "@/components/components/atoms/button";
 import OpenLayersMap from "@neshan-maps-platform/ol/Map";
 import BottomSheet from "@/app/_components/BottomSheet";

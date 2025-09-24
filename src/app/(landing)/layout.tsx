@@ -17,15 +17,21 @@ export default function LandingLayout({
   const shopCartList = useGetShopCartListApi();
 
   useEffect(() => {
-    if (accountProfileInfo.isSuccess)
+    if (accountProfileInfo.isSuccess && accountProfileInfo.data)
       setUserInfo({
         userProfileInfo: accountProfileInfo.data,
       });
-    if (shopCartList.isSuccess)
+    if (shopCartList.isSuccess && shopCartList.data)
       setUserInfo({
         shopCart: shopCartList.data,
       });
-  }, [accountProfileInfo.isSuccess, shopCartList.isSuccess]);
+  }, [
+    accountProfileInfo.isSuccess,
+    accountProfileInfo.data,
+    shopCartList.isSuccess,
+    shopCartList.data,
+    setUserInfo,
+  ]);
 
   return children;
 }

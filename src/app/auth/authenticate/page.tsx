@@ -82,7 +82,7 @@ const AuthenticatePage = () => {
         certificate_file: undefined,
       });
     };
-  }, []);
+  }, [setAuthStore]);
 
   const accountFileUploadMutate = useAccountFilesUploadPost({
     onSuccess: (res) => {
@@ -218,6 +218,7 @@ const AuthenticatePage = () => {
     registerPostMutate.isPending,
     loginOtpMutateGet.isPending,
     loginOtpMutatePost.isPending,
+    registerPutMutate.isPending,
   ]);
 
   const bottomSheetTitle = () => {
