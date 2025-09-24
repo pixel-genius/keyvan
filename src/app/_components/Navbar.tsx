@@ -290,7 +290,7 @@ const Navbar = () => {
                 variant="primary"
                 size="md"
                 isLoading={shopOrderMutate.isPending}
-                disabled={shopOrderMutate.isPending}
+                disabled={!formFields.address_id || shopOrderMutate.isPending}
                 onClick={handleOrderSubmit}
                 className="w-full"
               >
