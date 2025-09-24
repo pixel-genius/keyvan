@@ -62,6 +62,7 @@ function BlogDetailFn() {
           width={800}
           height={400}
           className="w-full h-64 object-cover rounded-lg mb-6"
+          unoptimized
         />
       ) : (
         <div className="w-full h-64 flex items-center justify-center bg-gray-200 text-gray-400 rounded-lg mb-6 text-lg">

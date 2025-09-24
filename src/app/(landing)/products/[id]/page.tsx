@@ -134,7 +134,7 @@ function ProductDetailFn() {
   }
 
   return (
-    <div className="px-4 pt-28 ">
+    <div className="px-4 pt-24 pb-48 ">
       <div className="flex gap-0.5 items-center pb-3.5">
         <span
           className="inline-flex items-center gap-2 cursor-pointer p-2"
@@ -152,6 +152,7 @@ function ProductDetailFn() {
             width={400}
             height={400}
             className="object-cover"
+            unoptimized
           />
         </div>
         <div dir="rtl" className="pb-9 ">

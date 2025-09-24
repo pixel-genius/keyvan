@@ -179,7 +179,7 @@ const Pricepage = () => {
   };
 
   return (
-    <div dir="rtl" className="px-4 pt-28 ">
+    <div dir="rtl" className="px-4 pt-24 pb-48 ">
       <div className="flex flex-row items-center justify-between ">
         <button
           onClick={goToPreviousDay}
