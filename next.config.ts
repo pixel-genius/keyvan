@@ -16,7 +16,6 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
-    unoptimized: true, // This can help with some image loading issues
   },
   async headers() {
     return [
