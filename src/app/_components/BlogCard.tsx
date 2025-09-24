@@ -24,7 +24,6 @@ const BlogCard: React.FC<BlogCardProps> = ({
   created_at,
   author_name,
 }) => {
-  console.log(image);
   return (
     <Link href={`/blogs/${id}`}>
       <div
@@ -39,6 +38,7 @@ const BlogCard: React.FC<BlogCardProps> = ({
               fill
               className="object-cover w-full h-full rounded-t-2xl"
               style={{ objectFit: "cover" }}
+              unoptimized
             />
           ) : (
             <div className="w-full h-full bg-gray-200 dark:bg-zinc-800 flex items-center justify-center text-gray-400 dark:text-gray-500">
