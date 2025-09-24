@@ -1,4 +1,6 @@
+import runtimeCaching from "next-pwa/cache";
 import type { NextConfig } from "next";
+import withPWA from "next-pwa";
 
 const nextConfig: NextConfig = {
   output: "standalone",
@@ -28,21 +30,19 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-      {
-        source: "/sw.js",
-        headers: [
-          {
-            key: "Content-Type",
-            value: "application/javascript",
-          },
-          {
-            key: "Cache-Control",
-            value: "no-cache",
-          },
-        ],
-      },
     ];
   },
 };
 
-export default nextConfig;
+const withPWAWrapped = withPWA({
+  dest: "public",
+  disable: process.env.NODE_ENV === "development",
+  register: true,
+  skipWaiting: true,
+  runtimeCaching,
+  fallbacks: {
+    document: "/offline.html",
+  },
+});
+
+export default withPWAWrapped(nextConfig);
