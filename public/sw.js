@@ -8,110 +8,81 @@ const STATIC_ASSETS = [
   // Add other static assets here
 ];
 
-// Install event - cache static assets
+// Install - cache static assets
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches
-      .open(STATIC_CACHE)
-      .then((cache) => {
-        console.log("Caching static assets");
-        return cache.addAll(STATIC_ASSETS);
-      })
-      .then(() => {
-        return self.skipWaiting();
-      }),
+    caches.open(STATIC_CACHE)
+      .then((cache) => cache.addAll(STATIC_ASSETS))
+      .then(() => self.skipWaiting())
   );
 });
 
-// Activate event - clean up old caches and take control
+// Activate - clean old caches
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches
-      .keys()
-      .then((cacheNames) => {
-        return Promise.all(
-          cacheNames.map((cacheName) => {
-            if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
-              console.log("Deleting old cache:", cacheName);
-              return caches.delete(cacheName);
-            }
-          }),
-        );
-      })
-      .then(() => {
-        return self.clients.claim();
-      }),
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.map((key) => {
+          if (key !== STATIC_CACHE && key !== DYNAMIC_CACHE) {
+            return caches.delete(key);
+          }
+        })
+      );
+    }).then(() => self.clients.claim())
   );
 });
 
-// Fetch event - serve from cache when offline
+// Fetch - handle caching
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
   // Skip non-GET requests
-  if (request.method !== "GET") {
+  if (request.method !== "GET") return;
+
+  // Skip Next.js Image Optimization URLs
+  if (url.pathname.startsWith("/_next/image")) {
     return;
   }
 
-  // Handle API requests
+  // API requests - network first
   if (url.pathname.startsWith("/api/")) {
     event.respondWith(
       fetch(request)
-        .then((response) => {
-          // Clone the response
-          const responseClone = response.clone();
-
-          // Cache successful responses
-          if (response.status === 200) {
-            caches.open(DYNAMIC_CACHE).then((cache) => {
-              cache.put(request, responseClone);
-            });
+        .then((res) => {
+          if (res.status === 200) {
+            const resClone = res.clone();
+            caches.open(DYNAMIC_CACHE).then((cache) => cache.put(request, resClone));
           }
-
-          return response;
+          return res;
         })
-        .catch(() => {
-          // Return cached version if network fails
-          return caches.match(request);
-        }),
+        .catch(() => caches.match(request))
     );
     return;
   }
 
-  // Handle static assets
+  // Static & other requests - cache first
   event.respondWith(
-    caches.match(request).then((response) => {
-      if (response) {
-        return response;
-      }
+    caches.match(request).then((cacheRes) => {
+      if (cacheRes) return cacheRes;
 
-      return fetch(request).then((response) => {
-        // Don't cache if not a valid response
-        if (!response || response.status !== 200 || response.type !== "basic") {
-          return response;
-        }
+      return fetch(request).then((res) => {
+        if (!res || res.status !== 200 || res.type !== "basic") return res;
 
-        // Clone the response
-        const responseClone = response.clone();
-
-        // Cache the response
-        caches.open(DYNAMIC_CACHE).then((cache) => {
-          cache.put(request, responseClone);
-        });
-
-        return response;
-      });
-    }),
+        const resClone = res.clone();
+        caches.open(DYNAMIC_CACHE).then((cache) => cache.put(request, resClone));
+        return res;
+      }).catch(() => caches.match("/")); // fallback to home page
+    })
   );
 });
 
-// Background sync for offline actions
+// Background sync
 self.addEventListener("sync", (event) => {
   if (event.tag === "background-sync") {
     event.waitUntil(
-      // Handle background sync tasks
-      console.log("Background sync triggered"),
+      console.log("Background sync triggered")
+      // Add actual tasks here
     );
   }
 });
@@ -123,31 +94,18 @@ self.addEventListener("push", (event) => {
     icon: "/img/logo-PWA.png",
     badge: "/img/logo-PWA.png",
     vibrate: [100, 50, 100],
-    data: {
-      dateOfArrival: Date.now(),
-      primaryKey: 1,
-    },
+    data: { dateOfArrival: Date.now(), primaryKey: 1 },
     actions: [
-      {
-        action: "explore",
-        title: "مشاهده",
-        icon: "/img/logo-PWA.png",
-      },
-      {
-        action: "close",
-        title: "بستن",
-        icon: "/img/logo-PWA.png",
-      },
+      { action: "explore", title: "مشاهده", icon: "/img/logo-PWA.png" },
+      { action: "close", title: "بستن", icon: "/img/logo-PWA.png" },
     ],
   };
-
   event.waitUntil(self.registration.showNotification("Keyvan App", options));
 });
 
 // Notification click
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-
   if (event.action === "explore") {
     event.waitUntil(clients.openWindow("/"));
   }
