@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "env-cmd -f .env/.env.stage next dev",
-    "build:stage": "env-cmd -f .env/.env.stage next build",
-    "build": "env-cmd -f .env/.env next build",
+    "dev": "env-cmd -f .env.stage next dev",
+    "build:stage": "env-cmd -f .env.stage next build",
+    "build:production": "env-cmd -f .env.production next build",
+    "build": "next build",
     "start": "node .next/standalone/server.js",
     "lint": "next lint",
     "prepare": "husky"
