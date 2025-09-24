@@ -45,46 +45,45 @@ const ProductCard = ({
   };
 
   return (
-    <div className="bg-maincard p-4 rounded-xl pb-1.5">
-      <div className="flex justify-center items-center mb-2 min-h-[150px] relative">
-        <Image
-          src={getImageSrc()}
-          alt={product?.name || ""}
-          fill
-          unoptimized
-          className="w-full object-cover rounded"
-        />
-      </div>
-      <div className="flex flex-col items-start justify-center gap-2">
-        <Typography
-          variant="paragraph/xs"
-          weight="normal"
-          className="text-right"
-        >
-          {product?.name || ""}
-        </Typography>
-
-        {product?.category && (
-          <Badge variant="default">{product?.category?.name || ""}</Badge>
-        )}
-      </div>
-      <div className="w-auto h-0.5 bg-zinc-700 my-2 rounded-full"></div>
-      <div className="flex justify-between items-center">
-        <div className="flex gap-0.5 items-center">
-          <Typography
-            className="text-primary"
-            variant={"label/md"}
-            weight="normal"
-          >
-            {formattedPrice}
-          </Typography>
-          <Tomanicon color2="white" />
+    <Link href={`/products/${product.id}`} className="block">
+      <div className="bg-maincard p-4 rounded-xl pb-1.5 hover:bg-maincard/80 transition-colors cursor-pointer">
+        <div className="flex justify-center items-center mb-2 min-h-[150px] relative">
+          <Image
+            src={getImageSrc()}
+            alt={product?.name || ""}
+            fill
+            unoptimized
+            className="w-full object-cover rounded"
+          />
         </div>
-        <Link className="text-xs font-bold" href={`/products/${product.id}`}>
-          مشاهده
-        </Link>
+        <div className="flex flex-col items-start justify-center gap-2">
+          <Typography
+            variant="paragraph/xs"
+            weight="normal"
+            className="text-right"
+          >
+            {product?.name || ""}
+          </Typography>
+
+          {product?.category && (
+            <Badge variant="default">{product?.category?.name || ""}</Badge>
+          )}
+        </div>
+        <div className="w-auto h-0.5 bg-zinc-700 my-2 rounded-full"></div>
+        <div className="flex justify-between items-center">
+          <div className="flex gap-0.5 items-center">
+            <Typography
+              className="text-primary"
+              variant={"label/md"}
+              weight="normal"
+            >
+              {formattedPrice}
+            </Typography>
+            <Tomanicon color2="white" />
+          </div>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

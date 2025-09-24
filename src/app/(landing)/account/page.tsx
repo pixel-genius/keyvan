@@ -16,7 +16,7 @@ const Accountpage = () => {
 
   return (
     <div
-      className="px-4 pt-28 flex flex-col gap-6 min-h-screen bg-background page-container"
+      className="px-4 pt-28 pb-48 flex flex-col gap-6 min-h-screen bg-background page-container"
       dir="rtl"
     >
       {/* Header */}

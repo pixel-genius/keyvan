@@ -26,16 +26,12 @@ const ProfilePage = () => {
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
-    phone_number: "",
-    username: "",
   });
 
   useEffect(() => {
     setFormData({
       first_name: userProfileInfo?.first_name || "",
       last_name: userProfileInfo?.last_name || "",
-      phone_number: userProfileInfo?.phone_number || "",
-      username: userProfileInfo?.username || "",
     });
   }, [userProfileInfo]);
 
@@ -59,23 +55,20 @@ const ProfilePage = () => {
   };
 
   const handleSave = () => {
-    if (formData.phone_number.length === 11)
-      updateProfileMutation.mutate(formData);
+    updateProfileMutation.mutate(formData);
   };
 
   const handleCancel = () => {
     setFormData({
       first_name: userProfileInfo?.first_name || "",
       last_name: userProfileInfo?.last_name || "",
-      phone_number: userProfileInfo?.phone_number || "",
-      username: userProfileInfo?.username || "",
     });
     setIsEditing(false);
   };
 
   return (
     <div
-      className="px-4 pt-28 flex flex-col gap-6 min-h-screen bg-background"
+      className="px-4 pt-28 pb-48 flex flex-col gap-6 min-h-screen bg-background"
       dir="rtl"
     >
       {/* Header */}
@@ -118,7 +111,9 @@ const ProfilePage = () => {
                 variant={"paragraph/sm"}
                 className="text-primary-foreground/90"
               >
-                {userProfileInfo?.username || "نام کاربری"}
+                {userProfileInfo?.phone_number
+                  ? toPersianNumbers(userProfileInfo.phone_number)
+                  : "شماره موبایل"}
               </Typography>
             </div>
           </div>
@@ -159,41 +154,21 @@ const ProfilePage = () => {
                     placeholder="نام خانوادگی خود را وارد کنید"
                   />
                 </div>
-                <Input
-                  label="شماره موبایل"
-                  name="phone_number"
-                  value={
-                    formData.phone_number
-                      ? toPersianNumbers(formData.phone_number)
-                      : ""
-                  }
-                  onChange={handleInputChange}
-                  placeholder="شماره موبایل خود را وارد کنید"
-                  type="tel"
-                />
-                <Input
-                  label="نام کاربری"
-                  name="username"
-                  value={formData.username}
-                  onChange={handleInputChange}
-                  placeholder="نام کاربری خود را وارد کنید"
-                  type="text"
-                />
                 <div className="flex justify-between items-center p-4 bg-muted rounded-xl">
                   <Typography
                     variant={"paragraph/sm"}
                     className="text-muted-foreground"
                   >
-                    کد ملی:
+                    شماره موبایل:
                   </Typography>
                   <Typography
                     variant={"paragraph/sm"}
                     weight="bold"
                     className="text-foreground"
                   >
-                    {userProfileInfo?.national_code
-                      ? toPersianNumbers(userProfileInfo.national_code)
-                      : "___"}
+                    {userProfileInfo?.phone_number
+                      ? toPersianNumbers(userProfileInfo.phone_number)
+                      : "_"}
                   </Typography>
                 </div>
                 <div className="flex gap-3 pt-4">
@@ -294,21 +269,6 @@ const ProfilePage = () => {
           </div>
 
           <div className="space-y-4">
-            <div className="flex justify-between items-center p-4 bg-muted rounded-xl">
-              <Typography
-                variant={"paragraph/sm"}
-                className="text-muted-foreground"
-              >
-                نام کاربری:
-              </Typography>
-              <Typography
-                variant={"paragraph/sm"}
-                weight="bold"
-                className="text-foreground"
-              >
-                {userProfileInfo?.username || "_"}
-              </Typography>
-            </div>
             <div className="flex justify-between items-center p-4 bg-muted rounded-xl">
               <div className="flex items-center gap-2">
                 <IconCalendar size={16} className="text-muted-foreground" />

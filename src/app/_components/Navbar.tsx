@@ -199,7 +199,13 @@ const Navbar = () => {
             onClick={() => setIsSidebarOpen(true)}
           />
           {/* Center Logo */}
-          <Image src="img/logo-main.svg" alt="logo" width={50} height={50} />
+          <Image
+            src="img/logo-main.svg"
+            unoptimized
+            alt="logo"
+            width={50}
+            height={50}
+          />
           {/* <LogoIcon size={48} /> */}
 
           {/* Right Icon with Badge */}
@@ -239,8 +245,8 @@ const Navbar = () => {
               >
                 تعداد اقلام :{" "}
                 <span>
-                  {shopCart?.total_items
-                    ? toPersianNumbers(shopCart?.total_items)
+                  {shopCart?.items?.length
+                    ? toPersianNumbers(shopCart?.items?.length)
                     : null}
                 </span>
               </Typography>

@@ -175,7 +175,7 @@ const DocumentsPage = () => {
 
   return (
     <div
-      className="px-4 pt-28 flex flex-col gap-6 min-h-screen bg-background"
+      className="px-4 pt-24  flex flex-col gap-6 min-h-screen bg-background"
       dir="rtl"
     >
       {/* Header */}

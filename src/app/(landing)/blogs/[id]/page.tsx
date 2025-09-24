@@ -43,7 +43,7 @@ function BlogDetailFn() {
   }
 
   return (
-    <main className="max-w-2xl mx-auto pt-28 px-4" dir="rtl">
+    <main className="max-w-2xl mx-auto pt-28 pb-48 px-4" dir="rtl">
       <Link
         href="/blogs"
         className="cursor-pointer p-2 rounded-full hover:bg-muted transition-colors"

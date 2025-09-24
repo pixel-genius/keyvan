@@ -77,7 +77,7 @@ const OrdersPage = () => {
 
   return (
     <>
-      <div className="flex px-4 pt-28  flex-col gap-4 page-container page-with-bottom-nav">
+      <div className="flex px-4 pt-24 pb-48 flex-col gap-4 page-container page-with-bottom-nav">
         <Header title="سفارشات من" />
 
         {/* Use the new Header component */}

@@ -58,11 +58,6 @@ const BrandPage = () => {
                   {brand.name}
                 </Typography>
               </div>
-              <div className="bg-zinc-800 w-7 h-7 rounded-full inline-flex justify-center items-center">
-                <Typography variant="label/sm" weight="normal">
-                  {brand.count}
-                </Typography>
-              </div>
             </Link>
           ))
         ) : (
