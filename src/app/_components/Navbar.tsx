@@ -15,6 +15,10 @@ import {
   usePostShopOrderCreateApi,
 } from "@/utils/apis/shop/orders/create/POST/shopOrderCreatePostApi";
 import {
+  AccountAddressesObj,
+  useGetAccountAddressList,
+} from "@/utils/apis/account/addresses/GET/accountAddressesListGetApi";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -22,7 +26,6 @@ import {
   SelectValue,
 } from "@/components/components/atoms/select";
 import { useDeleteShopCartItemsRemoveApi } from "@/utils/apis/shop/cart/items/[id]/remove/DELETE/shopCartItemsRemoveDeleteApi";
-import { useGetAccountAddressList } from "@/utils/apis/account/addresses/GET/accountAddressesListGetApi";
 import { useDeleteShopCartClearApi } from "@/utils/apis/shop/cart/clear/DELETE/shopCartClearDeleteApi";
 import Typography from "@/components/components/atoms/typography";
 import { useAuthStore } from "@/utils/store/authenticate.store";
@@ -31,10 +34,10 @@ import { Button } from "@/components/components/atoms/button";
 import AddAddressBottomSheet from "./AddAddressBottomSheet";
 import OrderConfirmation from "./OrderConfirmation";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import CartItemCard from "./CartItemCard";
 import BottomSheet from "./BottomSheet";
 import EmptyCart from "./EmptyCart";
-import { useState } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
 
@@ -62,6 +65,8 @@ const Navbar = () => {
     notes: "",
     address_id: null,
   });
+  const [defaultAddressState, setDefaultAddressState] =
+    useState<AccountAddressesObj | null>(null);
 
   const accountAddressListQuery = useGetAccountAddressList({
     enabled: Number(shopCart?.total_items) > 0,
@@ -188,6 +193,23 @@ const Navbar = () => {
     },
   ];
 
+  useEffect(() => {
+    let defaultAddress: AccountAddressesObj | undefined =
+      accountAddressListQuery.data?.data.find((item) => item.is_default);
+
+    if (!defaultAddress) {
+      defaultAddress = accountAddressListQuery.data?.data?.[0];
+    }
+    setDefaultAddressState(defaultAddress || null);
+  }, [accountAddressListQuery.data?.data]);
+
+  useEffect(() => {
+    setFormFields((prev) => ({
+      ...prev,
+      address_id: defaultAddressState?.id || null,
+    }));
+  }, [defaultAddressState]);
+
   return (
     <>
       <nav className="bg-maincard flex justify-center z-50 fixed top-0 w-full items-center px-4 py-4">
@@ -267,9 +289,10 @@ const Navbar = () => {
                   onDecreaseQuantity={handleDecreaseQuantity}
                 />
               ))}
-              <div className="mb-2">
+              <div className="mb-4">
                 {accountAddressListQuery.data?.data.length ? (
                   <Select
+                    value={formFields.address_id?.toString() || ""}
                     onValueChange={(value) => {
                       setFormFields((prev) => ({
                         ...prev,
@@ -278,7 +301,7 @@ const Navbar = () => {
                     }}
                   >
                     <SelectTrigger
-                      className="bg-transparent w-full "
+                      className="bg-transparent w-full h-12"
                       style={{ boxShadow: "unset !important" }}
                       dir="rtl"
                     >

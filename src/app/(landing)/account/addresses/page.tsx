@@ -765,7 +765,7 @@ const AddressesPage = () => {
                 }));
               }}
             />
-            <div className="flex items-center gap-2 flex-row">
+            {/* <div className="flex items-center gap-2 flex-row">
               <Typography
                 variant={"paragraph/sm"}
                 weight="bold"
@@ -782,7 +782,7 @@ const AddressesPage = () => {
                   }));
                 }}
               />
-            </div>
+            </div> */}
             {/* Save Button */}
             <Button
               onClick={handleSaveAddress}
