@@ -242,6 +242,7 @@ const Navbar = () => {
                   image={item.product.image}
                   disabled={shopOrderMutate.isPending}
                   quantity={item.quantity}
+                  price={item.total_price}
                   removeMutate={shopDeleteCartItemMutate}
                   onIncreaseQuantity={handleIncreaseQuantity}
                   onDecreaseQuantity={handleDecreaseQuantity}

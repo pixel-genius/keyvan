@@ -20,6 +20,7 @@ type CartItemCardProps = {
   name: string;
   image: string;
   quantity: number;
+  price: string;
   disabled: boolean;
   removeMutate: UseMutationResult<
     ShopCartApiResponse,
@@ -36,6 +37,7 @@ const CartItemCard = ({
   name,
   quantity,
   image,
+  price,
   disabled,
   removeMutate,
 }: CartItemCardProps) => {
@@ -65,7 +67,7 @@ const CartItemCard = ({
               weight="normal"
               className="text-right text-gray-500"
             >
-              مبلغ : {toPersianNumbers("130000")} تومان
+              مبلغ : {toPersianNumbers(price)} تومان
             </Typography>
           </div>
           <div className="h-[54px] w-[54px] rounded-lg overflow-hidden">

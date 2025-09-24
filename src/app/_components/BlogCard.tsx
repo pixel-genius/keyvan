@@ -24,6 +24,7 @@ const BlogCard: React.FC<BlogCardProps> = ({
   created_at,
   author_name,
 }) => {
+  console.log(image);
   return (
     <Link href={`/blogs/${id}`}>
       <div

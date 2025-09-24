@@ -1,4 +1,3 @@
-import PWAInstaller from "@/components/PWAInstaller";
 import LogoIcon from "@/icons/logo";
 import { ReactNode } from "react";
 import "../globals.css";
@@ -22,7 +21,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           <div className="flex-1">{children}</div>
         </div>
       </div>
-      <PWAInstaller />
+      {/* <PWAInstaller /> */}
     </div>
   );
 }
