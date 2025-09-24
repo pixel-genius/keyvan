@@ -39,7 +39,7 @@ export default function ProductCard({
 
   return (
     <Card dir="rtl" className="bg-black text-white rounded-2xl p-4">
-      <CardContent className="flex items-center space-x-4 justify-between">
+      <CardContent className="flex items-center space-x-4 justify-between px-0!">
         <Link className="flex gap-3 items-center" href={`/products/${id}`}>
           <div className="w-16 h-16 relative rounded-lg overflow-hidden bg-gray-700 flex items-center justify-center">
             {isValidImageUrl ? (

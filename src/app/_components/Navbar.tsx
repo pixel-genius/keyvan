@@ -28,6 +28,7 @@ import Typography from "@/components/components/atoms/typography";
 import { useAuthStore } from "@/utils/store/authenticate.store";
 import { toEnglishDigits, toPersianNumbers } from "@/lib/utils";
 import { Button } from "@/components/components/atoms/button";
+import AddAddressBottomSheet from "./AddAddressBottomSheet";
 import OrderConfirmation from "./OrderConfirmation";
 import { useRouter } from "next/navigation";
 import CartItemCard from "./CartItemCard";
@@ -53,6 +54,7 @@ const Navbar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isOrderConfirmationOpen, setIsOrderConfirmationOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isAddAddressOpen, setIsAddAddressOpen] = useState(false);
   const [formFields, setFormFields] = useState<{
     notes: string;
     address_id: number | null;
@@ -266,32 +268,52 @@ const Navbar = () => {
                 />
               ))}
               <div className="mb-2">
-                <Select
-                  onValueChange={(value) => {
-                    setFormFields((prev) => ({
-                      ...prev,
-                      address_id: +value,
-                    }));
-                  }}
-                >
-                  <SelectTrigger
-                    className="bg-transparent w-full "
-                    style={{ boxShadow: "unset !important" }}
-                    dir="rtl"
+                {accountAddressListQuery.data?.data.length ? (
+                  <Select
+                    onValueChange={(value) => {
+                      setFormFields((prev) => ({
+                        ...prev,
+                        address_id: +value,
+                      }));
+                    }}
                   >
-                    <SelectValue placeholder="آدرس مورد نظر را انتخاب کنید" />
-                  </SelectTrigger>
-                  <SelectContent dir="rtl">
-                    {accountAddressListQuery.data?.data.map((item) => (
-                      <SelectItem
-                        key={item.id + item.title}
-                        value={item.id.toString()}
-                      >
-                        {item.title} {item.is_default ? "(پیش فرض)" : null}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                    <SelectTrigger
+                      className="bg-transparent w-full "
+                      style={{ boxShadow: "unset !important" }}
+                      dir="rtl"
+                    >
+                      <SelectValue placeholder="آدرس مورد نظر را انتخاب کنید" />
+                    </SelectTrigger>
+                    <SelectContent dir="rtl">
+                      {accountAddressListQuery.data?.data.map((item) => (
+                        <SelectItem
+                          key={item.id + item.title}
+                          value={item.id.toString()}
+                        >
+                          {item.title} {item.is_default ? "(پیش فرض)" : null}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <div className="flex flex-col items-center gap-2 p-4 bg-muted/10 rounded-xl">
+                    <Typography
+                      variant="paragraph/sm"
+                      className="text-muted-foreground text-center"
+                    >
+                      شما هنوز آدرسی ثبت نکرده‌اید
+                    </Typography>
+                    <Button
+                      variant="secondary"
+                      onClick={() => {
+                        setIsAddAddressOpen(true);
+                      }}
+                      className="w-full"
+                    >
+                      افزودن آدرس جدید
+                    </Button>
+                  </div>
+                )}
               </div>
               <textarea
                 value={formFields.notes}
@@ -403,6 +425,15 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      {/* Add Address Bottom Sheet */}
+      <AddAddressBottomSheet
+        isOpen={isAddAddressOpen}
+        onClose={() => setIsAddAddressOpen(false)}
+        onSave={() => {
+          accountAddressListQuery.refetch();
+        }}
+      />
     </>
   );
 };

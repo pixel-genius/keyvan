@@ -107,7 +107,7 @@ const OrdersPage = () => {
                 {/* Order Price */}
                 <div className="text-right">
                   <Typography variant="label/md" weight="bold">
-                    {toPersianNumbers(order.total_amount)}
+                    {toPersianNumbers(order.total_amount?.toLocaleString())}
                     <span className="text-gray-400 px-2">تومان</span>
                   </Typography>
                 </div>
@@ -154,7 +154,10 @@ const OrdersPage = () => {
                                 variant="paragraph/sm"
                                 className="text-gray-300"
                               >
-                                {toPersianNumbers(item.total_price)} تومان
+                                {toPersianNumbers(
+                                  item.total_price?.toLocaleString(),
+                                )}{" "}
+                                تومان
                               </Typography>
                             </div>
                           ))}

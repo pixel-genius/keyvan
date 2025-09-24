@@ -179,7 +179,7 @@ const Pricepage = () => {
   };
 
   return (
-    <div dir="rtl" className="px-4 pt-24 pb-48 ">
+    <div dir="rtl" className="px-4 pt-24 flex flex-col">
       <div className="flex flex-row items-center justify-between ">
         <button
           onClick={goToPreviousDay}
@@ -247,52 +247,54 @@ const Pricepage = () => {
       </div>
 
       {/* Results count */}
-      {shopPricesQuery.isFetching &&
-        [...Array(6)].map((_, index) => (
-          <div
-            key={index}
-            className="flex justify-between items-center border-b pb-3.5 border-zinc-700 pt-2"
-          >
-            <div className="flex flex-col gap-2 ">
-              <Skeleton className="h-5 w-16 bg-card rounded-sm" />
-              <div className="flex gap-1.5 items-center">
-                <Skeleton className="h-5 w-20 bg-card rounded-sm" />
+      <div className=" overflow-y-auto  gap-4 h-[calc(100vh-350px)] pb-16 min-h-0">
+        {shopPricesQuery.isFetching &&
+          [...Array(6)].map((_, index) => (
+            <div
+              key={index}
+              className="flex justify-between items-center border-b pb-3.5 border-zinc-700 pt-2"
+            >
+              <div className="flex flex-col gap-2 ">
+                <Skeleton className="h-5 w-16 bg-card rounded-sm" />
+                <div className="flex gap-1.5 items-center">
+                  <Skeleton className="h-5 w-20 bg-card rounded-sm" />
+                </div>
+              </div>
+              <div className="flex items-center gap-2 w-50">
+                <Skeleton className="h-9 w-1/5 rounded-full bg-card" />
+                <Skeleton className="h-9 w-2/5 bg-card" />
+                <Skeleton className="h-9 w-2/5 bg-card" />
               </div>
             </div>
-            <div className="flex items-center gap-2 w-50">
-              <Skeleton className="h-9 w-1/5 rounded-full bg-card" />
-              <Skeleton className="h-9 w-2/5 bg-card" />
-              <Skeleton className="h-9 w-2/5 bg-card" />
-            </div>
-          </div>
-        ))}
-      {shopPricesQuery?.data?.length === 0 ? (
-        <div className="text-center py-8">
-          <Typography
-            variant="label/md"
-            weight="medium"
-            className="text-gray-400"
-          >
-            محصولی یافت نشد
-          </Typography>
-        </div>
-      ) : (
-        <div className="flex flex-col gap-4">
-          {shopPricesQuery?.data?.map((item, index) => (
-            <div key={index}>
-              <PriceItemCard
-                title={item.name}
-                price={item.price}
-                trend={item.is_increamental ? "up" : "down"}
-                onChart={() => handleItemClick(item)}
-                onBuy={() => {
-                  onAddProductToCart(item.id);
-                }}
-              />
-            </div>
           ))}
-        </div>
-      )}
+        {shopPricesQuery?.data?.length === 0 ? (
+          <div className="text-center py-8">
+            <Typography
+              variant="label/md"
+              weight="medium"
+              className="text-gray-400"
+            >
+              محصولی یافت نشد
+            </Typography>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {shopPricesQuery?.data?.map((item, index) => (
+              <div key={index}>
+                <PriceItemCard
+                  title={item.name}
+                  price={item.price}
+                  trend={item.is_increamental ? "up" : "down"}
+                  onChart={() => handleItemClick(item)}
+                  onBuy={() => {
+                    onAddProductToCart(item.id);
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Chart Bottom Sheet */}
       <BottomSheet isOpen={showChart} onClose={closeChart}>

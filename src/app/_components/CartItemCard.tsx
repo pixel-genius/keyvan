@@ -67,7 +67,7 @@ const CartItemCard = ({
               weight="normal"
               className="text-right text-gray-500"
             >
-              مبلغ : {toPersianNumbers(price)} تومان
+              مبلغ : {toPersianNumbers(price?.toLocaleString())} تومان
             </Typography>
           </div>
           <div className="h-[54px] w-[54px] rounded-lg overflow-hidden">

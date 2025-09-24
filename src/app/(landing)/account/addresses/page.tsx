@@ -1,14 +1,6 @@
 "use client";
 
 import {
-  AlertDialog,
-  AlertDialogFooter,
-  AlertDialogDescription,
-  AlertDialogTitle,
-  AlertDialogHeader,
-  AlertDialogContent,
-} from "@/components/components/atoms/alertDialog";
-import {
   IconAlertSquareRounded,
   IconChevronLeft,
   IconEdit,
@@ -17,7 +9,17 @@ import {
   IconPlus,
   IconStar,
   IconTrash,
+  IconZoomIn,
+  IconZoomOut,
 } from "@tabler/icons-react";
+import {
+  AlertDialog,
+  AlertDialogFooter,
+  AlertDialogDescription,
+  AlertDialogTitle,
+  AlertDialogHeader,
+  AlertDialogContent,
+} from "@/components/components/atoms/alertDialog";
 import {
   AccountAddressesObj,
   useGetAccountAddressList,
@@ -79,6 +81,27 @@ const AddressesPage = () => {
   const [errorAddress, setErrorAddress] = useState<string | null>(null);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [currentZoom, setCurrentZoom] = useState(13);
+
+  const handleZoom = useCallback((direction: "in" | "out") => {
+    if (!mapRef.current?.map) return;
+
+    const view = mapRef.current.map.getView();
+    const zoom = view.getZoom() || 13;
+    const newZoom = direction === "in" ? zoom + 1 : zoom - 1;
+
+    // Limit zoom levels between 8 (city level) and 18 (building level)
+    const limitedZoom = Math.min(Math.max(newZoom, 8), 18);
+
+    view.animate({
+      zoom: limitedZoom,
+      duration: 250,
+    });
+
+    setCurrentZoom(limitedZoom);
+  }, []);
+
   const resetForm = () => {
     setFormFields({
       title: null,
@@ -384,6 +407,37 @@ const AddressesPage = () => {
   const onMapInit = useCallback(
     (map: OpenLayersMap) => {
       console.log("Map initialized!", map);
+
+      // Enable mouse wheel zoom
+      map.getInteractions().forEach((interaction) => {
+        if (interaction.get("type") === "wheel") {
+          interaction.setActive(true);
+        }
+      });
+
+      // Track zoom changes
+      map.getView().on("change:resolution", () => {
+        const zoom = map.getView().getZoom();
+        if (zoom) setCurrentZoom(Math.round(zoom));
+      });
+
+      // Handle map drag events
+      map.on("movestart", () => {
+        setIsDragging(true);
+      });
+
+      map.on("moveend", () => {
+        setIsDragging(false);
+        const view = map.getView();
+        const center = view.getCenter();
+        if (center) {
+          const lat = center[1];
+          const lng = center[0];
+          handleMapClick(lat, lng);
+        }
+      });
+
+      // Keep click handler for direct clicks
       map.on("click", (event) => {
         const coordinate = event.coordinate;
         const lat = coordinate[1];
@@ -597,22 +651,57 @@ const AddressesPage = () => {
                       traffic={false}
                       poi={false}
                     />
+                    {/* Center Pointer */}
+                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10">
+                      <div
+                        className={`w-8 h-8 rounded-full border-4 border-primary transition-all duration-300 ${
+                          isDragging
+                            ? "bg-primary/40 scale-110"
+                            : "bg-primary/20 "
+                        }`}
+                      ></div>
+                      <div className="w-2 h-2 rounded-full bg-primary absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+                    </div>
                   </>
                 )}
 
-                {/* My Location Button */}
-                <button
-                  onClick={getCurrentLocation}
-                  disabled={isGettingLocation}
-                  className="absolute top-4 left-4 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors disabled:opacity-50"
-                  title="موقعیت من"
-                >
-                  {isGettingLocation ? (
-                    <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                  ) : (
-                    <IconLocation size={20} className="text-primary" />
-                  )}
-                </button>
+                {/* Map Controls */}
+                <div className="absolute top-4 left-4 flex flex-col gap-2">
+                  {/* My Location Button */}
+                  <button
+                    onClick={getCurrentLocation}
+                    disabled={isGettingLocation}
+                    className="bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors disabled:opacity-50"
+                    title="موقعیت من"
+                  >
+                    {isGettingLocation ? (
+                      <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    ) : (
+                      <IconLocation size={20} className="text-primary" />
+                    )}
+                  </button>
+
+                  {/* Zoom Controls */}
+                  <div className="bg-white shadow-lg rounded-full flex flex-col">
+                    <button
+                      onClick={() => handleZoom("in")}
+                      disabled={currentZoom >= 18}
+                      className="p-2  transition-colors disabled:opacity-50 disabled:hover:bg-white"
+                      title="بزرگنمایی"
+                    >
+                      <IconZoomIn size={20} className="text-primary" />
+                    </button>
+                    <div className="h-[1px] bg-gray-200"></div>
+                    <button
+                      onClick={() => handleZoom("out")}
+                      disabled={currentZoom <= 8}
+                      className="p-2  transition-colors disabled:opacity-50 disabled:hover:bg-white"
+                      title="کوچک‌نمایی"
+                    >
+                      <IconZoomOut size={20} className="text-primary" />
+                    </button>
+                  </div>
+                </div>
               </div>
               <div className="mt-2">
                 <Typography
@@ -654,7 +743,7 @@ const AddressesPage = () => {
               onChange={(e) => {
                 setFormFields((prev) => ({
                   ...prev,
-                  text: e.currentTarget.value,
+                  text: e.currentTarget?.value,
                 }));
               }}
               placeholder="آدرس کامل خود را اینجا وارد کنید..."

@@ -20,7 +20,7 @@ const BrandChipsFilter: React.FC<BrandChipsFilterProps> = ({
   const brandLookupQuery = useGetBrandLookupListApi();
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 flex-wrap">
       {brandLookupQuery.isFetching &&
         [...Array(6)].map((_, index) => (
           <Skeleton key={index} className="h-9 w-16 bg-card rounded-sm" />
