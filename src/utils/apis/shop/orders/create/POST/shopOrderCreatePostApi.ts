@@ -6,6 +6,7 @@ import path from "path";
 
 export interface ShopOrderCreatePostApiPayload {
   notes: string;
+  address_id: number;
 }
 
 // POST API function
