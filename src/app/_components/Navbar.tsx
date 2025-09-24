@@ -23,6 +23,7 @@ import {
 } from "@/components/components/atoms/select";
 import { useDeleteShopCartItemsRemoveApi } from "@/utils/apis/shop/cart/items/[id]/remove/DELETE/shopCartItemsRemoveDeleteApi";
 import { useGetAccountAddressList } from "@/utils/apis/account/addresses/GET/accountAddressesListGetApi";
+import { useDeleteShopCartClearApi } from "@/utils/apis/shop/cart/clear/DELETE/shopCartClearDeleteApi";
 import Typography from "@/components/components/atoms/typography";
 import { useAuthStore } from "@/utils/store/authenticate.store";
 import { toEnglishDigits, toPersianNumbers } from "@/lib/utils";
@@ -69,10 +70,20 @@ const Navbar = () => {
       setUserInfo({ shopCart: res });
     },
   });
+
+  const shopCartClearMutate = useDeleteShopCartClearApi({
+    onSuccess: (res) => {
+      setUserInfo({ shopCart: res });
+    },
+  });
+
   const shopOrderMutate = usePostShopOrderCreateApi({
     onSuccess: () => {
       toast.success("ثبت سفارش با موفقیت انجام شد");
       setIsCartOpen(false);
+      setCartItems([]);
+      // Clear cart from server after successful order
+      shopCartClearMutate.mutate(undefined);
       router.push("/orders");
     },
     onError: () => {

@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   images: {
     // Disable Next.js image optimization to avoid upstream 400 on `?url=` param
-    // unoptimized: true,
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",

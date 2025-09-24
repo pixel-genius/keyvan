@@ -38,8 +38,8 @@ export default function ProductCard({
   const isValidImageUrl = imageUrl && imageUrl.trim() !== "" && !imageError;
 
   return (
-    <Card dir="rtl" className="bg-black text-white rounded-2xl">
-      <CardContent className="p-4 flex items-center space-x-4 justify-between">
+    <Card dir="rtl" className="bg-black text-white rounded-2xl p-4">
+      <CardContent className="flex items-center space-x-4 justify-between">
         <Link className="flex gap-3 items-center" href={`/products/${id}`}>
           <div className="w-16 h-16 relative rounded-lg overflow-hidden bg-gray-700 flex items-center justify-center">
             {isValidImageUrl ? (

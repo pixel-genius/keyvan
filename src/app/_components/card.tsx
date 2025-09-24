@@ -51,6 +51,7 @@ const ProductCard = ({
           src={getImageSrc()}
           alt={product?.name || ""}
           fill
+          unoptimized
           className="w-full object-cover rounded"
         />
       </div>

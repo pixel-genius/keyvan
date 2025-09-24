@@ -76,6 +76,7 @@ const CartItemCard = ({
               alt={name}
               width={54}
               height={54}
+              unoptimized
               className="h-full w-full object-cover rounded-lg"
             />
           </div>
