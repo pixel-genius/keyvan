@@ -35,6 +35,29 @@ function ProductDetailFn() {
 
   const shopProductDetail = useGetShopProductDetail({ slug: id });
 
+  // Validate and format image URL
+  const getImageSrc = () => {
+    if (!shopProductDetail?.data?.image) {
+      return "/img/sigar.png";
+    }
+
+    // Check if it's already a complete URL
+    if (
+      shopProductDetail.data.image.startsWith("http://") ||
+      shopProductDetail.data.image.startsWith("https://")
+    ) {
+      return shopProductDetail.data.image;
+    }
+
+    // If it's a relative path, ensure it starts with /
+    if (shopProductDetail.data.image.startsWith("/")) {
+      return shopProductDetail.data.image;
+    }
+
+    // If it doesn't start with /, add it
+    return `/${shopProductDetail.data.image}`;
+  };
+
   const shopProductDetailPriceHistory = useGetShopProductDetailPriceHistory({
     slug: id,
   });
@@ -124,7 +147,7 @@ function ProductDetailFn() {
       <div>
         <div className="flex justify-center items-center bg-white rounded-lg mb-4">
           <Image
-            src={shopProductDetail?.data?.image || "/img/sigar.png"}
+            src={getImageSrc()}
             alt={shopProductDetail?.data?.name || ""}
             width={400}
             height={400}

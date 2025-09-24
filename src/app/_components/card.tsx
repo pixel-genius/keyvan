@@ -19,11 +19,35 @@ const ProductCard = ({
   const formattedPrice = price
     ? new Intl.NumberFormat("fa-IR").format(price)
     : "0";
+
+  // Validate and format image URL
+  const getImageSrc = () => {
+    if (!product?.image) {
+      return "/img/sigar.png";
+    }
+
+    // Check if it's already a complete URL
+    if (
+      product.image.startsWith("http://") ||
+      product.image.startsWith("https://")
+    ) {
+      return product.image;
+    }
+
+    // If it's a relative path, ensure it starts with /
+    if (product.image.startsWith("/")) {
+      return product.image;
+    }
+
+    // If it doesn't start with /, add it
+    return `/${product.image}`;
+  };
+
   return (
     <div className="bg-maincard p-4 rounded-xl pb-1.5">
       <div className="flex justify-center items-center mb-2 min-h-[150px] relative">
         <Image
-          src={product?.image || "img/sigar.png"}
+          src={getImageSrc()}
           alt={product?.name || ""}
           fill
           className="w-full object-cover rounded"
