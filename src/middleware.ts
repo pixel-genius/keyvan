@@ -5,6 +5,22 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const authToken = request.cookies.get("auth-token")?.value;
 
+  // Bypass middleware for static assets and public files to prevent redirects on images/fonts/manifest
+  const isStaticAsset =
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/static") ||
+    pathname.startsWith("/fonts") ||
+    pathname.startsWith("/img") ||
+    pathname.startsWith("/favicon.ico") ||
+    pathname.startsWith("/robots.txt") ||
+    pathname.startsWith("/sitemap.xml") ||
+    pathname.startsWith("/manifest.json") ||
+    /\.[a-zA-Z0-9]+$/.test(pathname); // any file with an extension
+
+  if (isStaticAsset) {
+    return NextResponse.next();
+  }
+
   const isAuthPage = pathname.startsWith("/auth");
   const isAuthenticated = Boolean(authToken);
 
@@ -22,7 +38,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Exclude API routes, Next internals, and any file with an extension (static assets)
-    "/((?!api|_next|.*\\..*).*)",
+    // Run middleware for all app routes except API; static assets are skipped in-code above
+    "/((?!api).*)",
   ],
 };
