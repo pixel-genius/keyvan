@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "env-cmd -f .env/.env.stage next dev",
-    "build:stage": "env-cmd -f .env/.env.stage next build",
-    "build": "env-cmd -f .env/.env next build",
+    "build:stage": "env-cmd -f .env.stage next build",
+    "build": "env-cmd -f .env --silent next build || (echo 'Warning: .env/.env not found, building without env-cmd' && next build)",
     "start": "node .next/standalone/server.js",
     "lint": "next lint",
     "prepare": "husky"
