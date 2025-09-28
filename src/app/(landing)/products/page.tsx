@@ -3,9 +3,12 @@
 import AddToCartBottomSheet, {
   SelectedItemAddCartBottomSheet,
 } from "@/app/_components/AddToCartBottomSheet";
+import {
+  ORDERTYPE,
+  usePostShopCartAddApi,
+} from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
 import { useGetShopProductsListInfiniteApi } from "@/utils/apis/shop/products/GET/shopProductsListApi";
 import { useGetCategoryLookupListApi } from "@/utils/apis/shop/category/GET/categoryLookupListApi";
-import { usePostShopCartAddApi } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
 import { useGetBrandLookupListApi } from "@/utils/apis/shop/brand/GET/brandLookupListApi";
 import { useInfiniteScroll } from "@/utils/hooks/useInfiniteScroll";
 import Typography from "@/components/components/atoms/typography";
@@ -119,13 +122,15 @@ function ProductsContent() {
     setIsBottomSheetOpen(false);
   };
 
-  const onAddToCart = () => {
+  const onAddToCart = (order_type: ORDERTYPE) => {
     if (selectedProduct?.id && selectedProduct?.count) {
       shopAddCartMutate.mutate({
         product_id: selectedProduct?.id,
         quantity: selectedProduct?.count
           ? Number(toEnglishDigits(selectedProduct?.count))
           : undefined,
+        order_type,
+        suggested_price: Number(selectedProduct.suggested_price),
       });
     }
   };
@@ -147,7 +152,7 @@ function ProductsContent() {
   // The API does not provide a category field. If needed, extract categories from another source.
 
   return (
-    <div className="mx-auto px-4 pt-28  min-h-full">
+    <div className="mx-auto px-4 min-h-full">
       <Header
         title={
           categories.data?.find((item) => item.id === params.category)?.name ||

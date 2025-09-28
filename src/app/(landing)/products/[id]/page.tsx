@@ -3,8 +3,11 @@ import { useGetShopProductDetailPriceHistory } from "@/utils/apis/shop/products/
 import AddToCartBottomSheet, {
   SelectedItemAddCartBottomSheet,
 } from "@/app/_components/AddToCartBottomSheet";
+import {
+  ORDERTYPE,
+  usePostShopCartAddApi,
+} from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
 import { useGetShopProductDetail } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
-import { usePostShopCartAddApi } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
 import { IconChevronLeft, IconShoppingCart } from "@tabler/icons-react";
 import CustomAreaChartCard from "./_components/CustomAreaChartCard";
 import Typography from "@/components/components/atoms/typography";
@@ -62,12 +65,14 @@ function ProductDetailFn() {
     }
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (order_type: ORDERTYPE) => {
     if (selectedProduct?.id && selectedProduct.count) {
       setIsAddingToCart(true);
       addToCartMutation.mutate({
         product_id: selectedProduct.id,
         quantity: +toEnglishDigits(selectedProduct.count),
+        order_type,
+        suggested_price: selectedProduct.suggested_price as number,
       });
     }
   };
