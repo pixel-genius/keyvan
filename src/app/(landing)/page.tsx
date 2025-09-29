@@ -30,7 +30,7 @@ const LandingPage = () => {
   const shopProductsQuery = useGetShopProductsListApi();
 
   return (
-    <div className="px-4 pt-28">
+    <div className="px-4 pt-2">
       <div className="flex flex-col items-center justify-center ">
         <Swiper
           spaceBetween={30}

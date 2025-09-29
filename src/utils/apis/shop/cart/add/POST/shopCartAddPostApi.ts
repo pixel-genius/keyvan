@@ -3,9 +3,13 @@ import { ShopCartApiResponse } from "../../GET/shopCartGetApi";
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
+export type ORDERTYPE = "buy" | "sell";
+
 export interface ShopCartAddPostApiPayload {
   product_id: number;
   quantity: number | undefined;
+  order_type: ORDERTYPE;
+  suggested_price: number;
 }
 
 // POST API function

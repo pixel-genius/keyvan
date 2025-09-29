@@ -23,10 +23,12 @@ import {
 } from "@/components/components/atoms/select";
 import { useDeleteShopCartItemsRemoveApi } from "@/utils/apis/shop/cart/items/[id]/remove/DELETE/shopCartItemsRemoveDeleteApi";
 import { useGetAccountAddressList } from "@/utils/apis/account/addresses/GET/accountAddressesListGetApi";
+import { SHOPCARTGET_QUERYKEY } from "@/utils/apis/shop/cart/GET/shopCartGetApi";
 import Typography from "@/components/components/atoms/typography";
 import { useAuthStore } from "@/utils/store/authenticate.store";
 import { toEnglishDigits, toPersianNumbers } from "@/lib/utils";
 import { Button } from "@/components/components/atoms/button";
+import { useQueryClient } from "@tanstack/react-query";
 import OrderConfirmation from "./OrderConfirmation";
 import { useRouter } from "next/navigation";
 import CartItemCard from "./CartItemCard";
@@ -48,7 +50,7 @@ type CartItem = {
 const Navbar = () => {
   const router = useRouter();
   const { shopCart, setUserInfo } = useAuthStore();
-
+  const queryClient = useQueryClient();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isOrderConfirmationOpen, setIsOrderConfirmationOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -59,7 +61,6 @@ const Navbar = () => {
     notes: "",
     address_id: null,
   });
-
   const accountAddressListQuery = useGetAccountAddressList({
     enabled: Number(shopCart?.total_items) > 0,
   });
@@ -73,6 +74,7 @@ const Navbar = () => {
     onSuccess: () => {
       toast.success("ثبت سفارش با موفقیت انجام شد");
       setIsCartOpen(false);
+      queryClient.refetchQueries({ queryKey: [SHOPCARTGET_QUERYKEY] });
       router.push("/orders");
     },
     onError: () => {
@@ -103,7 +105,6 @@ const Navbar = () => {
       ),
     );
   };
-
   // Function to handle order submission
   const handleOrderSubmit = () => {
     shopOrderMutate.mutate(formFields as ShopOrderCreatePostApiPayload);
@@ -218,7 +219,7 @@ const Navbar = () => {
             سبد سفارش
           </Typography>
 
-          {Number(shopCart?.total_items) > 0 ? (
+          {Number(shopCart?.total_items) !== 0 ? (
             <>
               <Typography
                 variant="label/sm"
@@ -232,20 +233,23 @@ const Navbar = () => {
                     : null}
                 </span>
               </Typography>
-
-              {shopCart?.items?.map((item) => (
-                <CartItemCard
-                  key={item.id}
-                  id={String(item.id)}
-                  name={item.product.name}
-                  image={item.product.image}
-                  disabled={shopOrderMutate.isPending}
-                  quantity={item.quantity}
-                  removeMutate={shopDeleteCartItemMutate}
-                  onIncreaseQuantity={handleIncreaseQuantity}
-                  onDecreaseQuantity={handleDecreaseQuantity}
-                />
-              ))}
+              <div className="max-h-[250px] overflow-y-auto mb-2 flex flex-col gap-2">
+                {shopCart?.items?.map((item) => (
+                  <CartItemCard
+                    key={item.id}
+                    id={String(item.id)}
+                    name={item.product.name}
+                    image={item.product.image}
+                    orderType={item.order_type}
+                    price={item.suggested_price}
+                    disabled={shopOrderMutate.isPending}
+                    quantity={item.quantity}
+                    removeMutate={shopDeleteCartItemMutate}
+                    onIncreaseQuantity={handleIncreaseQuantity}
+                    onDecreaseQuantity={handleDecreaseQuantity}
+                  />
+                ))}
+              </div>
               <div className="mb-2">
                 <Select
                   onValueChange={(value) => {
