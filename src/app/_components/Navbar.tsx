@@ -232,20 +232,23 @@ const Navbar = () => {
                     : null}
                 </span>
               </Typography>
-
-              {shopCart?.items?.map((item) => (
-                <CartItemCard
-                  key={item.id}
-                  id={String(item.id)}
-                  name={item.product.name}
-                  image={item.product.image}
-                  disabled={shopOrderMutate.isPending}
-                  quantity={item.quantity}
-                  removeMutate={shopDeleteCartItemMutate}
-                  onIncreaseQuantity={handleIncreaseQuantity}
-                  onDecreaseQuantity={handleDecreaseQuantity}
-                />
-              ))}
+              <div className="max-h-[250px] overflow-y-auto mb-2 flex flex-col gap-2">
+                {shopCart?.items?.map((item) => (
+                  <CartItemCard
+                    key={item.id}
+                    id={String(item.id)}
+                    name={item.product.name}
+                    image={item.product.image}
+                    orderType={item.order_type}
+                    price={item.suggested_price}
+                    disabled={shopOrderMutate.isPending}
+                    quantity={item.quantity}
+                    removeMutate={shopDeleteCartItemMutate}
+                    onIncreaseQuantity={handleIncreaseQuantity}
+                    onDecreaseQuantity={handleDecreaseQuantity}
+                  />
+                ))}
+              </div>
               <div className="mb-2">
                 <Select
                   onValueChange={(value) => {

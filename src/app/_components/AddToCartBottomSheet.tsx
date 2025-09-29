@@ -88,9 +88,9 @@ const AddToCartBottomSheet = ({
             type="text"
           />
           <Button
-            className="w-full mb-3"
+            className="w-full mb-3 bg-green-600"
             disabled={disabled}
-            variant="primary"
+            variant="tertiary"
             onClick={() => {
               onAddToCart("buy");
             }}
@@ -98,9 +98,9 @@ const AddToCartBottomSheet = ({
             خرید
           </Button>
           <Button
-            className="w-full"
+            className="w-full bg-red-600"
             disabled={disabled}
-            variant="secondary"
+            variant="tertiary"
             onClick={() => {
               onAddToCart("sell");
             }}

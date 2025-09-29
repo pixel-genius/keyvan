@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import React from "react";
 import { Slot } from "@radix-ui/react-slot";
+import { cn } from "@/lib/utils";
+import React from "react";
 
 const chipVariants = cva(
   "inline-flex gap-2 items-center justify-center disabled:bg-ring disabled:text-gray-400 whitespace-nowrap text-foreground rounded-lg bg-primary px-3 py-2 text-sm font-medium transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50",
@@ -8,9 +9,9 @@ const chipVariants = cva(
     variants: {
       variant: {
         primary: "bg-primary hover:bg-yellow-700   ",
-        warning: "bg-warning hover:bg-amber-700    ",
-        danger: "bg-rose-500 hover:bg-rose-700   ",
-        success: "bg-success hover:bg-emerald-700   ",
+        warning: "bg-yellow-600 hover:bg-amber-700    ",
+        danger: "bg-red-600 hover:bg-rose-700   ",
+        success: "bg-green-600 hover:bg-emerald-700   ",
         info: "bg-sky-500 hover:bg-sky-700   ",
         secendery: "bg-zinc-900 hover:bg-zinc-700    ",
       },
@@ -24,7 +25,7 @@ const chipVariants = cva(
       variant: "primary",
       size: "sm",
     },
-  }
+  },
 );
 export interface ChipProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -46,12 +47,12 @@ const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
       children,
       ...props
     },
-    ref
+    ref,
   ) => {
     const Comp = asChild ? Slot : "button";
     return (
       <Comp
-        className={chipVariants({ variant, size, className })}
+        className={cn(chipVariants({ variant, size }), className)}
         ref={ref}
         {...props}
         disabled={props.disabled}
@@ -61,7 +62,7 @@ const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
         {IconRight && <span> {IconRight}</span>}
       </Comp>
     );
-  }
+  },
 );
 Chip.displayName = "Chip";
 
