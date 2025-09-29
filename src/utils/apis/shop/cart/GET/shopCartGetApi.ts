@@ -26,7 +26,7 @@ export interface ShopCartApiResponse {
   created_at: string;
   updated_at: string;
 }
-
+export const SHOPCARTGET_QUERYKEY = "getShopCartApi";
 const getShopCartApi = async (): Promise<ShopCartApiResponse> => {
   const response = await coreApi.get(path.join("/shop/cart/"));
 
@@ -39,7 +39,7 @@ export const useGetShopCartListApi = (
   >,
 ) => {
   const query = useQuery({
-    queryKey: ["getShopCartApi"],
+    queryKey: [SHOPCARTGET_QUERYKEY],
     queryFn: () => getShopCartApi(),
     ...props,
   });
