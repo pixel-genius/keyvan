@@ -17,7 +17,9 @@ export interface ShopOrderDetailApiResponse {
   id: number;
   status: keyof typeof SHOP_ORDER_STATUSES;
   total_amount: number;
-  total_items: string;
+  total_items: number;
+  total_buy_amount: number;
+  total_sell_amount: number;
   items: {
     id: number;
     product: ShopProductDetailApiResponse;
