@@ -62,7 +62,7 @@ const Navbar = () => {
     address_id: null,
   });
   const accountAddressListQuery = useGetAccountAddressList({
-    enabled: Number(shopCart?.total_items) > 0,
+    enabled: Number(shopCart?.total_items) !== 0,
   });
 
   const shopDeleteCartItemMutate = useDeleteShopCartItemsRemoveApi({
@@ -70,6 +70,7 @@ const Navbar = () => {
       setUserInfo({ shopCart: res });
     },
   });
+
   const shopOrderMutate = usePostShopOrderCreateApi({
     onSuccess: () => {
       toast.success("ثبت سفارش با موفقیت انجام شد");
@@ -81,6 +82,7 @@ const Navbar = () => {
       toast.error("سفارش انجام نشد");
     },
   });
+
   // Sample cart items - in a real app, this would come from a state management solution
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 

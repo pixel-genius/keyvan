@@ -25,7 +25,7 @@ interface OrderStatusObj {
   };
 }
 
-const orderStatusObj: OrderStatusObj = {
+export const orderStatusObj: OrderStatusObj = {
   pending: {
     text: "در انتظار تایید",
     colorClass: "warning",
@@ -92,21 +92,26 @@ const OrdersPage = () => {
                     <Chip
                       variant={orderStatusObj[order.status].colorClass}
                       size="sm"
-                      className="ml-2"
+                      className="ml-2 inline-flex"
                     >
                       {orderStatusObj[order.status].text}
                     </Chip>
                     {toPersianNumbers(format(order.created_at, "yyyy/MM/dd"))}
                   </div>
                   <div className="font-medium">
-                    سفارش #{toPersianNumbers(order.id)}
+                    درخواست #{toPersianNumbers(order.id)}
                   </div>
                 </div>
 
                 {/* Order Price */}
                 <div className="text-right">
                   <Typography variant="label/md" weight="bold">
-                    {toPersianNumbers(order.total_amount)} تومان
+                    کل مبلغ خرید : {toPersianNumbers(order.total_buy_amount)}{" "}
+                    تومان
+                  </Typography>
+                  <Typography variant="label/md" weight="bold">
+                    کل مبلغ فروش : {toPersianNumbers(order.total_sell_amount)}{" "}
+                    تومان
                   </Typography>
                 </div>
                 {order.address && (
@@ -119,7 +124,7 @@ const OrdersPage = () => {
                 )}
                 {/* Order Status Buttons */}
                 {!!order.items.length && (
-                  <div dir="rtl" className="grid grid-cols-4 gap-1">
+                  <div dir="rtl" className="flex flex-wrap gap-1">
                     {order.items?.map((item) => (
                       <Button
                         variant="secondary"
