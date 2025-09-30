@@ -1,6 +1,7 @@
 import { AccountAddressesObj } from "@/utils/apis/account/addresses/GET/accountAddressesListGetApi";
 import { ShopProductDetailApiResponse } from "../../../products/[id]/GET/shopProductDetailApi";
 import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
+import { ORDERTYPE } from "../../../cart/add/POST/shopCartAddPostApi";
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
@@ -26,6 +27,7 @@ export interface ShopOrderDetailApiResponse {
     quantity: number;
     price_at_time: number;
     total_price: number;
+    order_type: ORDERTYPE;
   }[];
   address: AccountAddressesObj;
   notes: string;

@@ -11,12 +11,14 @@ import { useGetShopOrdersListApi } from "@/utils/apis/shop/orders/GET/shopOrders
 import { Chip, ChipProps } from "@/components/components/atoms/chip";
 import { Separator } from "@/components/components/atoms/separator";
 import Typography from "@/components/components/atoms/typography";
+import { Skeleton } from "@/components/components/atoms/skeleton";
 import { Button } from "@/components/components/atoms/button";
 import { Card } from "@/components/components/atoms/card";
 import { toPersianNumbers } from "@/lib/utils";
 import Header from "@/app/_components/Header";
 import { useEffect, useState } from "react";
 import { format } from "date-fns-jalali";
+import "./styles.css";
 
 interface OrderStatusObj {
   [key: string]: {
@@ -76,12 +78,45 @@ const OrdersPage = () => {
   }, [shopOrderListQuery.data]);
 
   return (
-    <>
+    <div className="mt-2">
       <Header title="سفارشات" />
-      <div className="flex px-4 pt-28  flex-col gap-4 ">
+      <div className="flex flex-col order-container gap-4 mt-2 overflow-y-auto">
         {/* Use the new Header component */}
+        {shopOrderListQuery.isFetching ? (
+          [...Array(2)].map((_, index) => (
+            <Card
+              key={"order-item-" + index}
+              className="bg-maincard rounded-lg p-4"
+            >
+              {/* Order Header */}
+              <div className="flex justify-between items-center">
+                <div className="flex gap-2 items-center text-gray-400 text-sm">
+                  <Skeleton className="w-30 h-10" />
+                  <Skeleton className="w-30 h-5" />
+                </div>
+                <div className="font-medium">
+                  <Skeleton className="w-20 h-5" />
+                </div>
+              </div>
 
-        {shopOrderListQuery.data?.length ? (
+              {/* Order Price */}
+              <div className="text-right" dir="rtl">
+                <Skeleton className="w-36 h-5 mb-2" />
+                <Skeleton className="w-36 h-5" />
+              </div>
+              <div dir="rtl">
+                <Skeleton className="w-10 h-5 mb-1" />
+                <Skeleton className="w-full h-5" />
+              </div>
+              {/* Order Status Buttons */}
+              <div dir="rtl" className="flex flex-wrap gap-1">
+                <Skeleton className="w-30 h-9" />
+                <Skeleton className="w-30 h-9" />
+                <Skeleton className="w-30 h-9" />
+              </div>
+            </Card>
+          ))
+        ) : shopOrderListQuery.data?.length ? (
           shopOrderListQuery.data?.map((order) => (
             <div key={order.id + order.items.toString()}>
               {/* Order Card */}
@@ -141,29 +176,58 @@ const OrdersPage = () => {
                 {/* Order Details */}
                 {orderDetailsOpen.find((item) => item.id === order.id)?.open &&
                   !!order.items.length && (
-                    <>
+                    <div dir="rtl">
                       <Separator className="my-2 bg-gray-700" />
-                      <div className="pt-2">
-                        <div className="grid grid-cols-1 gap-2">
-                          {order.items.map((item) => (
-                            <div
-                              className="flex justify-between"
-                              key={item.id + item.product.name}
-                            >
-                              <Typography variant="paragraph/sm">
-                                {item.product.name} × {item.quantity}
-                              </Typography>
-                              <Typography
-                                variant="paragraph/sm"
-                                className="text-gray-300"
+                      <div>
+                        <Typography variant="label/lg">کالا ها :</Typography>
+                        <div className="pt-2">
+                          <div className="grid grid-cols-1 gap-2">
+                            {order.items.map((item) => (
+                              <div
+                                className="flex justify-between"
+                                key={item.id + item.product.name}
                               >
-                                {toPersianNumbers(item.total_price)} تومان
-                              </Typography>
-                            </div>
-                          ))}
+                                <Typography
+                                  variant="paragraph/sm"
+                                  className="whitespace-pre-line max-w-[79%]"
+                                >
+                                  {item.product.name} × {item.quantity}
+                                  <Chip
+                                    className="hover:bg-red-600 !cursor-default !py-0 h-fit rounded-xs mr-2 text-xs"
+                                    variant={
+                                      item.order_type === "buy"
+                                        ? "success"
+                                        : "danger"
+                                    }
+                                  >
+                                    {item.order_type === "buy"
+                                      ? "خرید"
+                                      : "فروش"}
+                                  </Chip>
+                                </Typography>
+                                <Typography
+                                  variant="paragraph/sm"
+                                  className="text-gray-300"
+                                >
+                                  {toPersianNumbers(item.total_price)} تومان
+                                </Typography>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
-                    </>
+                      {order.notes ? (
+                        <>
+                          <Separator className="my-2 bg-gray-700" />
+                          <div>
+                            <Typography variant="label/lg">
+                              یادداشت :
+                            </Typography>
+                            <Typography>{order.notes}</Typography>
+                          </div>
+                        </>
+                      ) : null}
+                    </div>
                   )}
 
                 {/* Order Details Toggle */}
@@ -225,7 +289,7 @@ const OrdersPage = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
