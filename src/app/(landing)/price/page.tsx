@@ -184,7 +184,7 @@ const Pricepage = () => {
   };
 
   return (
-    <div dir="rtl" className="px-4 pt-24 flex flex-col">
+    <div dir="rtl" className="px-4 pt-3 flex flex-col">
       <div className="flex flex-row items-center justify-between ">
         <button
           onClick={goToPreviousDay}
@@ -239,7 +239,7 @@ const Pricepage = () => {
       </div>
 
       {/* Category filters */}
-      <div className="flex flex-row gap-1 pb-3.5 overflow-x-auto">
+      <div className="flex flex-row gap-1 pb-2 overflow-x-auto mb-4">
         <CategoryChipsFilter
           value={filterParams.category}
           onChange={(value) => {
@@ -252,7 +252,7 @@ const Pricepage = () => {
       </div>
 
       {/* Results count */}
-      <div className=" overflow-y-auto  gap-4 h-[calc(100vh-350px)] pb-16 min-h-0">
+      <div className=" overflow-y-auto  gap-4 h-[calc(100vh-350px)] min-h-0">
         {shopPricesQuery.isFetching &&
           [...Array(6)].map((_, index) => (
             <div
