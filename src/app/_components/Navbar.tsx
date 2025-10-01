@@ -26,12 +26,13 @@ import {
   SelectValue,
 } from "@/components/components/atoms/select";
 import { useDeleteShopCartItemsRemoveApi } from "@/utils/apis/shop/cart/items/[id]/remove/DELETE/shopCartItemsRemoveDeleteApi";
-import { useDeleteShopCartClearApi } from "@/utils/apis/shop/cart/clear/DELETE/shopCartClearDeleteApi";
+import { SHOPCARTGET_QUERYKEY } from "@/utils/apis/shop/cart/GET/shopCartGetApi";
 import Typography from "@/components/components/atoms/typography";
 import { useAuthStore } from "@/utils/store/authenticate.store";
 import { toEnglishDigits, toPersianNumbers } from "@/lib/utils";
 import { Button } from "@/components/components/atoms/button";
 import AddAddressBottomSheet from "./AddAddressBottomSheet";
+import { useQueryClient } from "@tanstack/react-query";
 import OrderConfirmation from "./OrderConfirmation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -53,7 +54,7 @@ type CartItem = {
 const Navbar = () => {
   const router = useRouter();
   const { shopCart, setUserInfo } = useAuthStore();
-
+  const queryClient = useQueryClient();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isOrderConfirmationOpen, setIsOrderConfirmationOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -69,16 +70,10 @@ const Navbar = () => {
     useState<AccountAddressesObj | null>(null);
 
   const accountAddressListQuery = useGetAccountAddressList({
-    enabled: Number(shopCart?.total_items) > 0,
+    enabled: Number(shopCart?.total_items) !== 0,
   });
 
   const shopDeleteCartItemMutate = useDeleteShopCartItemsRemoveApi({
-    onSuccess: (res) => {
-      setUserInfo({ shopCart: res });
-    },
-  });
-
-  const shopCartClearMutate = useDeleteShopCartClearApi({
     onSuccess: (res) => {
       setUserInfo({ shopCart: res });
     },
@@ -88,15 +83,14 @@ const Navbar = () => {
     onSuccess: () => {
       toast.success("ثبت سفارش با موفقیت انجام شد");
       setIsCartOpen(false);
-      setCartItems([]);
-      // Clear cart from server after successful order
-      shopCartClearMutate.mutate(undefined);
+      queryClient.refetchQueries({ queryKey: [SHOPCARTGET_QUERYKEY] });
       router.push("/orders");
     },
     onError: () => {
       toast.error("سفارش انجام نشد");
     },
   });
+
   // Sample cart items - in a real app, this would come from a state management solution
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
@@ -121,7 +115,6 @@ const Navbar = () => {
       ),
     );
   };
-
   // Function to handle order submission
   const handleOrderSubmit = () => {
     shopOrderMutate.mutate(formFields as ShopOrderCreatePostApiPayload);
@@ -260,7 +253,7 @@ const Navbar = () => {
             سبد سفارش
           </Typography>
 
-          {Number(shopCart?.total_items) > 0 ? (
+          {Number(shopCart?.total_items) !== 0 ? (
             <>
               <Typography
                 variant="label/sm"
@@ -274,25 +267,26 @@ const Navbar = () => {
                     : null}
                 </span>
               </Typography>
-
-              {shopCart?.items?.map((item) => (
-                <CartItemCard
-                  key={item.id}
-                  id={String(item.id)}
-                  name={item.product.name}
-                  image={item.product.image}
-                  disabled={shopOrderMutate.isPending}
-                  quantity={item.quantity}
-                  price={item.total_price}
-                  removeMutate={shopDeleteCartItemMutate}
-                  onIncreaseQuantity={handleIncreaseQuantity}
-                  onDecreaseQuantity={handleDecreaseQuantity}
-                />
-              ))}
-              <div className="mb-4">
-                {accountAddressListQuery.data?.data.length ? (
+              <div className="max-h-[250px] overflow-y-auto mb-2 flex flex-col gap-2">
+                {shopCart?.items?.map((item) => (
+                  <CartItemCard
+                    key={item.id}
+                    id={String(item.id)}
+                    name={item.product.name}
+                    image={item.product.image}
+                    orderType={item.order_type}
+                    price={item.suggested_price}
+                    disabled={shopOrderMutate.isPending}
+                    quantity={item.quantity}
+                    removeMutate={shopDeleteCartItemMutate}
+                    onIncreaseQuantity={handleIncreaseQuantity}
+                    onDecreaseQuantity={handleDecreaseQuantity}
+                  />
+                ))}
+              </div>
+              <div className="mb-2">
+                {accountAddressListQuery.data?.data?.length ? (
                   <Select
-                    value={formFields.address_id?.toString() || ""}
                     onValueChange={(value) => {
                       setFormFields((prev) => ({
                         ...prev,
@@ -301,7 +295,7 @@ const Navbar = () => {
                     }}
                   >
                     <SelectTrigger
-                      className="bg-transparent w-full h-12"
+                      className="bg-transparent w-full "
                       style={{ boxShadow: "unset !important" }}
                       dir="rtl"
                     >

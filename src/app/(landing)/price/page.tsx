@@ -7,8 +7,11 @@ import {
 import AddToCartBottomSheet, {
   SelectedItemAddCartBottomSheet,
 } from "@/app/_components/AddToCartBottomSheet";
+import {
+  ORDERTYPE,
+  usePostShopCartAddApi,
+} from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
 import { ShopPricesDetailApiResponse } from "@/utils/apis/shop/prices/[id]/GET/shopPricesDetailApi";
-import { usePostShopCartAddApi } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -167,13 +170,15 @@ const Pricepage = () => {
 
   const currentDay = daysData[currentDayIndex];
 
-  const onAddToCart = () => {
+  const onAddToCart = (order_type: ORDERTYPE) => {
     if (selectedProduct?.id && selectedProduct?.count) {
       shopAddCartMutate.mutate({
         product_id: selectedProduct?.id,
         quantity: selectedProduct?.count
           ? Number(toEnglishDigits(selectedProduct.count))
           : undefined,
+        order_type,
+        suggested_price: selectedProduct.suggested_price as number,
       });
     }
   };

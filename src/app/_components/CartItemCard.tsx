@@ -6,10 +6,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/components/atoms/alertDialog";
+import type { ORDERTYPE } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
 import { ShopCartApiResponse } from "@/utils/apis/shop/cart/GET/shopCartGetApi";
 import { IconAlertSquareRounded, IconTrash } from "@tabler/icons-react";
 import Typography from "@/components/components/atoms/typography";
 import { Button } from "@/components/components/atoms/button";
+import { Chip } from "@/components/components/atoms/chip";
 import { UseMutationResult } from "@tanstack/react-query";
 import { toPersianNumbers } from "@/lib/utils";
 import { useState } from "react";
@@ -20,7 +22,8 @@ type CartItemCardProps = {
   name: string;
   image: string;
   quantity: number;
-  price: string;
+  price: number | string;
+  orderType: ORDERTYPE;
   disabled: boolean;
   removeMutate: UseMutationResult<
     ShopCartApiResponse,
@@ -39,12 +42,17 @@ const CartItemCard = ({
   image,
   price,
   disabled,
+  orderType,
   removeMutate,
 }: CartItemCardProps) => {
   const [open, setOpen] = useState<boolean>(false);
   return (
     <>
-      <div className="flex items-center justify-between gap-2 bg-card w-full rounded-lg p-2 mb-4">
+      <div
+        className={
+          "flex items-center justify-between gap-2 bg-card w-full rounded-lg p-2"
+        }
+      >
         <button
           disabled={disabled}
           onClick={() => setOpen(true)}
@@ -52,7 +60,9 @@ const CartItemCard = ({
         >
           <IconTrash size={25} className="text-red-500" />
         </button>
-
+        <Chip variant={orderType === "buy" ? "success" : "danger"}>
+          {orderType === "buy" ? "خرید" : "فروش"}
+        </Chip>
         <div className="flex items-center gap-4 ml-auto">
           <div className="flex flex-col items-end">
             <Typography
@@ -67,7 +77,7 @@ const CartItemCard = ({
               weight="normal"
               className="text-right text-gray-500"
             >
-              مبلغ : {toPersianNumbers(price?.toLocaleString())} تومان
+              مبلغ : {toPersianNumbers(price)} تومان
             </Typography>
           </div>
           <div className="h-[54px] w-[54px] rounded-lg overflow-hidden">
@@ -76,8 +86,7 @@ const CartItemCard = ({
               alt={name}
               width={54}
               height={54}
-              unoptimized
-              className="h-full w-full object-cover rounded-lg"
+              className="h-full text-xs w-full object-cover rounded-lg"
             />
           </div>
         </div>

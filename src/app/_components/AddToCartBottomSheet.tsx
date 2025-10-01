@@ -1,7 +1,8 @@
+import { ORDERTYPE } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
+import { formatPrice, toEnglishDigits, toPersianNumbers } from "@/lib/utils";
 import Typography from "@/components/components/atoms/typography";
 import { Button } from "@/components/components/atoms/button";
 import { Dispatch, SetStateAction } from "react";
-import { formatPrice } from "@/lib/utils";
 import BottomSheet from "./BottomSheet";
 import Tomanicon from "@/icons/toman";
 import Counter from "./Counter";
@@ -11,6 +12,8 @@ export type SelectedItemAddCartBottomSheet = {
   name: string;
   price: number;
   count?: number;
+  order_type?: ORDERTYPE;
+  suggested_price?: string | number | null;
 } | null;
 
 interface AddToCartBottomSheetProps {
@@ -19,7 +22,7 @@ interface AddToCartBottomSheetProps {
   disabled: boolean;
   setSelectedItem: Dispatch<SetStateAction<SelectedItemAddCartBottomSheet>>;
   onClose: () => void;
-  onAddToCart: () => void;
+  onAddToCart: (order_type: ORDERTYPE) => void;
 }
 
 const AddToCartBottomSheet = ({
@@ -63,14 +66,46 @@ const AddToCartBottomSheet = ({
               });
             }}
           />
-          {/* <Textarea placeholder="توضیحات (اختیاری)" className="mb-4" /> */}
+          <input
+            name="suggested_price"
+            dir="rtl"
+            className="w-full border mb-6 rounded px-3 py-2 outline-none focus:ring-0"
+            value={
+              selectedItem.suggested_price
+                ? toPersianNumbers(selectedItem.suggested_price)
+                : ""
+            }
+            onChange={(e) => {
+              setSelectedItem((prev) => {
+                if (!prev) return prev;
+                return {
+                  ...prev,
+                  suggested_price: toEnglishDigits(e.target.value),
+                };
+              });
+            }}
+            placeholder="قیمت پیشنهادی..."
+            type="text"
+          />
           <Button
-            className="w-full"
-            variant="primary"
+            className="w-full mb-3 bg-green-600"
             disabled={disabled}
-            onClick={onAddToCart}
+            variant="tertiary"
+            onClick={() => {
+              onAddToCart("buy");
+            }}
           >
-            افزودن به سبد خرید
+            خرید
+          </Button>
+          <Button
+            className="w-full bg-red-600"
+            disabled={disabled}
+            variant="tertiary"
+            onClick={() => {
+              onAddToCart("sell");
+            }}
+          >
+            فروش
           </Button>
         </div>
       )}

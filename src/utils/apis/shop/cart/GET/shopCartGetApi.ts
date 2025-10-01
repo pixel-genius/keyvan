@@ -1,26 +1,32 @@
 import { ShopProductDetailApiResponse } from "../../products/[id]/GET/shopProductDetailApi";
 import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
+import type { ORDERTYPE } from "../add/POST/shopCartAddPostApi";
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
 
-export interface ShopCartApiResponse {
+export interface ShopCartItemObj {
   id: number;
-  items: {
-    id: number;
-    product: ShopProductDetailApiResponse;
-    product_id: number;
-    quantity: number;
-    total_price: string;
-    created_at: string;
-    updated_at: string;
-  }[];
-  price: number;
-  total_items: string;
+  product: ShopProductDetailApiResponse;
+  product_id: number;
+  quantity: number;
   total_price: string;
+  suggested_price: string;
+  order_type: ORDERTYPE;
   created_at: string;
   updated_at: string;
 }
 
+export interface ShopCartApiResponse {
+  id: number;
+  items: ShopCartItemObj[];
+  total_items: string;
+  total_price: string;
+  total_buy_amount: number;
+  total_sell_amount: number;
+  created_at: string;
+  updated_at: string;
+}
+export const SHOPCARTGET_QUERYKEY = "getShopCartApi";
 const getShopCartApi = async (): Promise<ShopCartApiResponse> => {
   const response = await coreApi.get(path.join("/shop/cart/"));
 
@@ -33,7 +39,7 @@ export const useGetShopCartListApi = (
   >,
 ) => {
   const query = useQuery({
-    queryKey: ["getShopCartApi"],
+    queryKey: [SHOPCARTGET_QUERYKEY],
     queryFn: () => getShopCartApi(),
     ...props,
   });

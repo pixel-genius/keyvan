@@ -1,5 +1,6 @@
 import LayoutClientWrapper from "./_components/LayoutClientWrapper";
 import { Geist, Geist_Mono } from "next/font/google";
+import PWAStatus from "@/components/PWAStatus";
 import { ApiProvider } from "./_provider/api";
 import { yekanBakh } from "@/lib/fonts";
 import { Toaster } from "sonner";
@@ -65,10 +66,10 @@ export default function RootLayout({
       >
         <ApiProvider>
           <LayoutClientWrapper>
-            <main className="max-w-lg w-full mx-auto min-h-screen overflow-x-hidden">
+            <main className="max-w-lg w-full mx-auto pt-16 pb-20">
               {children}
             </main>
-
+            <PWAStatus />
             <Toaster richColors />
           </LayoutClientWrapper>
         </ApiProvider>

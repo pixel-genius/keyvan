@@ -1,6 +1,7 @@
 import { cva, VariantProps } from "class-variance-authority";
-import Link, { LinkProps } from "next/link";
 import React, { forwardRef, ReactNode } from "react";
+import Link, { LinkProps } from "next/link";
+import { cn } from "@/lib/utils";
 
 const typographyVariants = cva("", {
   variants: {
@@ -114,11 +115,10 @@ const Typography = forwardRef<HTMLParagraphElement, TypographyProps>(
       truncate,
       onClick,
     },
-    ref
+    ref,
   ) => {
     const styles = typographyVariants({
       variant,
-      className,
       weight,
       align,
       transform,
@@ -130,7 +130,7 @@ const Typography = forwardRef<HTMLParagraphElement, TypographyProps>(
       return (
         <Link
           href={href!}
-          className={styles}
+          className={cn(styles, className)}
           ref={ref as React.Ref<HTMLAnchorElement>}
           onClick={onClick}
         >
@@ -142,13 +142,13 @@ const Typography = forwardRef<HTMLParagraphElement, TypographyProps>(
     return (
       <Component
         ref={ref as React.Ref<HTMLParagraphElement>}
-        className={styles}
+        className={cn(styles, className)}
         onClick={onClick}
       >
         {children}
       </Component>
     );
-  }
+  },
 );
 
 Typography.displayName = "Typography";
