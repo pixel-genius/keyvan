@@ -15,7 +15,7 @@ import { Skeleton } from "@/components/components/atoms/skeleton";
 import { Button } from "@/components/components/atoms/button";
 import { formatPrice, toPersianNumbers } from "@/lib/utils";
 import { Card } from "@/components/components/atoms/card";
-import Header from "@/app/_components/Header";
+import PageTitle from "@/app/_components/PageTitle";
 import { useEffect, useState } from "react";
 import { format } from "date-fns-jalali";
 import "./styles.css";
@@ -78,8 +78,9 @@ const OrdersPage = () => {
   }, [shopOrderListQuery.data]);
 
   return (
-    <div className="mt-2">
-      <Header title="درخواست ها" />
+    <div className="pt-8">
+      <PageTitle title="درخواست ها" />
+
       <div className="flex flex-col order-container gap-4 mt-2 overflow-y-auto">
         {/* Use the new Header component */}
         {shopOrderListQuery.isFetching ? (

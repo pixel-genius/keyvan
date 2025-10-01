@@ -43,12 +43,12 @@ function BlogDetailFn() {
   }
 
   return (
-    <main className="max-w-2xl mx-auto pt-28 pb-48 px-4" dir="rtl">
+    <main className="max-w-2xl mx-auto py-4" dir="rtl">
       <Link
         href="/blogs"
         className="cursor-pointer p-2 rounded-full hover:bg-muted transition-colors"
       >
-        <div className="flex gap-0.5 items-center pb-3.5 mb-6">
+        <div className="flex gap-0.5 items-center pb-3.5">
           <IconChevronRight size={24} className="text-muted-foreground" />
 
           <span className="text-sm text-muted-foreground">بازگشت</span>

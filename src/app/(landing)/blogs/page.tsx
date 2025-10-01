@@ -1,6 +1,7 @@
 "use client";
 import { useGetBlogPosts } from "@/utils/apis/blog/posts/GET/blogPostsGetApi";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
+import PageTitle from "@/app/_components/PageTitle";
 import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,7 +15,7 @@ function BlogListFn() {
 
   if (isLoading) {
     return (
-      <main className="max-w-2xl mx-auto pt-28 px-4" dir="rtl">
+      <main className="max-w-2xl mx-auto py-4" dir="rtl">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold">اخبار دخانیات</h1>
           <Link
@@ -34,7 +35,7 @@ function BlogListFn() {
 
   if (error) {
     return (
-      <main className="max-w-2xl mx-auto pt-28 px-4" dir="rtl">
+      <main className="max-w-2xl mx-auto py-4" dir="rtl">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold">اخبار دخانیات</h1>
           <Link
@@ -55,19 +56,8 @@ function BlogListFn() {
   }
 
   return (
-    <main className="max-w-2xl mx-auto pt-28 px-4" dir="rtl">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold">اخبار دخانیات</h1>
-        <Link
-          href="/"
-          className="cursor-pointer p-2 rounded-full hover:bg-muted transition-colors"
-        >
-          <div className="flex gap-0.5 items-center">
-            <span className="text-sm text-muted-foreground">بازگشت</span>
-            <IconChevronLeft size={24} className="text-muted-foreground" />
-          </div>
-        </Link>
-      </div>
+    <main className="max-w-2xl mx-auto py-4" dir="rtl">
+      <PageTitle title="اخبار دخانیات" />
       <ul className="space-y-6">
         {blogPosts?.map((post) => (
           <li
