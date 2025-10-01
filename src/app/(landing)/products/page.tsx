@@ -26,6 +26,7 @@ import { useSearchParams } from "next/navigation";
 import { IconFilter } from "@tabler/icons-react";
 import Header from "@/app/_components/Header";
 import { toEnglishDigits } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface Params {
   category?: number;
@@ -55,6 +56,7 @@ function ProductsContent() {
     onSuccess: (res) => {
       setUserInfo({ shopCart: res });
       setIsBottomSheetOpen(false);
+      toast.success("افزودن درخواست انجام شد");
     },
   });
 

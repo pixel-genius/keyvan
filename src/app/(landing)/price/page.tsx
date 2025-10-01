@@ -33,6 +33,7 @@ import { DayBadge } from "./_components/dayBadge";
 import { format, subDays } from "date-fns-jalali";
 import { faIR } from "date-fns-jalali/locale";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 import { clsx } from "clsx";
 
 interface DayData {
@@ -103,6 +104,7 @@ const Pricepage = () => {
     onSuccess: (res) => {
       setUserInfo({ shopCart: res });
       setShowPurchaseBottomSheet(false);
+      toast.success("افزودن درخواست انجام شد");
     },
   });
 

@@ -13,8 +13,8 @@ import { Separator } from "@/components/components/atoms/separator";
 import Typography from "@/components/components/atoms/typography";
 import { Skeleton } from "@/components/components/atoms/skeleton";
 import { Button } from "@/components/components/atoms/button";
+import { formatPrice, toPersianNumbers } from "@/lib/utils";
 import { Card } from "@/components/components/atoms/card";
-import { toPersianNumbers } from "@/lib/utils";
 import Header from "@/app/_components/Header";
 import { useEffect, useState } from "react";
 import { format } from "date-fns-jalali";
@@ -141,12 +141,10 @@ const OrdersPage = () => {
                 {/* Order Price */}
                 <div className="text-right">
                   <Typography variant="label/md" weight="bold">
-                    کل مبلغ خرید : {toPersianNumbers(order.total_buy_amount)}{" "}
-                    تومان
+                    کل مبلغ خرید : {formatPrice(order.total_buy_amount)} تومان
                   </Typography>
                   <Typography variant="label/md" weight="bold">
-                    کل مبلغ فروش : {toPersianNumbers(order.total_sell_amount)}{" "}
-                    تومان
+                    کل مبلغ فروش : {formatPrice(order.total_sell_amount)} تومان
                   </Typography>
                 </div>
                 {order.address && (
@@ -209,7 +207,7 @@ const OrdersPage = () => {
                                   variant="paragraph/sm"
                                   className="text-gray-300"
                                 >
-                                  {toPersianNumbers(item.total_price)} تومان
+                                  {formatPrice(item.total_price)} تومان
                                 </Typography>
                               </div>
                             ))}

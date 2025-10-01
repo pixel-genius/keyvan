@@ -11,9 +11,9 @@ import { ShopCartApiResponse } from "@/utils/apis/shop/cart/GET/shopCartGetApi";
 import { IconAlertSquareRounded, IconTrash } from "@tabler/icons-react";
 import Typography from "@/components/components/atoms/typography";
 import { Button } from "@/components/components/atoms/button";
+import { formatPrice, toPersianNumbers } from "@/lib/utils";
 import { Chip } from "@/components/components/atoms/chip";
 import { UseMutationResult } from "@tanstack/react-query";
-import { toPersianNumbers } from "@/lib/utils";
 import { useState } from "react";
 import Image from "next/image";
 
@@ -77,7 +77,7 @@ const CartItemCard = ({
               weight="normal"
               className="text-right text-gray-500"
             >
-              مبلغ : {toPersianNumbers(price)} تومان
+              مبلغ : {formatPrice(price)} تومان
             </Typography>
           </div>
           <div className="h-[54px] w-[54px] rounded-lg overflow-hidden">
