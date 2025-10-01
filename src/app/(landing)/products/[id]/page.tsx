@@ -8,7 +8,6 @@ import {
   usePostShopCartAddApi,
 } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
 import { useGetShopProductDetail } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
-import { IconChevronLeft, IconShoppingCart } from "@tabler/icons-react";
 import CustomAreaChartCard from "./_components/CustomAreaChartCard";
 import Typography from "@/components/components/atoms/typography";
 import { ChartConfig } from "@/components/components/atoms/chart";
@@ -16,6 +15,7 @@ import { useAuthStore } from "@/utils/store/authenticate.store";
 import { Button } from "@/components/components/atoms/button";
 import { Badge } from "@/components/components/atoms/badge";
 import { useParams, useRouter } from "next/navigation";
+import { IconChevronLeft } from "@tabler/icons-react";
 import { toEnglishDigits } from "@/lib/utils";
 import { Suspense, useState } from "react";
 import Image from "next/image";
@@ -180,8 +180,7 @@ function ProductDetailFn() {
             <Button
               onClick={handleAddToCartClick}
               disabled={!shopProductDetail.data?.id}
-              iconLeft={<IconShoppingCart size={20} />}
-              className="w-full"
+              className="w-full text-md"
             >
               خرید و فروش
             </Button>

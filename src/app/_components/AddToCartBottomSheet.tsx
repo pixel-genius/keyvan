@@ -90,7 +90,11 @@ const AddToCartBottomSheet = ({
             onChange={(count) => {
               setSelectedItem((prev) => {
                 if (!prev) return prev;
-                return { ...prev, count };
+                return {
+                  ...prev,
+                  count,
+                  suggested_price: count * selectedItem.price,
+                };
               });
             }}
           />
