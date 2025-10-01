@@ -30,27 +30,27 @@ interface OrderStatusObj {
 const orderStatusObj: OrderStatusObj = {
   pending: {
     text: "در انتظار تایید",
-    colorClass: "warning", // نارنجی/زرد برای انتظار
+    colorClass: "warning",
   },
   confirmed: {
     text: "تایید شده",
-    colorClass: "primary", // زرد برای تایید
+    colorClass: "success",
   },
   processing: {
     text: "در حال پردازش",
-    colorClass: "info", // آبی برای پردازش
+    colorClass: "secendery",
   },
   shipped: {
     text: "ارسال شده",
-    colorClass: "secendery", // خاکستری تیره برای ارسال
+    colorClass: "info",
   },
   delivered: {
     text: "تحویل شده",
-    colorClass: "success", // سبز برای تحویل موفق
+    colorClass: "info",
   },
   cancelled: {
     text: "لغو شده",
-    colorClass: "danger", // قرمز برای لغو
+    colorClass: "danger",
   },
 };
 
@@ -79,7 +79,7 @@ const OrdersPage = () => {
 
   return (
     <div className="mt-2">
-      <Header title="سفارشات" />
+      <Header title="درخواست ها" />
       <div className="flex flex-col order-container gap-4 mt-2 overflow-y-auto">
         {/* Use the new Header component */}
         {shopOrderListQuery.isFetching ? (
@@ -118,7 +118,7 @@ const OrdersPage = () => {
           ))
         ) : shopOrderListQuery.data?.length ? (
           shopOrderListQuery.data?.map((order) => (
-            <div key={`order-${order.id}-${order.created_at}`}>
+            <div key={order.id + order.items.toString()}>
               {/* Order Card */}
               <Card className="bg-maincard rounded-lg p-4">
                 {/* Order Header */}
@@ -193,7 +193,7 @@ const OrdersPage = () => {
                                 >
                                   {item.product.name} × {item.quantity}
                                   <Chip
-                                    className="hover:bg-red-600 !cursor-default !py-0 h-fit rounded-xs mr-2 text-xs"
+                                    className="!cursor-default !py-0 h-fit rounded-xs mr-2 text-xs"
                                     variant={
                                       item.order_type === "buy"
                                         ? "success"
@@ -280,7 +280,7 @@ const OrdersPage = () => {
           <div className="flex flex-col items-center text-primary">
             <IconListDetails size={24} />
             <Typography variant="paragraph/xs" className="text-primary">
-              سفارشات
+              درخواست ها
             </Typography>
           </div>
           <div className="flex flex-col items-center text-gray-400">
