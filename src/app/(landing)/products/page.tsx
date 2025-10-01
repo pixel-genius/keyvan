@@ -22,9 +22,9 @@ import ProductCard from "@/app/_components/ProductCard";
 import BottomSheet from "@/app/_components/BottomSheet";
 import { useDebounce } from "@/utils/hooks/useDebounce";
 import { Suspense, useEffect, useState } from "react";
+import PageTitle from "@/app/_components/PageTitle";
 import { useSearchParams } from "next/navigation";
 import { IconFilter } from "@tabler/icons-react";
-import Header from "@/app/_components/Header";
 import { toEnglishDigits } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -77,11 +77,6 @@ function ProductsContent() {
         : undefined,
     }));
   }, [searchParams]);
-
-  const handleBackClick = () => {
-    // Simulate a back navigation
-    window.history.back();
-  };
 
   const { observerRef } = useInfiniteScroll(shopProductListQuery);
 
@@ -154,14 +149,8 @@ function ProductsContent() {
   // The API does not provide a category field. If needed, extract categories from another source.
 
   return (
-    <div className="mx-auto px-4 min-h-full">
-      <Header
-        title={
-          categories.data?.find((item) => item.id === params.category)?.name ||
-          "محصولات"
-        }
-        onBackClick={handleBackClick}
-      />
+    <div className="mx-auto pt-8 pb-4">
+      <PageTitle title="محصولات" />
 
       <div className="flex justify-between items-center gap-2">
         <Input

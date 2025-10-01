@@ -3,7 +3,7 @@
 import { useGetBrandLookupListApi } from "@/utils/apis/shop/brand/GET/brandLookupListApi";
 import Typography from "@/components/components/atoms/typography";
 import { Skeleton } from "@/components/components/atoms/skeleton";
-import Header from "@/app/_components/Header";
+import PageTitle from "@/app/_components/PageTitle";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -11,10 +11,10 @@ const BrandPage = () => {
   const brandQuery = useGetBrandLookupListApi();
 
   return (
-    <div className="px-4 pt-28  mx-auto min-h-full pb-24">
-      <Header title="برند ها" />
+    <div className="py-4 mx-auto min-h-full">
+      <PageTitle title="برند ها" />
 
-      <div className="flex justify-between items-center gap-8 pt-4 pb-4">
+      <div className="flex justify-between items-center gap-8 pb-4">
         <div className="w-6"></div> {/* Spacer for alignment */}
       </div>
 

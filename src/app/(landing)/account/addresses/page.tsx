@@ -1,8 +1,15 @@
 "use client";
 
 import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/components/atoms/alertDialog";
+import {
   IconAlertSquareRounded,
-  IconChevronLeft,
   IconEdit,
   IconLocation,
   IconMapPin,
@@ -12,14 +19,6 @@ import {
   IconZoomIn,
   IconZoomOut,
 } from "@tabler/icons-react";
-import {
-  AlertDialog,
-  AlertDialogFooter,
-  AlertDialogDescription,
-  AlertDialogTitle,
-  AlertDialogHeader,
-  AlertDialogContent,
-} from "@/components/components/atoms/alertDialog";
 import {
   AccountAddressesObj,
   useGetAccountAddressList,
@@ -34,7 +33,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/components/atoms/button";
 import OpenLayersMap from "@neshan-maps-platform/ol/Map";
 import BottomSheet from "@/app/_components/BottomSheet";
-import { useRouter } from "next/navigation";
+import PageTitle from "@/app/_components/PageTitle";
 import dynamic from "next/dynamic";
 import { toast } from "sonner";
 
@@ -63,7 +62,6 @@ interface FormFields {
 }
 
 const AddressesPage = () => {
-  const router = useRouter();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mapRef = useRef<any>(null);
 
@@ -456,26 +454,9 @@ const AddressesPage = () => {
 
   return (
     <>
-      <div
-        className="px-4 pt-24 flex flex-col gap-6 min-h-screen bg-background"
-        dir="rtl"
-      >
+      <div className="pb-4 pt-8 flex flex-col gap-6 bg-background" dir="rtl">
         {/* Header */}
-        <div className="flex justify-between items-start">
-          <Typography
-            variant={"paragraph/md"}
-            className="self-center"
-            weight="bold"
-          >
-            آدرس ها
-          </Typography>
-          <div
-            className="cursor-pointer p-2 rounded-full hover:bg-muted transition-colors"
-            onClick={() => router.back()}
-          >
-            <IconChevronLeft size={24} className="text-muted-foreground" />
-          </div>
-        </div>
+        <PageTitle title="آدرس ها" />
 
         <div className="space-y-6">
           {/* Add New Address Button */}

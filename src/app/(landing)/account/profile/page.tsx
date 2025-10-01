@@ -3,7 +3,6 @@
 import {
   IconCalendar,
   IconCheck,
-  IconChevronLeft,
   IconEdit,
   IconShield,
   IconUser,
@@ -16,11 +15,10 @@ import { useAuthStore } from "@/utils/store/authenticate.store";
 import { toEnglishDigits, toPersianNumbers } from "@/lib/utils";
 import { Button } from "@/components/components/atoms/button";
 import { ChangeEvent, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import PageTitle from "@/app/_components/PageTitle";
 import { format } from "date-fns-jalali";
 
 const ProfilePage = () => {
-  const router = useRouter();
   const { userProfileInfo } = useAuthStore();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [formData, setFormData] = useState({
@@ -67,26 +65,9 @@ const ProfilePage = () => {
   };
 
   return (
-    <div
-      className="px-4 pt-28 pb-48 flex flex-col gap-6 min-h-screen bg-background"
-      dir="rtl"
-    >
+    <div className="pb-4 pt-8 flex flex-col gap-6 bg-background" dir="rtl">
       {/* Header */}
-      <div className="flex justify-between items-start">
-        <Typography
-          variant={"paragraph/md"}
-          className="self-center"
-          weight="bold"
-        >
-          اطلاعات حساب کاربری
-        </Typography>
-        <div
-          className="cursor-pointer p-2 rounded-full hover:bg-muted transition-colors"
-          onClick={() => router.back()}
-        >
-          <IconChevronLeft size={24} className="text-muted-foreground " />
-        </div>
-      </div>
+      <PageTitle title="اطلاعات حساب کاربری" />
 
       <div className="space-y-6">
         {/* Profile Header */}

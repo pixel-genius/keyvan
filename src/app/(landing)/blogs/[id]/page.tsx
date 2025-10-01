@@ -10,11 +10,6 @@ function BlogDetailFn() {
   const { id } = useParams<{ id: string }>();
   const { data: post, isLoading, error } = useGetBlogPostsDetail({ slug: id });
 
-  // Debug logging
-  console.log("Blog ID from URL:", id);
-  console.log("Post data:", post);
-  console.log("Error:", error);
-
   if (isLoading) {
     return (
       <main className="max-w-2xl mx-auto pt-28 px-4" dir="rtl">
@@ -43,12 +38,12 @@ function BlogDetailFn() {
   }
 
   return (
-    <main className="max-w-2xl mx-auto pt-28 pb-48 px-4" dir="rtl">
+    <main className="max-w-2xl mx-auto py-4" dir="rtl">
       <Link
         href="/blogs"
         className="cursor-pointer p-2 rounded-full hover:bg-muted transition-colors"
       >
-        <div className="flex gap-0.5 items-center pb-3.5 mb-6">
+        <div className="flex gap-0.5 items-center pb-3.5">
           <IconChevronRight size={24} className="text-muted-foreground" />
 
           <span className="text-sm text-muted-foreground">بازگشت</span>

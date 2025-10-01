@@ -2,7 +2,6 @@
 
 import {
   IconCheck,
-  IconChevronRight,
   IconClock,
   IconDownload,
   IconEye,
@@ -14,8 +13,8 @@ import { useAccountFilesUploadPost } from "@/utils/apis/account/files/upload/POS
 import Typography from "@/components/components/atoms/typography";
 import { useAuthStore } from "@/utils/store/authenticate.store";
 import BottomSheet from "@/app/_components/BottomSheet";
+import PageTitle from "@/app/_components/PageTitle";
 import { UploadFileApiCategory } from "@/lib/types";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -31,7 +30,6 @@ type DocumentState = {
 }[];
 
 const DocumentsPage = () => {
-  const router = useRouter();
   const { userProfileInfo } = useAuthStore();
   const [documents, setDocuments] = useState<DocumentState>([
     {
@@ -174,27 +172,11 @@ const DocumentsPage = () => {
   };
 
   return (
-    <div
-      className="px-4 pt-24  flex flex-col gap-6 min-h-screen bg-background"
-      dir="rtl"
-    >
+    <div className="pb-4 pt-8 flex flex-col gap-6 bg-background" dir="rtl">
       {/* Header */}
-      <div className="flex justify-between items-end">
-        <Typography variant={"paragraph/md"} weight="bold">
-          مستندات و مدارک
-        </Typography>
-        <div
-          className="cursor-pointer p-2 rounded-full hover:bg-muted transition-colors"
-          onClick={() => router.back()}
-        >
-          <IconChevronRight
-            size={24}
-            className="text-muted-foreground rotate-180"
-          />
-        </div>
-      </div>
+      <PageTitle title="اسناد و مدارک" />
 
-      <div className="space-y-6">
+      <div className="space-y-6 mt-8">
         {/* Documents List */}
         <div className="space-y-4">
           <div className="flex items-center gap-3">

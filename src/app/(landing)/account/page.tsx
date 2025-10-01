@@ -9,26 +9,16 @@ import {
   IconChevronRight,
 } from "@tabler/icons-react";
 import Typography from "@/components/components/atoms/typography";
+import PageTitle from "@/app/_components/PageTitle";
 import { useRouter } from "next/navigation";
 
 const Accountpage = () => {
   const router = useRouter();
 
   return (
-    <div
-      className="px-4 pt-28 pb-48 flex flex-col gap-6 min-h-screen bg-background page-container"
-      dir="rtl"
-    >
+    <div className="pt-8 flex flex-col gap-6 bg-background" dir="rtl">
       {/* Header */}
-      <div className="flex justify-between items-start">
-        <Typography variant={"paragraph/md"} weight="bold">
-          حساب کاربری
-        </Typography>
-        <IconChevronRight
-          size={24}
-          className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors rotate-180"
-        />
-      </div>
+      <PageTitle title="حساب کاربری" />
 
       {/* User Stats Card */}
       <div className="relative overflow-hidden bg-primary rounded-2xl p-6 shadow-lg">
