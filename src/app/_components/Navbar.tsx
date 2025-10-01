@@ -66,7 +66,6 @@ const Navbar = () => {
   });
   const [defaultAddressState, setDefaultAddressState] =
     useState<AccountAddressesObj | null>(null);
-  console.log(formFields);
   const shopCartGetMutate = useGetMutateShopCartListApi({
     onSuccess: (res) => {
       setUserInfo({ shopCart: res });
@@ -146,8 +145,6 @@ const Navbar = () => {
       icon: IconInfoCircle,
       onClick: () => {
         setIsSidebarOpen(false);
-        // TODO: Navigate to about page
-        console.log("Navigate to about page");
       },
     },
     {
@@ -156,8 +153,6 @@ const Navbar = () => {
       icon: IconPhone,
       onClick: () => {
         setIsSidebarOpen(false);
-        // TODO: Navigate to contact page
-        console.log("Navigate to contact page");
       },
     },
     {
@@ -166,8 +161,6 @@ const Navbar = () => {
       icon: IconHeadset,
       onClick: () => {
         setIsSidebarOpen(false);
-        // TODO: Navigate to support page
-        console.log("Navigate to support page");
       },
     },
     {
@@ -176,8 +169,6 @@ const Navbar = () => {
       icon: IconScale,
       onClick: () => {
         setIsSidebarOpen(false);
-        // TODO: Navigate to terms page
-        console.log("Navigate to terms page");
       },
     },
     {
@@ -186,8 +177,6 @@ const Navbar = () => {
       icon: IconBook,
       onClick: () => {
         setIsSidebarOpen(false);
-        // TODO: Navigate to education page
-        console.log("Navigate to education page");
       },
     },
   ];

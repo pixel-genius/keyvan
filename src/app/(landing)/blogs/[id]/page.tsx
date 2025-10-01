@@ -10,11 +10,6 @@ function BlogDetailFn() {
   const { id } = useParams<{ id: string }>();
   const { data: post, isLoading, error } = useGetBlogPostsDetail({ slug: id });
 
-  // Debug logging
-  console.log("Blog ID from URL:", id);
-  console.log("Post data:", post);
-  console.log("Error:", error);
-
   if (isLoading) {
     return (
       <main className="max-w-2xl mx-auto pt-28 px-4" dir="rtl">
