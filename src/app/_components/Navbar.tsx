@@ -1,13 +1,13 @@
 "use client";
 
 import {
+  IconArchive,
   IconBook,
   IconHeadset,
   IconInfoCircle,
   IconMenu2,
   IconPhone,
   IconScale,
-  IconShoppingCart,
   IconX,
 } from "@tabler/icons-react";
 import {
@@ -238,7 +238,7 @@ const Navbar = () => {
 
           {/* Right Icon with Badge */}
           <div className="relative">
-            <IconShoppingCart
+            <IconArchive
               size={28}
               color="white"
               className="cursor-pointer"
