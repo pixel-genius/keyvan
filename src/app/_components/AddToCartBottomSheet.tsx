@@ -2,7 +2,7 @@ import { ORDERTYPE } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
 import { formatPrice, toEnglishDigits, toPersianNumbers } from "@/lib/utils";
 import Typography from "@/components/components/atoms/typography";
 import { Button } from "@/components/components/atoms/button";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import BottomSheet from "./BottomSheet";
 import Tomanicon from "@/icons/toman";
 import Counter from "./Counter";
@@ -33,18 +33,33 @@ const AddToCartBottomSheet = ({
   disabled,
   onAddToCart,
 }: AddToCartBottomSheetProps) => {
+  const [tab, setTab] = useState<ORDERTYPE>("buy");
+
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose}>
       {selectedItem && (
         <div className="pb-15">
           <hr className="w-1/2 mx-auto border-2 rounded-full mb-4" />
-          <Typography
-            variant="label/lg"
-            weight="semi-bold"
-            className="mb-4 text-center"
-          >
-            افزودن محصول به سبد
-          </Typography>
+          <div className="flex items-center mb-4 gap-2" dir="rtl">
+            <Button
+              onClick={() => {
+                if (tab !== "buy") setTab("buy");
+              }}
+              variant={tab === "buy" ? "primary" : "secondary"}
+              className="w-full"
+            >
+              خرید
+            </Button>
+            <Button
+              onClick={() => {
+                if (tab !== "sell") setTab("sell");
+              }}
+              variant={tab === "sell" ? "primary" : "secondary"}
+              className="w-full"
+            >
+              فروش
+            </Button>
+          </div>
           <Typography
             variant="label/sm"
             weight="bold"
@@ -88,24 +103,14 @@ const AddToCartBottomSheet = ({
             type="text"
           />
           <Button
-            className="w-full mb-3 bg-green-600"
+            className="w-full mb-3"
             disabled={disabled}
-            variant="tertiary"
+            variant="primary"
             onClick={() => {
-              onAddToCart("buy");
+              onAddToCart(tab);
             }}
           >
-            خرید
-          </Button>
-          <Button
-            className="w-full bg-red-600"
-            disabled={disabled}
-            variant="tertiary"
-            onClick={() => {
-              onAddToCart("sell");
-            }}
-          >
-            فروش
+            افزودن درخواست
           </Button>
         </div>
       )}

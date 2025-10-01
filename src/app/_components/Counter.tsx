@@ -1,8 +1,8 @@
 "use client";
 
+import { toEnglishDigits, toPersianNumbers } from "@/lib/utils";
 import { Button } from "@/components/components/atoms/button";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
-import { toPersianNumbers } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
 interface CounterProps {
@@ -14,25 +14,30 @@ export default function Counter({ onChange }: CounterProps) {
 
   useEffect(() => {
     onChange?.(count);
-  }, [count, onChange]);
+  }, [count]);
 
   return (
     <div
       dir="ltr"
-      className="flex items-center space-x-4 pb-5 rounded-lg w-full text-white"
+      className="flex items-center gap-4 pb-5 rounded-lg w-full text-white"
     >
       <Button
         variant="primary"
-        className="w-full"
+        className="w-full m-0"
         onClick={() => setCount((prev) => prev - 25)}
         disabled={count <= 25}
       >
         <IconMinus stroke={2} />
       </Button>
-
-      <span className="text-lg w-full font-semibold text-center">
-        {toPersianNumbers(count)} باکس
-      </span>
+      <input
+        name="count"
+        dir="rtl"
+        className="w-full border mb-6 rounded px-3 py-2 !m-0 outline-none focus:ring-0 text-center"
+        placeholder="تعداد باکس"
+        type="text"
+        value={toPersianNumbers(count)}
+        onChange={(e) => setCount(Number(toEnglishDigits(e.target.value)) || 0)}
+      />
       <Button
         variant="primary"
         className="w-full"

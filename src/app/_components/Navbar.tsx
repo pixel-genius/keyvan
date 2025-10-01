@@ -81,13 +81,13 @@ const Navbar = () => {
 
   const shopOrderMutate = usePostShopOrderCreateApi({
     onSuccess: () => {
-      toast.success("ثبت سفارش با موفقیت انجام شد");
+      toast.success("ثبت درخواست با موفقیت انجام شد");
       setIsCartOpen(false);
       queryClient.refetchQueries({ queryKey: [SHOPCARTGET_QUERYKEY] });
-      router.push("/orders");
+      router.push("/requests");
     },
     onError: () => {
-      toast.error("سفارش انجام نشد");
+      toast.error("درخواست انجام نشد");
     },
   });
 
@@ -123,7 +123,7 @@ const Navbar = () => {
   // Handle tracking order
   const handleTrackOrder = () => {
     setIsOrderConfirmationOpen(false);
-    router.push("/orders"); // Navigate to orders page
+    router.push("/requests"); // Navigate to requests page
   };
 
   // Handle close order confirmation
@@ -250,10 +250,10 @@ const Navbar = () => {
             weight="semi-bold"
             className="mb-2 text-center"
           >
-            سبد سفارش
+            درخواست ها
           </Typography>
 
-          {Number(shopCart?.total_items) !== 0 ? (
+          {Number(shopCart?.total_items) > 0 ? (
             <>
               <Typography
                 variant="label/sm"
@@ -351,7 +351,7 @@ const Navbar = () => {
                 onClick={handleOrderSubmit}
                 className="w-full"
               >
-                ثبت سفارش
+                ثبت درخواست
               </Button>
             </>
           ) : (

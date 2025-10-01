@@ -183,7 +183,7 @@ function ProductDetailFn() {
               iconLeft={<IconShoppingCart size={20} />}
               className="w-full"
             >
-              افزودن به سبد خرید
+              خرید و فروش
             </Button>
           </div>
         </div>
