@@ -24,8 +24,7 @@ export default function Counter({ onChange }: CounterProps) {
       <Button
         variant="primary"
         className="w-full m-0"
-        onClick={() => setCount((prev) => prev - 25)}
-        disabled={count <= 25}
+        onClick={() => setCount((prev) => (prev - 25 > 0 ? prev - 25 : 0))}
       >
         <IconMinus stroke={2} />
       </Button>

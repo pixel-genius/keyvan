@@ -1,5 +1,10 @@
+import {
+  cn,
+  formatPrice,
+  toEnglishDigits,
+  toPersianNumbers,
+} from "@/lib/utils";
 import { ORDERTYPE } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
-import { formatPrice, toEnglishDigits, toPersianNumbers } from "@/lib/utils";
 import Typography from "@/components/components/atoms/typography";
 import { Button } from "@/components/components/atoms/button";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -45,8 +50,13 @@ const AddToCartBottomSheet = ({
               onClick={() => {
                 if (tab !== "buy") setTab("buy");
               }}
-              variant={tab === "buy" ? "primary" : "secondary"}
-              className="w-full"
+              className={cn(
+                "w-full",
+                tab === "buy"
+                  ? "!bg-green-100 !text-green-500 font-bold text-lg"
+                  : "",
+              )}
+              variant="secondary"
             >
               خرید
             </Button>
@@ -54,8 +64,11 @@ const AddToCartBottomSheet = ({
               onClick={() => {
                 if (tab !== "sell") setTab("sell");
               }}
-              variant={tab === "sell" ? "primary" : "secondary"}
-              className="w-full"
+              className={cn(
+                "w-full",
+                tab === "sell" ? "!bg-red-100 !text-red-500 text-lg" : "",
+              )}
+              variant="secondary"
             >
               فروش
             </Button>
