@@ -19,7 +19,8 @@ export interface ShopCartItemObj {
 export interface ShopCartApiResponse {
   id: number;
   items: ShopCartItemObj[];
-  total_items: string;
+  total_buy_items: string;
+  total_sell_items: string;
   total_price: string;
   total_buy_amount: number;
   total_sell_amount: number;

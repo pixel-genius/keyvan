@@ -253,7 +253,8 @@ const Navbar = () => {
             درخواست ها
           </Typography>
 
-          {Number(shopCart?.total_items) > 0 ? (
+          {Number(shopCart?.total_sell_items) > 0 ||
+          Number(shopCart?.total_buy_items) > 0 ? (
             <>
               <Typography
                 variant="label/sm"
@@ -341,6 +342,7 @@ const Navbar = () => {
                   }));
                 }}
                 placeholder="...یادداشت خود را بنویسید"
+                dir="rtl"
                 className="w-full text-right mb-1 p-4 border border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-background text-foreground min-h-[100px] resize-none"
               />
               <Button
