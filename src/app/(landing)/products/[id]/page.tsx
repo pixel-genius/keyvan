@@ -110,7 +110,7 @@ function ProductDetailFn() {
 
   if (shopProductDetail.isError) {
     return (
-      <div className="px-4 pt-28  flex flex-col items-center justify-center min-h-screen gap-4">
+      <div className="px-4 flex flex-col items-center justify-center min-h-screen gap-4">
         <Typography variant="paragraph/md" className="text-red-500">
           خطا در دریافت اطلاعات محصول
         </Typography>
@@ -139,7 +139,7 @@ function ProductDetailFn() {
   }
 
   return (
-    <div className="px-4 pt-24 pb-48 ">
+    <div className="px-4 pt-5">
       <div className="flex gap-0.5 items-center pb-3.5">
         <span
           className="inline-flex items-center gap-2 cursor-pointer p-2"
