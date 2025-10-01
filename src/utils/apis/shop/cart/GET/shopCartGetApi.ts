@@ -1,5 +1,11 @@
+import {
+  QueryKey,
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  UseQueryOptions,
+} from "@tanstack/react-query";
 import { ShopProductDetailApiResponse } from "../../products/[id]/GET/shopProductDetailApi";
-import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
 import type { ORDERTYPE } from "../add/POST/shopCartAddPostApi";
 import { coreApi } from "@/utils/service/instance";
 import path from "path";
@@ -46,4 +52,15 @@ export const useGetShopCartListApi = (
   });
 
   return query;
+};
+
+// useMutation Hook with proper types
+export const useGetMutateShopCartListApi = (
+  options?: UseMutationOptions<ShopCartApiResponse, unknown, unknown>,
+) => {
+  return useMutation<ShopCartApiResponse, unknown, unknown, unknown>({
+    mutationFn: getShopCartApi,
+    mutationKey: [SHOPCARTGET_QUERYKEY + "Mutate"],
+    ...options,
+  });
 };

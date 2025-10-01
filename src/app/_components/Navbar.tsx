@@ -26,13 +26,12 @@ import {
   SelectValue,
 } from "@/components/components/atoms/select";
 import { useDeleteShopCartItemsRemoveApi } from "@/utils/apis/shop/cart/items/[id]/remove/DELETE/shopCartItemsRemoveDeleteApi";
-import { SHOPCARTGET_QUERYKEY } from "@/utils/apis/shop/cart/GET/shopCartGetApi";
+import { useGetMutateShopCartListApi } from "@/utils/apis/shop/cart/GET/shopCartGetApi";
 import Typography from "@/components/components/atoms/typography";
 import { useAuthStore } from "@/utils/store/authenticate.store";
 import { toEnglishDigits, toPersianNumbers } from "@/lib/utils";
 import { Button } from "@/components/components/atoms/button";
 import AddAddressBottomSheet from "./AddAddressBottomSheet";
-import { useQueryClient } from "@tanstack/react-query";
 import OrderConfirmation from "./OrderConfirmation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -54,7 +53,6 @@ type CartItem = {
 const Navbar = () => {
   const router = useRouter();
   const { shopCart, setUserInfo } = useAuthStore();
-  const queryClient = useQueryClient();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isOrderConfirmationOpen, setIsOrderConfirmationOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -68,9 +66,17 @@ const Navbar = () => {
   });
   const [defaultAddressState, setDefaultAddressState] =
     useState<AccountAddressesObj | null>(null);
+  console.log(formFields);
+  const shopCartGetMutate = useGetMutateShopCartListApi({
+    onSuccess: (res) => {
+      setUserInfo({ shopCart: res });
+    },
+  });
 
   const accountAddressListQuery = useGetAccountAddressList({
-    enabled: Number(shopCart?.total_items) !== 0,
+    enabled:
+      Number(shopCart?.total_buy_items) > 0 ||
+      Number(shopCart?.total_sell_items) > 0,
   });
 
   const shopDeleteCartItemMutate = useDeleteShopCartItemsRemoveApi({
@@ -83,7 +89,7 @@ const Navbar = () => {
     onSuccess: () => {
       toast.success("ثبت درخواست با موفقیت انجام شد");
       setIsCartOpen(false);
-      queryClient.refetchQueries({ queryKey: [SHOPCARTGET_QUERYKEY] });
+      shopCartGetMutate.mutate(undefined);
       router.push("/requests");
     },
     onError: () => {
@@ -202,6 +208,11 @@ const Navbar = () => {
       address_id: defaultAddressState?.id || null,
     }));
   }, [defaultAddressState]);
+  useEffect(() => {
+    if (!isCartOpen) {
+      setFormFields({ notes: "", address_id: null });
+    }
+  }, [isCartOpen]);
 
   return (
     <>
@@ -288,6 +299,7 @@ const Navbar = () => {
               <div className="mb-2">
                 {accountAddressListQuery.data?.data?.length ? (
                   <Select
+                    defaultValue={formFields.address_id?.toString()}
                     onValueChange={(value) => {
                       setFormFields((prev) => ({
                         ...prev,
