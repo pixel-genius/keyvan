@@ -8,7 +8,6 @@ import {
   usePostShopCartAddApi,
 } from "@/utils/apis/shop/cart/add/POST/shopCartAddPostApi";
 import { useGetShopProductDetail } from "@/utils/apis/shop/products/[id]/GET/shopProductDetailApi";
-import { IconChevronLeft, IconShoppingCart } from "@tabler/icons-react";
 import CustomAreaChartCard from "./_components/CustomAreaChartCard";
 import Typography from "@/components/components/atoms/typography";
 import { ChartConfig } from "@/components/components/atoms/chart";
@@ -16,6 +15,7 @@ import { useAuthStore } from "@/utils/store/authenticate.store";
 import { Button } from "@/components/components/atoms/button";
 import { Badge } from "@/components/components/atoms/badge";
 import { useParams, useRouter } from "next/navigation";
+import { IconChevronLeft } from "@tabler/icons-react";
 import { toEnglishDigits } from "@/lib/utils";
 import { Suspense, useState } from "react";
 import Image from "next/image";
@@ -110,7 +110,7 @@ function ProductDetailFn() {
 
   if (shopProductDetail.isError) {
     return (
-      <div className="px-4 pt-28  flex flex-col items-center justify-center min-h-screen gap-4">
+      <div className="px-4 flex flex-col items-center justify-center min-h-screen gap-4">
         <Typography variant="paragraph/md" className="text-red-500">
           خطا در دریافت اطلاعات محصول
         </Typography>
@@ -139,7 +139,7 @@ function ProductDetailFn() {
   }
 
   return (
-    <div className="px-4 pt-24 pb-48 ">
+    <div className="px-4 pt-5">
       <div className="flex gap-0.5 items-center pb-3.5">
         <span
           className="inline-flex items-center gap-2 cursor-pointer p-2"
@@ -180,8 +180,7 @@ function ProductDetailFn() {
             <Button
               onClick={handleAddToCartClick}
               disabled={!shopProductDetail.data?.id}
-              iconLeft={<IconShoppingCart size={20} />}
-              className="w-full"
+              className="w-full text-md"
             >
               خرید و فروش
             </Button>

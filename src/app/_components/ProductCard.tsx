@@ -3,7 +3,6 @@
 import { Card, CardContent } from "@/components/components/atoms/card";
 import Typography from "@/components/components/atoms/typography";
 import { Button } from "@/components/components/atoms/button";
-import { IconShoppingCartPlus } from "@tabler/icons-react";
 import { formatPrice } from "@/lib/utils";
 import Tomanicon from "@/icons/toman";
 import { useState } from "react";
@@ -85,7 +84,6 @@ export default function ProductCard({
               size="sm"
               className="bg-primary rounded-sm d-inline-flex"
               onClick={onAddToCart}
-              iconLeft={<IconShoppingCartPlus className="w-5 h-5" stroke={2} />}
             >
               خرید و فروش
             </Button>
