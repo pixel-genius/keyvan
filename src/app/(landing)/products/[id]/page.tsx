@@ -19,6 +19,7 @@ import { IconChevronLeft } from "@tabler/icons-react";
 import { toEnglishDigits } from "@/lib/utils";
 import { Suspense, useState } from "react";
 import Image from "next/image";
+import { toast } from "sonner";
 
 const chartConfig = {
   desktop: {
@@ -70,6 +71,7 @@ function ProductDetailFn() {
       setUserInfo({ shopCart: data });
       setIsAddingToCart(false);
       setIsBottomSheetOpen(false);
+      toast.success("افزودن درخواست انجام شد");
     },
     onError: () => {
       setIsAddingToCart(false);

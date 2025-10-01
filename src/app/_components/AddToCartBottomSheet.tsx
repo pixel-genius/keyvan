@@ -121,7 +121,7 @@ const AddToCartBottomSheet = ({
           />
           <Button
             className="w-full mb-3"
-            disabled={disabled}
+            disabled={disabled || !selectedItem.count}
             variant="primary"
             onClick={() => {
               onAddToCart(tab);
