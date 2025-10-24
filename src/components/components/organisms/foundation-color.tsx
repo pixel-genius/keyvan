@@ -145,7 +145,7 @@ export const FoundationColor = () => {
         </div>
 
         {/* dark */}
-        <div className="flex flex-col gap-2 dark bg-white text-gray-900 p-4">
+        <div className="flex flex-col gap-2 bg-white text-gray-900 p-4">
           dark
           <div className="flex gap-2 items-center">
             <div className="w-10 h-10 rounded-full  shadow-lg border bg-background"></div>

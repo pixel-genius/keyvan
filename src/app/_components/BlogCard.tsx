@@ -27,7 +27,7 @@ const BlogCard: React.FC<BlogCardProps> = ({
   return (
     <Link href={`/blogs/${id}`}>
       <div
-        className="bg-white dark:bg-zinc-900 rounded-2xl shadow-md dark:shadow-zinc-800 overflow-hidden w-full max-w-md mx-auto hover:shadow-lg transition-shadow cursor-pointer"
+        className="bg-white rounded  overflow-hidden w-full  mx-auto  transition-shadow cursor-pointer"
         dir="rtl"
       >
         <div className="relative w-full h-48">
@@ -36,38 +36,36 @@ const BlogCard: React.FC<BlogCardProps> = ({
               src={image || "/img/sigar.png"}
               alt={title || ""}
               fill
-              className="object-cover w-full h-full rounded-t-2xl"
+              className="object-cover w-full h-full rounded"
               style={{ objectFit: "cover" }}
               unoptimized
             />
           ) : (
-            <div className="w-full h-full bg-gray-200 dark:bg-zinc-800 flex items-center justify-center text-gray-400 dark:text-gray-500">
+            <div className="w-full h-full bg-muted flex items-center justify-center text-muted-foreground">
               تصویر
             </div>
           )}
         </div>
         <div className="p-4 flex flex-col gap-2">
           <div className="flex justify-between items-center mb-1">
-            <span className="bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-gray-300 text-xs px-3 py-1 rounded-full">
+            <span className="bg-secondary text-secondary-foreground text-xs px-3 py-1 rounded-full">
               {created_at
                 ? new Date(created_at).toLocaleDateString("fa-IR")
                 : ""}
             </span>
-            <span className="text-xs text-gray-500 dark:text-gray-400">
-              {author_name}
-            </span>
+            <span className="text-xs text-gray-500">{author_name}</span>
           </div>
           <Typography
             variant="label/md"
             weight="bold"
-            className="text-right text-lg leading-tight mb-1 text-zinc-900 dark:text-zinc-100"
+            className="text-right text-lg leading-tight mb-1 text-zinc-900"
           >
             {title}
           </Typography>
           <Typography
             variant="label/xs"
             weight="normal"
-            className="text-right text-gray-500 dark:text-gray-300 leading-relaxed"
+            className="text-right text-gray-500 leading-relaxed"
           >
             {truncateText(content || "", 100)}
           </Typography>

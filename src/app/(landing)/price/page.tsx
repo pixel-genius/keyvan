@@ -192,10 +192,10 @@ const Pricepage = () => {
           onClick={goToPreviousDay}
           disabled={currentDayIndex === 0}
           className={clsx(
-            "flex items-center justify-center  text-white transition",
+            "flex items-center justify-center  transition",
             currentDayIndex === 0
-              ? "opacity-50 cursor-not-allowed"
-              : "bg-zinc-800",
+              ? "text-zinc-400 cursor-not-allowed"
+              : "text-zinc-800",
           )}
         >
           <IconChevronRight size={24} />
@@ -208,10 +208,10 @@ const Pricepage = () => {
           onClick={goToNextDay}
           disabled={currentDayIndex === daysData.length - 1}
           className={clsx(
-            "flex items-center justify-center rounded-xl text-white transition",
+            "flex items-center justify-center rounded-xl  transition",
             currentDayIndex === daysData.length - 1
-              ? "opacity-50 cursor-not-allowed"
-              : "bg-zinc-800 hover:bg-zinc-700",
+              ? "text-zinc-400 cursor-not-allowed"
+              : "text-zinc-800",
           )}
         >
           روز بعد
@@ -220,20 +220,23 @@ const Pricepage = () => {
       </div>
 
       {/* Search Input */}
-      <div className="pb-3.5 flex justify-between items-center gap-2">
-        <Input
-          placeholder="جستجو کنید ...."
-          value={searchQuery}
-          onChange={handleSearch}
-          className="flex-1"
-        />
+      <div className="flex items-center justify-between gap-2 pb-4">
+        <div className="flex-1">
+          <Input
+            placeholder="جستجو کنید ...."
+            value={searchQuery}
+            onChange={handleSearch}
+            className="w-full  rounded-md"
+          />
+        </div>
+
         <div
-          className="border-2 relative border-zinc-700 rounded p-2 cursor-pointer h-[50px] w-[50px] flex items-center justify-center"
           onClick={() => setShowFilterBottomSheet(true)}
+          className="h-10 w-10 flex items-center justify-center bg-zinc-700 rounded-md cursor-pointer relative"
         >
-          <IconFilter size="24" stroke={1.5} />
+          <IconFilter size="22" stroke={1.5} className="text-zinc-200" />
           {!!filterParams.brand && (
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
               1
             </span>
           )}

@@ -53,7 +53,7 @@ export default function BottomSheet({
             "fixed inset-0 z-50 flex items-end justify-center",
             hasBackdrop && "bg-black/50",
             hasBlur && "backdrop-blur-sm",
-            fullScreen ? "items-center" : "max-w-lg w-full mx-auto",
+            fullScreen ? "items-center" : " w-full mx-auto",
           )}
         >
           <motion.div
@@ -62,10 +62,10 @@ export default function BottomSheet({
             exit={fullScreen ? { scale: 0.9, opacity: 0 } : { y: "100%" }}
             transition={{ type: "tween", duration: 0.5, ease: "easeInOut" }}
             className={cn(
-              "bg-background rounded-2xl flex flex-col",
+              "bg-white rounded-2xl flex flex-col",
               fullScreen
-                ? "w-full h-full max-w-4xl max-h-[90vh] mx-4 my-4"
-                : "max-w-lg w-full mx-auto rounded-t-2xl max-h-[80vh]",
+                ? "w-full h-full  max-h-[90vh] mx-4 my-4"
+                : " w-full mx-auto rounded-t-2xl max-h-[80vh]",
             )}
           >
             <div className="flex-1 overflow-y-auto px-4 pb-16">{children}</div>

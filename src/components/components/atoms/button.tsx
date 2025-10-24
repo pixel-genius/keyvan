@@ -13,9 +13,9 @@ const buttonVariants = cva(
         primary:
           "bg-primary text-white rounded-lg hover:bg-primary-hover disabled:text-gray-400 disabled:!bg-gray-200 ",
         secondary:
-          "bg-secondary border border-zinc-700 rounded-lg text-secondary-foreground hover:bg-zinc-900 disabled:text-gray-400 disabled:bg-secondary  ",
+          "bg-secondary border border-border rounded-lg text-foreground hover:bg-gray-200 disabled:text-gray-400 disabled:bg-gray-200 ",
         tertiary:
-          "bg-transparent active:border-none focus:border-none text-white rounded-lg disabled:text-gray-700 ",
+          "bg-transparent active:border-none focus:border-none text-gray-700 rounded-lg disabled:text-gray-400 ",
       },
       size: {
         sm: "h-9 text-sm",

@@ -38,7 +38,7 @@ const CardItem = ({
     <Link href={link || ""}>
       <div className="flex flex-col items-center">
         <div
-          className={`bg-card p-4 rounded-xl shadow-lg flex items-center justify-center ${sizeClasses[size]}`}
+          className={`bg-white p-4 rounded-xl shadow-lg flex items-center justify-center ${sizeClasses[size]}`}
         >
           {image ? (
             <Image

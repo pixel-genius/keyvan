@@ -74,7 +74,7 @@ export default function PWAInstaller() {
   if (isIOS && !isInstallable && showIOSInstructions) {
     return (
       <div className="fixed bottom-4 left-4 right-4 z-50">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 border border-gray-200 dark:border-gray-700">
+        <div className="bg-white rounded-lg shadow-lg p-4 border border-gray-200">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
@@ -93,17 +93,17 @@ export default function PWAInstaller() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-white">
+                <p className="text-sm font-medium text-gray-900">
                   نصب اپلیکیشن
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
+                <p className="text-xs text-gray-500">
                   روی دکمه Share کلیک کنید و Add to Home Screen را انتخاب کنید
                 </p>
               </div>
             </div>
             <button
               onClick={handleDismiss}
-              className="px-4 py-2 text-gray-500 text-sm font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className="px-4 py-2 text-gray-500 text-sm font-medium rounded-lg hover:bg-gray-100 transition-colors"
             >
               بستن
             </button>
@@ -118,7 +118,7 @@ export default function PWAInstaller() {
 
   return (
     <div className="fixed bottom-4 left-4 right-4 z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 border border-gray-200 dark:border-gray-700">
+      <div className="bg-white rounded-lg shadow-lg p-4 border border-gray-200">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
@@ -137,10 +137,8 @@ export default function PWAInstaller() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-900 dark:text-white">
-                نصب اپلیکیشن
-              </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-sm font-medium text-gray-900">نصب اپلیکیشن</p>
+              <p className="text-xs text-gray-500">
                 برای دسترسی آسان‌تر، اپلیکیشن را نصب کنید
               </p>
             </div>
@@ -155,7 +153,7 @@ export default function PWAInstaller() {
             </button>
             <button
               onClick={handleDismiss}
-              className="px-4 py-2 text-gray-500 text-sm font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className="px-4 py-2 text-gray-500 text-sm font-medium rounded-lg hover:bg-gray-100 transition-colors"
             >
               بعداً
             </button>

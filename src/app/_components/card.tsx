@@ -46,7 +46,7 @@ const ProductCard = ({
 
   return (
     <Link href={`/products/${product.id}`} className="block">
-      <div className="bg-maincard p-4 rounded-xl pb-1.5 hover:bg-maincard/80 transition-colors cursor-pointer">
+      <div className="bg-white p-4 rounded pb-1.5  transition-colors cursor-pointer">
         <div className="flex justify-center items-center mb-2 min-h-[150px] relative">
           <Image
             src={getImageSrc()}
@@ -69,7 +69,7 @@ const ProductCard = ({
             <Badge variant="default">{product?.category?.name || ""}</Badge>
           )}
         </div>
-        <div className="w-auto h-0.5 bg-zinc-700 my-2 rounded-full"></div>
+        <div className="w-auto h-0.5 bg-border my-2 rounded-full"></div>
         <div className="flex justify-between items-center">
           <div className="flex gap-0.5 items-center">
             <Typography

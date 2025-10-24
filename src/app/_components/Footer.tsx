@@ -35,13 +35,13 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-maincard fixed bottom-0 left-0 w-full py-4 z-30 flex items-center shadow-lg">
-      <div className="flex justify-around w-full max-w-xl mx-auto text-xs text-gray-600">
+    <footer className="bg-white fixed bottom-0 left-0 w-full py-4 z-30 flex items-center shadow-lg">
+      <div className="flex justify-around w-full max-w-xl mx-auto text-xs text-white">
         {links.map((link) => (
           <div
             key={link.id}
-            className={`flex flex-col gap-2 items-center cursor-pointer ${
-              pathname === link.href ? "text-primary" : "text-gray-600"
+            className={`flex flex-col gap-2 items-center cursor-pointer transition-colors ${
+              pathname === link.href ? "text-primary" : "text-zinc-400"
             }`}
             onClick={() => router.push(link.href)}
           >

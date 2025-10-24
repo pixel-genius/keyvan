@@ -8,12 +8,13 @@ const chipVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-primary hover:bg-yellow-700   ",
+        primary:
+          "bg-primary text-primary-foreground hover:bg-primary-hover text-white ",
         warning: "bg-yellow-600 hover:bg-amber-700    ",
         danger: "bg-red-600 hover:bg-rose-700   ",
         success: "bg-green-600 hover:bg-emerald-700   ",
         info: "bg-sky-500 hover:bg-sky-700   ",
-        secendery: "bg-zinc-900 hover:bg-zinc-700    ",
+        secendery: "bg-gray-300  hover:bg-gray-700    ",
       },
       size: {
         sm: "h-9 text-sm",

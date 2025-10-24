@@ -14,7 +14,20 @@ export default function Counter({ onChange }: CounterProps) {
 
   useEffect(() => {
     onChange?.(count);
-  }, [count]);
+  }, [count, onChange]); // رفع هشدار React Hooks
+
+  const decrease = () => {
+    setCount((prev) => (prev - 25 > 0 ? prev - 25 : 0));
+  };
+
+  const increase = () => {
+    setCount((prev) => prev + 25);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(toEnglishDigits(e.target.value)) || 0;
+    setCount(value);
+  };
 
   return (
     <div
@@ -22,25 +35,27 @@ export default function Counter({ onChange }: CounterProps) {
       className="flex items-center gap-4 pb-5 rounded-lg w-full text-white"
     >
       <Button
-        variant="primary"
-        className="w-full m-0"
-        onClick={() => setCount((prev) => (prev - 25 > 0 ? prev - 25 : 0))}
+        variant="tertiary"
+        className="w-full border border-primary text-primary"
+        onClick={decrease}
       >
         <IconMinus stroke={2} />
       </Button>
+
       <input
         name="count"
         dir="rtl"
-        className="w-full border mb-6 rounded px-3 py-2 !m-0 outline-none focus:ring-0 text-center"
-        placeholder="تعداد باکس"
         type="text"
+        placeholder="تعداد باکس"
         value={toPersianNumbers(count)}
-        onChange={(e) => setCount(Number(toEnglishDigits(e.target.value)) || 0)}
+        onChange={handleInputChange}
+        className="w-full text-zinc-800 border mb-6 rounded px-3 py-2 !m-0 outline-none focus:ring-0 text-center"
       />
+
       <Button
-        variant="primary"
-        className="w-full"
-        onClick={() => setCount((prev) => prev + 25)}
+        variant="tertiary"
+        className="w-full border border-primary text-primary"
+        onClick={increase}
       >
         <IconPlus stroke={2} />
       </Button>

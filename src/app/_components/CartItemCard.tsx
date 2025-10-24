@@ -56,7 +56,7 @@ const CartItemCard = ({
         <button
           disabled={disabled}
           onClick={() => setOpen(true)}
-          className="p-1 rounded-full hover:bg-gray-100 transition-colors"
+          className="p-1 rounded-full hover:bg-secondary transition-colors"
         >
           <IconTrash size={25} className="text-red-500" />
         </button>

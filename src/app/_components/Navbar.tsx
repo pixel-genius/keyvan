@@ -1,16 +1,6 @@
 "use client";
 
 import {
-  IconArchive,
-  IconBook,
-  IconHeadset,
-  IconInfoCircle,
-  IconMenu2,
-  IconPhone,
-  IconScale,
-  IconX,
-} from "@tabler/icons-react";
-import {
   ShopOrderCreatePostApiPayload,
   usePostShopOrderCreateApi,
 } from "@/utils/apis/shop/orders/create/POST/shopOrderCreatePostApi";
@@ -26,6 +16,14 @@ import {
   SelectValue,
 } from "@/components/components/atoms/select";
 import { useDeleteShopCartItemsRemoveApi } from "@/utils/apis/shop/cart/items/[id]/remove/DELETE/shopCartItemsRemoveDeleteApi";
+import {
+  IconArchive,
+  IconHeadset,
+  IconInfoCircle,
+  IconMenu2,
+  IconPhone,
+  IconX,
+} from "@tabler/icons-react";
 import { useGetMutateShopCartListApi } from "@/utils/apis/shop/cart/GET/shopCartGetApi";
 import Typography from "@/components/components/atoms/typography";
 import { useAuthStore } from "@/utils/store/authenticate.store";
@@ -138,46 +136,25 @@ const Navbar = () => {
   };
 
   // Menu items for sidebar
+  // Menu items for sidebar
   const menuItems = [
     {
-      id: "about",
-      title: "درباره ما",
-      icon: IconInfoCircle,
-      onClick: () => {
-        setIsSidebarOpen(false);
-      },
+      id: "support",
+      title: "پشتیبانی",
+      icon: IconHeadset,
+      path: "/support",
     },
     {
       id: "contact",
       title: "تماس با ما",
       icon: IconPhone,
-      onClick: () => {
-        setIsSidebarOpen(false);
-      },
+      path: "/contactus",
     },
     {
-      id: "support",
-      title: "پشتیبانی",
-      icon: IconHeadset,
-      onClick: () => {
-        setIsSidebarOpen(false);
-      },
-    },
-    {
-      id: "terms",
-      title: "قانون و مقررات",
-      icon: IconScale,
-      onClick: () => {
-        setIsSidebarOpen(false);
-      },
-    },
-    {
-      id: "education",
-      title: "آموزش",
-      icon: IconBook,
-      onClick: () => {
-        setIsSidebarOpen(false);
-      },
+      id: "about",
+      title: "درباره ما",
+      icon: IconInfoCircle,
+      path: "/aboutus",
     },
   ];
 
@@ -205,14 +182,13 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="bg-maincard flex justify-center z-50 fixed top-0 w-full items-center px-4 py-4">
+      <nav className="bg-white flex justify-center z-50 fixed top-0 w-full items-center px-4 py-4 shadow-lg">
         <div className="flex justify-between items-center w-full max-w-xl mx-auto">
           {/* Left Icon */}
 
           <IconMenu2
             size={28}
-            color="white"
-            className="cursor-pointer"
+            className="cursor-pointer text-primary"
             onClick={() => setIsSidebarOpen(true)}
           />
           {/* Center Logo */}
@@ -229,8 +205,7 @@ const Navbar = () => {
           <div className="relative">
             <IconArchive
               size={28}
-              color="white"
-              className="cursor-pointer"
+              className="cursor-pointer text-primary"
               onClick={() => setIsCartOpen(true)}
             />
             {shopCart?.items && shopCart?.items?.length > 0 && (
@@ -386,11 +361,18 @@ const Navbar = () => {
 
         {/* Sidebar */}
         <div
-          className={`fixed right-0 top-0 h-full w-80 bg-maincard z-50 shadow-2xl transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "translate-x-full"}`}
+          className={`fixed right-0 top-0 h-full w-80 bg-primary z-50 shadow-2xl transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "translate-x-full"}`}
         >
           <div className="p-6">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
+              <div
+                onClick={() => setIsSidebarOpen(false)}
+                className="p-2 cursor-pointer hover:bg-white/10 transition-all duration-200 rounded-lg"
+              >
+                <IconX size={24} className="text-white" />
+              </div>
+
               <Typography
                 variant="heading/lg"
                 weight="bold"
@@ -398,13 +380,6 @@ const Navbar = () => {
               >
                 منو
               </Typography>
-
-              <div
-                onClick={() => setIsSidebarOpen(false)}
-                className="p-2 cursor-pointer hover:bg-white/10 transition-all duration-200 rounded-lg"
-              >
-                <IconX size={24} className="text-white" />
-              </div>
             </div>
 
             {/* Menu Items */}
@@ -414,7 +389,10 @@ const Navbar = () => {
                 return (
                   <div
                     key={item.id}
-                    onClick={item.onClick}
+                    onClick={() => {
+                      setIsSidebarOpen(false);
+                      router.push(item.path);
+                    }}
                     className="w-full h-16 flex items-center justify-end cursor-pointer hover:bg-white/10 transition-all duration-200 rounded-xl backdrop-blur-sm"
                   >
                     <Typography

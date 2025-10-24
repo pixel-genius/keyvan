@@ -3,9 +3,9 @@
 import * as LabelPrimitive from "@radix-ui/react-label";
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
-import { Label } from "../atoms/label";
 import Typography from "../atoms/typography";
+import { Label } from "../atoms/label";
+import { cn } from "@/lib/utils";
 
 export interface LabelWraperProps
   extends React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> {
@@ -30,7 +30,7 @@ const LabelWraper = React.forwardRef<
       required = false,
       ...props
     },
-    ref
+    ref,
   ) => (
     <div className={cn("relative w-full flex flex-col", className)}>
       {/* Label */}
@@ -59,7 +59,7 @@ const LabelWraper = React.forwardRef<
           "hidden",
           "relative  mt-1  text-muted-foreground px-1",
           (helperText || !!error) && "block",
-          !!error && "dark:text-error-400  text-error-500"
+          !!error && "text-error-500",
         )}
       >
         <Typography component="span" variant="label/xs" className="">
@@ -67,7 +67,7 @@ const LabelWraper = React.forwardRef<
         </Typography>
       </span>
     </div>
-  )
+  ),
 );
 
 LabelWraper.displayName = "LabelWraper";

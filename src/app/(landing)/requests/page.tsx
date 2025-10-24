@@ -87,7 +87,7 @@ const OrdersPage = () => {
           [...Array(2)].map((_, index) => (
             <Card
               key={"order-item-" + index}
-              className="bg-maincard rounded-lg p-4"
+              className="bg-white rounded-lg p-4"
             >
               {/* Order Header */}
               <div className="flex justify-between items-center">
@@ -121,7 +121,7 @@ const OrdersPage = () => {
           shopOrderListQuery.data?.map((order) => (
             <div key={order.id + order.items.toString()}>
               {/* Order Card */}
-              <Card className="bg-maincard rounded-lg p-4">
+              <Card className="bg-white rounded-lg p-4">
                 {/* Order Header */}
                 <div className="flex justify-between items-center">
                   <div className="flex gap-2 items-center text-gray-400 text-sm">
@@ -206,7 +206,7 @@ const OrdersPage = () => {
                                 </Typography>
                                 <Typography
                                   variant="paragraph/sm"
-                                  className="text-gray-300"
+                                  className="text-gray-500"
                                 >
                                   {formatPrice(item.total_price)} تومان
                                 </Typography>

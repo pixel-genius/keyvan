@@ -153,6 +153,12 @@ function ProductsContent() {
       <PageTitle title="محصولات" />
 
       <div className="flex justify-between items-center gap-2">
+        <div
+          className="border-2 border-zinc-700 rounded p-2 cursor-pointer h-[50px] w-[50px] flex items-center justify-center"
+          onClick={handleFilterClick}
+        >
+          <IconFilter size="24" stroke={1.5} />
+        </div>
         <Input
           placeholder="جستجو"
           className="pb-1 text-sm"
@@ -160,12 +166,6 @@ function ProductsContent() {
           value={searchQuery}
           onChange={handleSearchChange}
         />
-        <div
-          className="border-2 border-zinc-700 rounded p-2 cursor-pointer h-[50px] w-[50px] flex items-center justify-center"
-          onClick={handleFilterClick}
-        >
-          <IconFilter size="24" stroke={1.5} />
-        </div>
       </div>
 
       <BottomSheet
@@ -258,7 +258,11 @@ function ProductsContent() {
         {shopProductListQuery.isFetching && (
           <>
             {[...Array(6)].map((_, index) => (
-              <div key={index} className="bg-black rounded-2xl p-4" dir="rtl">
+              <div
+                key={index}
+                className="bg-gray-200 rounded-2xl p-4"
+                dir="rtl"
+              >
                 <div className="flex items-center space-x-4">
                   {/* Image skeleton */}
                   <Skeleton className="w-16 h-16 rounded-lg" />
