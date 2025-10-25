@@ -5,7 +5,6 @@ import {
   IconUser,
   IconFile,
   IconMapPin,
-  IconCrown,
   IconChevronRight,
 } from "@tabler/icons-react";
 import Typography from "@/components/components/atoms/typography";
@@ -21,7 +20,7 @@ const Accountpage = () => {
       <PageTitle title="حساب کاربری" />
 
       {/* User Stats Card */}
-      <div className="relative overflow-hidden bg-primary rounded-2xl p-6 shadow-lg">
+      {/* <div className="relative overflow-hidden bg-primary rounded-2xl p-6 shadow-lg">
         <div className="absolute top-0 right-0 w-32 h-32 bg-primary-foreground/10 rounded-full -translate-y-16 translate-x-16"></div>
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary-foreground/10 rounded-full translate-y-12 -translate-x-12"></div>
 
@@ -42,27 +41,12 @@ const Accountpage = () => {
                 variant={"paragraph/sm"}
                 className="text-primary-foreground/90"
               >
-                سطح ۱
-              </Typography>
+            سطح آزمایشی              </Typography>
             </div>
           </div>
-          <div className="text-right">
-            <Typography
-              weight="bold"
-              variant={"paragraph/lg"}
-              className="text-primary-foreground"
-            >
-              ۳۵
-            </Typography>
-            <Typography
-              variant={"paragraph/sm"}
-              className="text-primary-foreground/90"
-            >
-              امتیاز
-            </Typography>
-          </div>
+          
         </div>
-      </div>
+      </div> */}
 
       {/* Menu Items */}
       <div className="space-y-4">

@@ -7,8 +7,8 @@ const LogoIcon = () => {
       src="/img/logo-main.svg"
       unoptimized
       alt="logo"
-      width={50}
-      height={50}
+      width={100}
+      height={100}
     />
   );
 };

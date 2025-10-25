@@ -187,6 +187,11 @@ const Pricepage = () => {
 
   return (
     <div dir="rtl" className="px-4 pt-3 flex flex-col">
+      <div className=" flex justify-center text-primary font-bold gap-4 text-sm">
+        <div>شکر نعمت، نعمتت افزون کند </div>
+        <div>کفر نعمت از کفت برون کند</div>
+      </div>
+
       <div className="flex flex-row items-center justify-between ">
         <button
           onClick={goToPreviousDay}
