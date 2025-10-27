@@ -14,7 +14,7 @@ export default function Counter({ onChange }: CounterProps) {
 
   useEffect(() => {
     onChange?.(count);
-  }, [count, onChange]); // رفع هشدار React Hooks
+  }, [count]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const decrease = () => {
     setCount((prev) => (prev - 25 > 0 ? prev - 25 : 0));

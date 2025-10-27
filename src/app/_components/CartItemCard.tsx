@@ -60,7 +60,10 @@ const CartItemCard = ({
         >
           <IconTrash size={25} className="text-red-500" />
         </button>
-        <Chip variant={orderType === "buy" ? "success" : "danger"}>
+        <Chip
+          variant={orderType === "buy" ? "success" : "danger"}
+          className="!text-white"
+        >
           {orderType === "buy" ? "خرید" : "فروش"}
         </Chip>
         <div className="flex items-center gap-4 ml-auto">
