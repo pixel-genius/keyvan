@@ -196,7 +196,7 @@ function ProductDetailFn() {
             <Typography
               variant="paragraph/sm"
               weight="normal"
-              className="text-gray-300"
+              className="text-gray-700"
             >
               {shopProductDetail.data.description || null}
             </Typography>
